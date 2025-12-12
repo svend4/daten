@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Цветочная лавка «Bloomery»</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">Bloomery</div>
+    <nav class="nav">
+      <a href="#bouquets">Букеты</a>
+      <a href="#collections">Коллекции</a>
+      <a href="#care">Уход</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <button class="btn ghost">Войти</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__text">
+        <p class="eyebrow">Живые цветы с доставкой за 90 минут</p>
+        <h1>Создаем букеты, которые говорят за вас</h1>
+        <p class="lede">Сочетаем форму, аромат и сезонность, чтобы каждое поздравление чувствовалось личным. Доставка по городу ежедневно с 8:00 до 22:00.</p>
+        <div class="actions">
+          <button class="btn primary">Выбрать букет</button>
+          <button class="btn secondary">Собрать свой</button>
+        </div>
+        <div class="metrics">
+          <div>
+            <span class="metric__number">4.9★</span>
+            <span class="metric__label">на основе 3 200 отзывов</span>
+          </div>
+          <div>
+            <span class="metric__number">15 000</span>
+            <span class="metric__label">доставленных букетов</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero__card">
+        <div class="badge">Новинка недели</div>
+        <h2>«Лавандовый рассвет»</h2>
+        <p class="card__text">Эвкалипт, лавандовая роза, маттиола и хлопок в шёлковой упаковке.</p>
+        <div class="price-row">
+          <span class="price">3 200 ₽</span>
+          <button class="btn primary">В корзину</button>
+        </div>
+        <ul class="card__list">
+          <li>Свежесрезанные цветы из фермерских теплиц</li>
+          <li>Гидрогель и инструкция по уходу в комплекте</li>
+          <li>Фото готового букета перед доставкой</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid" id="bouquets">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Популярные букеты</p>
+          <h2>Собранные флористами композиции</h2>
+        </div>
+        <a class="link" href="#">Смотреть все</a>
+      </div>
+      <div class="cards">
+        <article class="product">
+          <div class="product__image alt-rose">Ранункулюсы и садовые розы</div>
+          <div class="product__body">
+            <h3>Солнечный сад</h3>
+            <p>Тёплая палитра, много текстуры и ароматные акценты.</p>
+            <div class="product__footer">
+              <span class="price">3 850 ₽</span>
+              <button class="btn ghost">В корзину</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="product__image alt-peony">Пионы и гвоздика</div>
+          <div class="product__body">
+            <h3>Нежное облако</h3>
+            <p>Пастельные тона и воздушная упаковка для трепетных моментов.</p>
+            <div class="product__footer">
+              <span class="price">4 100 ₽</span>
+              <button class="btn ghost">В корзину</button>
+            </div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="product__image alt-eucalyptus">Эвкалипт и орхидея</div>
+          <div class="product__body">
+            <h3>Северное сияние</h3>
+            <p>Контраст холодных оттенков и яркого акцента фаленопсиса.</p>
+            <div class="product__footer">
+              <span class="price">4 600 ₽</span>
+              <button class="btn ghost">В корзину</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="two-column" id="collections">
+      <div class="section-header">
+        <p class="eyebrow">Коллекции сезона</p>
+        <h2>Букеты на разные поводы</h2>
+        <p class="lede">Свадебные композиции, подписка на еженедельную доставку и букеты для офиса — выберите готовый набор или соберите свой.</p>
+        <div class="pill-group">
+          <span class="pill">Свадебные</span>
+          <span class="pill">День рождения</span>
+          <span class="pill">Для дома</span>
+          <span class="pill">Для офиса</span>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="number">01</div>
+          <h3>Расскажите о событии</h3>
+          <p>Мы подбираем цветы по атмосфере, месту проведения и времени суток.</p>
+        </div>
+        <div class="step">
+          <div class="number">02</div>
+          <h3>Согласуем эскиз</h3>
+          <p>Флорист отправит варианты ленты, упаковки и формы композиции.</p>
+        </div>
+        <div class="step">
+          <div class="number">03</div>
+          <h3>Доставка в нужный момент</h3>
+          <p>Курьер привезёт букет вовремя, а вам отправим фото получателя.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="care" id="care">
+      <div class="care__content">
+        <p class="eyebrow">Уход за цветами</p>
+        <h2>Сохраняем свежесть до 10 дней</h2>
+        <ul class="checklist">
+          <li>Профессиональная обработка стеблей и питательная смесь для воды</li>
+          <li>Доставка в термобоксах летом и в утепленных пакетах зимой</li>
+          <li>Обучаем получателя простым шагам по уходу и замене воды</li>
+        </ul>
+        <button class="btn secondary">Получить инструкцию</button>
+      </div>
+    </section>
+
+    <section class="cta" id="contact">
+      <div>
+        <p class="eyebrow">Начать подбор</p>
+        <h2>Свяжитесь с флористом</h2>
+        <p class="lede">Оставьте номер — мы предложим идеи и отправим подборку на ваш вкус в течение 15 минут.</p>
+      </div>
+      <form class="cta__form">
+        <input type="text" placeholder="Имя" aria-label="Имя">
+        <input type="tel" placeholder="Телефон" aria-label="Телефон">
+        <button class="btn primary" type="submit">Жду звонка</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <div class="logo">Bloomery</div>
+      <p>Ежедневно с 8:00 до 22:00 • Доставка по городу и области</p>
+    </div>
+    <div class="footer__links">
+      <a href="#">Instagram</a>
+      <a href="#">Telegram</a>
+      <a href="tel:+78001234567">+7 (800) 123-45-67</a>
+    </div>
+  </footer>
+</body>
+</html>
