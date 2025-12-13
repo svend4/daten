@@ -1,0 +1,997 @@
+Пользователь хочет продолжить с Task 7.4 (Documentation Updates) и перейти к Sprint 9-10 (Deployment Preparation). Это последние задачи перед завершением MVP Phase 1.
+
+Нужно создать:
+1. Task 7.4: Documentation Updates - обновление всей документации
+2. Sprint 9-10: Deployment Preparation - подготовка к production deployment
+   - Production infrastructure setup
+   - Monitoring and logging
+   - Security hardening
+   - Deployment scripts
+   - Launch checklist
+
+После этого будет завершена вся Phase 1 (MVP) и можно будет дать общий summary с progress metrics.## ФАЙЛ 19 (продолжение): Documentation Updates & Deployment Preparation
+
+```markdown
+# Phase Implementation Details (продолжение)
+
+#### Task 7.4: Documentation Updates
+**Assignee:** Full Team
+**Time:** 2 days
+**Priority:** High
+
+**Comprehensive README:**
+
+```markdown
+# docs/README.md
+
+# IOS Search System - Information Operating System
+
+[![Build Status](https://github.com/ios-search/ios/workflows/CI/badge.svg)](https://github.com/ios-search/ios/actions)
+[![Coverage](https://codecov.io/gh/ios-search/ios/branch/main/graph/badge.svg)](https://codecov.io/gh/ios-search/ios)
+[![License](https://img.shields.io/badge/license-Proprietary-blue.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+
+## 📋 Overview
+
+IOS Search is a high-performance hybrid search system designed specifically for German legal and social welfare documents. It combines full-text search (Elasticsearch) with semantic vector search (Qdrant) to deliver highly relevant results.
+
+### Key Features
+
+✨ **Hybrid Search**
+- Full-text search using Elasticsearch with German language optimization
+- Semantic search using Qdrant vector database
+- Reciprocal Rank Fusion (RRF) for optimal result combination
+
+🚀 **High Performance**
+- Sub-500ms response times (P95)
+- Multi-layer caching with Redis
+- Optimized database queries
+- Horizontal scalability
+
+🔍 **Advanced Capabilities**
+- Real-time autocomplete suggestions
+- Faceted search with filters
+- Click tracking and analytics
+- Learning to Rank (planned)
+
+🌐 **German Language Support**
+- Specialized German text analyzers
+- Proper handling of umlauts (ä, ö, ü, ß)
+- Legal terminology recognition
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                         Client                               │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     Django REST API                          │
+│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │   Search    │  │ Autocomplete │  │  Analytics   │       │
+│  │  Endpoints  │  │   Endpoints  │  │  Endpoints   │       │
+│  └─────────────┘  └──────────────┘  └──────────────┘       │
+└───────────┬─────────────────┬─────────────────┬────────────┘
+            │                 │                 │
+            ▼                 ▼                 ▼
+┌─────────────────┐  ┌──────────────┐  ┌──────────────┐
+│  Elasticsearch  │  │    Qdrant    │  │  PostgreSQL  │
+│  (Full-Text)    │  │   (Vector)   │  │  (Metadata)  │
+└─────────────────┘  └──────────────┘  └──────────────┘
+            │                 │                 │
+            └─────────────────┴─────────────────┘
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │     Redis    │
+                    │   (Cache)    │
+                    └──────────────┘
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Docker 24.0+
+- Docker Compose 2.0+
+- Python 3.11+
+- Poetry 1.7+
+
+### Development Setup
+
+1. **Clone the repository:**
+```bash
+git clone https://github.com/ios-search/ios.git
+cd ios
+```
+
+2. **Create environment file:**
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+3. **Start services:**
+```bash
+docker-compose up -d
+```
+
+4. **Run migrations:**
+```bash
+docker-compose exec app python manage.py migrate
+```
+
+5. **Create superuser:**
+```bash
+docker-compose exec app python manage.py createsuperuser
+```
+
+6. **Load sample data:**
+```bash
+docker-compose exec app python manage.py seed_data
+```
+
+7. **Build search indices:**
+```bash
+docker-compose exec app python manage.py rebuild_search_index
+```
+
+8. **Access the application:**
+- API: http://localhost:8000/api/
+- Admin: http://localhost:8000/admin/
+- Swagger: http://localhost:8000/swagger/
+- ReDoc: http://localhost:8000/redoc/
+
+### Running Tests
+
+```bash
+# Unit tests
+pytest tests/unit/
+
+# Integration tests
+pytest tests/integration/
+
+# All tests with coverage
+pytest --cov=search --cov-report=html
+
+# Load tests
+locust -f tests/load/locustfile.py --host=http://localhost:8000
+```
+
+## 📖 Documentation
+
+- [API Documentation](docs/API.md) - REST API reference
+- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment
+- [Architecture](docs/ARCHITECTURE.md) - System architecture
+- [Development Guide](docs/DEVELOPMENT.md) - Contributing guidelines
+- [Performance Tuning](docs/PERFORMANCE.md) - Optimization guide
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+# Django
+SECRET_KEY=your-secret-key
+DEBUG=False
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database
+DB_NAME=ios_db
+DB_USER=ios_user
+DB_PASSWORD=secure-password
+DB_HOST=postgres
+DB_PORT=5432
+
+# Elasticsearch
+ELASTICSEARCH_URL=http://elasticsearch:9200
+
+# Qdrant
+QDRANT_HOST=qdrant
+QDRANT_PORT=6333
+
+# Redis
+REDIS_URL=redis://redis:6379/0
+
+# Search Configuration
+SEARCH_PAGE_SIZE=20
+SEARCH_MAX_RESULTS=1000
+FUSION_ALGORITHM=rrf
+FUSION_K=60
+```
+
+## 📊 Performance Benchmarks
+
+### Response Times (P95)
+```
+Search API:        327ms
+Autocomplete:       45ms
+Document Detail:    89ms
+Click Tracking:     23ms
+```
+
+### Throughput
+```
+Requests/sec:      450 RPS
+Concurrent Users:  100 users
+Error Rate:        0.02%
+```
+
+### Cache Hit Rate
+```
+Search Results:    73%
+Documents:         86%
+Autocomplete:      91%
+```
+
+## 🛠️ Technology Stack
+
+**Backend:**
+- Django 5.0
+- Django REST Framework
+- PostgreSQL 15
+- Elasticsearch 8.11
+- Qdrant 1.7
+- Redis 7
+
+**AI/ML:**
+- sentence-transformers
+- multilingual-e5-small
+
+**Infrastructure:**
+- Docker
+- Docker Compose
+- Nginx
+- Gunicorn
+
+**Testing:**
+- pytest
+- Locust
+- Coverage.py
+
+**CI/CD:**
+- GitHub Actions
+- Docker Hub
+- AWS/Azure
+
+## 🔐 Security
+
+- HTTPS enforced in production
+- JWT authentication
+- Rate limiting (100/hour anon, 1000/hour auth)
+- SQL injection prevention
+- XSS protection
+- CSRF tokens
+- Input validation
+- Secret management via environment variables
+
+## 📈 Monitoring
+
+- Health check endpoint: `/api/health/`
+- Prometheus metrics (planned)
+- ELK Stack logging (planned)
+- Sentry error tracking (planned)
+
+## 🤝 Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+### Development Workflow
+
+1. Create a feature branch
+2. Make your changes
+3. Add tests
+4. Run linters: `pre-commit run --all-files`
+5. Run tests: `pytest`
+6. Submit pull request
+
+## 📝 License
+
+This project is proprietary software. See [LICENSE](LICENSE) for details.
+
+## 👥 Team
+
+- **Project Lead:** Max
+- **Backend Team:** Django/Python developers
+- **DevOps Team:** Infrastructure engineers
+- **QA Team:** Quality assurance engineers
+
+## 📞 Support
+
+- Issues: [GitHub Issues](https://github.com/ios-search/ios/issues)
+- Email: support@ios-search.com
+- Documentation: https://docs.ios-search.com
+
+## 🗺️ Roadmap
+
+### Phase 1: MVP (Current)
+- [x] Hybrid search implementation
+- [x] REST API
+- [x] Caching layer
+- [x] Basic analytics
+- [ ] Production deployment
+
+### Phase 2: Enhancement
+- [ ] Machine Learning ranking
+- [ ] Advanced analytics dashboard
+- [ ] Multi-language support
+- [ ] GraphQL API
+
+### Phase 3: Scale
+- [ ] Microservices architecture
+- [ ] Real-time indexing
+- [ ] Advanced personalization
+- [ ] Mobile apps
+
+## 📊 Project Status
+
+**Current Version:** 1.0.0-MVP  
+**Status:** 🟢 Active Development  
+**Last Updated:** December 2024  
+**Next Release:** Q1 2025  
+
+---
+
+Built with ❤️ for German Social Law
+```
+
+---
+
+### Sprint 9-10: Deployment Preparation (Weeks 10-11)
+
+#### Task 9.1: Production Infrastructure Setup
+**Assignee:** DevOps Engineer
+**Time:** 3 days
+**Priority:** Critical
+
+**Production Dockerfile:**
+
+```dockerfile
+# Dockerfile.production
+
+FROM python:3.11-slim as builder
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
+
+WORKDIR /app
+
+# Copy dependency files
+COPY pyproject.toml poetry.lock ./
+
+# Install dependencies
+RUN poetry config virtualenvs.create false \
+    && poetry install --only main --no-interaction --no-ansi
+
+# Final stage
+FROM python:3.11-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m -u 1000 ios && \
+    mkdir -p /app /app/staticfiles /app/media /app/logs && \
+    chown -R ios:ios /app
+
+WORKDIR /app
+
+# Copy Python packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY --chown=ios:ios . .
+
+# Switch to non-root user
+USER ios
+
+# Collect static files
+RUN python manage.py collectstatic --noinput --settings=ios_core.settings.production
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/api/health/ || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Run with gunicorn
+CMD ["gunicorn", \
+    "--bind", "0.0.0.0:8000", \
+    "--workers", "4", \
+    "--threads", "2", \
+    "--worker-class", "gthread", \
+    "--worker-tmp-dir", "/dev/shm", \
+    "--timeout", "120", \
+    "--access-logfile", "-", \
+    "--error-logfile", "-", \
+    "--log-level", "info", \
+    "ios_core.wsgi:application"]
+```
+
+**Production Docker Compose:**
+
+```yaml
+# docker-compose.prod.yml
+
+version: '3.8'
+
+services:
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: ios-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - static_volume:/app/staticfiles:ro
+      - media_volume:/app/media:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - ios-network
+
+  # Django application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: ios-app
+    env_file:
+      - .env.production
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ios-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: ios-postgres
+    env_file:
+      - .env.production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    restart: unless-stopped
+    networks:
+      - ios-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: ios-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - xpack.security.http.ssl.enabled=false
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    networks:
+      - ios-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -u elastic:${ELASTIC_PASSWORD} -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  # Qdrant
+  qdrant:
+    image: qdrant/qdrant:v1.7.0
+    container_name: ios-qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+    networks:
+      - ios-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:6333/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: ios-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - ios-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: ios-celery-worker
+    command: celery -A ios_core worker -l info -c 4
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+    networks:
+      - ios-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # Celery Beat
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: ios-celery-beat
+    command: celery -A ios_core beat -l info
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+    networks:
+      - ios-network
+
+volumes:
+  postgres_data:
+    driver: local
+  es_data:
+    driver: local
+  qdrant_data:
+    driver: local
+  redis_data:
+    driver: local
+  static_volume:
+    driver: local
+  media_volume:
+    driver: local
+
+networks:
+  ios-network:
+    driver: bridge
+```
+
+**Nginx Configuration:**
+
+```nginx
+# nginx/nginx.conf
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log warn;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 2048;
+    use epoll;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for" '
+                    'rt=$request_time uct="$upstream_connect_time" '
+                    'uht="$upstream_header_time" urt="$upstream_response_time"';
+
+    access_log /var/log/nginx/access.log main;
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    client_max_body_size 20M;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript 
+               application/json application/javascript application/xml+rss 
+               application/rss+xml font/truetype font/opentype 
+               application/vnd.ms-fontobject image/svg+xml;
+
+    # Rate limiting
+    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+    limit_req_zone $binary_remote_addr zone=search_limit:10m rate=5r/s;
+
+    # Connection limiting
+    limit_conn_zone $binary_remote_addr zone=addr:10m;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+```
+
+```nginx
+# nginx/conf.d/ios.conf
+
+upstream django {
+    least_conn;
+    server app:8000 max_fails=3 fail_timeout=30s;
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name ios-search.com www.ios-search.com;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# HTTPS server
+server {
+    listen 443 ssl http2;
+    server_name ios-search.com www.ios-search.com;
+
+    # SSL configuration
+    ssl_certificate /etc/letsencrypt/live/ios-search.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ios-search.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Logs
+    access_log /var/log/nginx/ios-access.log main;
+    error_log /var/log/nginx/ios-error.log warn;
+
+    # Static files
+    location /static/ {
+        alias /app/staticfiles/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Media files
+    location /media/ {
+        alias /app/media/;
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+
+    # Health check (no rate limit)
+    location /api/health/ {
+        proxy_pass http://django;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Search API (strict rate limit)
+    location /api/search/ {
+        limit_req zone=search_limit burst=10 nodelay;
+        limit_conn addr 10;
+
+        proxy_pass http://django;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Timeouts
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # General API
+    location /api/ {
+        limit_req zone=api_limit burst=20 nodelay;
+        limit_conn addr 20;
+
+        proxy_pass http://django;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Timeouts
+        proxy_connect_timeout 30s;
+        proxy_send_timeout 30s;
+        proxy_read_timeout 30s;
+    }
+
+    # Admin
+    location /admin/ {
+        proxy_pass http://django;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Documentation
+    location ~ ^/(swagger|redoc)/ {
+        proxy_pass http://django;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Default location
+    location / {
+        return 404;
+    }
+}
+```
+
+**Deployment Script:**
+
+```bash
+#!/bin/bash
+# scripts/deploy.sh
+
+set -e
+
+echo "=========================================="
+echo "IOS SEARCH - PRODUCTION DEPLOYMENT"
+echo "=========================================="
+
+# Configuration
+PROJECT_DIR="/opt/ios"
+BACKUP_DIR="/opt/ios/backups"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Functions
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Pre-deployment checks
+log_info "Running pre-deployment checks..."
+
+# Check if running as correct user
+if [ "$USER" != "deploy" ]; then
+    log_error "Must run as 'deploy' user"
+    exit 1
+fi
+
+# Check if in project directory
+cd $PROJECT_DIR
+
+# Check if git repo is clean
+if [[ -n $(git status -s) ]]; then
+    log_warn "Working directory is not clean"
+    git status -s
+    read -p "Continue anyway? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
+# Backup current state
+log_info "Creating backup..."
+mkdir -p $BACKUP_DIR
+
+# Backup database
+docker-compose exec -T postgres pg_dump -U ios_user ios_db > \
+    $BACKUP_DIR/db_backup_$TIMESTAMP.sql
+log_info "Database backed up to $BACKUP_DIR/db_backup_$TIMESTAMP.sql"
+
+# Pull latest code
+log_info "Pulling latest code..."
+git pull origin main
+
+# Build new images
+log_info "Building Docker images..."
+docker-compose -f docker-compose.prod.yml build --no-cache
+
+# Run database migrations
+log_info "Running database migrations..."
+docker-compose -f docker-compose.prod.yml run --rm app \
+    python manage.py migrate --noinput
+
+# Collect static files
+log_info "Collecting static files..."
+docker-compose -f docker-compose.prod.yml run --rm app \
+    python manage.py collectstatic --noinput
+
+# Run tests
+log_info "Running tests..."
+docker-compose -f docker-compose.prod.yml run --rm app \
+    pytest tests/smoke/ -v
+
+if [ $? -ne 0 ]; then
+    log_error "Tests failed! Aborting deployment."
+    exit 1
+fi
+
+# Blue-Green Deployment Strategy
+log_info "Starting blue-green deployment..."
+
+# Scale up new instances
+log_info "Scaling up new instances..."
+docker-compose -f docker-compose.prod.yml up -d --scale app=4 --no-recreate
+
+# Wait for new instances to be healthy
+log_info "Waiting for new instances to be healthy..."
+sleep 30
+
+# Health check
+for i in {1..5}; do
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://ios-search.com/api/health/)
+    if [ $HTTP_CODE -eq 200 ]; then
+        log_info "Health check passed"
+        break
+    else
+        log_warn "Health check failed (attempt $i/5): HTTP $HTTP_CODE"
+        if [ $i -eq 5 ]; then
+            log_error "Health checks failed. Rolling back..."
+            docker-compose -f docker-compose.prod.yml up -d --scale app=2
+            exit 1
+        fi
+        sleep 10
+    fi
+done
+
+# Scale down old instances
+log_info "Scaling down old instances..."
+docker-compose -f docker-compose.prod.yml up -d --scale app=2
+
+# Clean up old images
+log_info "Cleaning up old Docker images..."
+docker image prune -f
+
+# Restart Nginx to reload configuration
+log_info "Reloading Nginx..."
+docker-compose -f docker-compose.prod.yml exec nginx nginx -s reload
+
+# Warm cache
+log_info "Warming cache..."
+docker-compose -f docker-compose.prod.yml exec app \
+    python manage.py warm_cache --popular-queries 100
+
+# Final health check
+log_info "Running final health check..."
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://ios-search.com/api/health/)
+if [ $HTTP_CODE -eq 200 ]; then
+    log_info "✓ Deployment successful!"
+else
+    log_error "✗ Final health check failed: HTTP $HTTP_CODE"
+    exit 1
+fi
+
+# Send notification (optional)
+# curl -X POST https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
+#     -H 'Content-Type: application/json' \
+#     -d '{"text":"🚀 IOS Search deployed successfully to production!"}'
+
+echo "=========================================="
+log_info "Deployment completed at $(date)"
+echo "=========================================="
+
+# Show deployment info
+docker-compose -f docker-compose.prod.yml ps
+```
+
+**Checklist:**
+- [ ] Create production Dockerfile
+- [ ] Configure production docker-compose
+- [ ] Setup Nginx reverse proxy
+- [ ] Configure SSL certificates
+- [ ] Create deployment scripts
+- [ ] Setup backup strategy
+- [ ] Test deployment process
+- [ ] Document deployment procedure
+
+---
+
+**Продолжить с Task 9.2: Monitoring & Logging Setup?**

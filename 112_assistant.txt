@@ -1,0 +1,970 @@
+Продолжаю создание файлов для Production Deployment Guide. Теперь нужно создать:
+1. Operations runbooks
+2. Team onboarding guide
+3. Maintenance procedures
+
+Сейчас создам ФАЙЛ 6: Operations Runbooks# 📦 PRODUCTION DEPLOYMENT GUIDE (ПРОДОЛЖЕНИЕ)
+
+## ФАЙЛ 6: `operations/runbooks/OPERATIONS_RUNBOOKS.md`
+
+```markdown
+# Operations Runbooks
+
+## 🎯 Overview
+
+Step-by-step procedures for common operational tasks and incident response.
+
+**Runbook Index:**
+1. [API Down](#runbook-1-api-down)
+2. [High Error Rate](#runbook-2-high-error-rate)
+3. [Database Issues](#runbook-3-database-issues)
+4. [Performance Degradation](#runbook-4-performance-degradation)
+5. [Cache Problems](#runbook-5-cache-problems)
+6. [Deployment Rollback](#runbook-6-deployment-rollback)
+7. [Database Backup & Restore](#runbook-7-database-backup--restore)
+8. [Certificate Renewal](#runbook-8-certificate-renewal)
+9. [Scaling Operations](#runbook-9-scaling-operations)
+10. [Security Incident](#runbook-10-security-incident)
+
+---
+
+## RUNBOOK 1: API Down
+
+### Symptoms
+- Health check endpoint returns 503 or times out
+- Alert: "APIDown" firing in AlertManager
+- Users report service unavailable
+- Prometheus shows `up{job="ios-api"} == 0`
+
+### Impact
+- **Severity:** Critical
+- **User Impact:** Complete service outage
+- **Business Impact:** Revenue loss, reputation damage
+
+### Investigation Steps
+
+**Step 1: Check Pod Status**
+```bash
+# Check if pods are running
+kubectl get pods -n ios-production | grep ios-api
+
+# Expected: 3/3 Running
+# If not, investigate pod status
+
+# Check pod details
+kubectl describe pod <pod-name> -n ios-production
+
+# Common issues:
+# - ImagePullBackOff: Image not found
+# - CrashLoopBackOff: Application crashing
+# - Pending: Resource constraints
+```
+
+**Step 2: Check Pod Logs**
+```bash
+# Check recent logs
+kubectl logs -n ios-production deployment/ios-api --tail=100
+
+# Check for errors
+kubectl logs -n ios-production deployment/ios-api | grep -i error
+
+# Check previous pod logs (if crashed)
+kubectl logs -n ios-production deployment/ios-api --previous
+```
+
+**Step 3: Check Resource Usage**
+```bash
+# Check if resource limits exceeded
+kubectl top pods -n ios-production | grep ios-api
+
+# Check node resources
+kubectl top nodes
+
+# If resources exhausted, scale up immediately
+```
+
+**Step 4: Check Dependencies**
+```bash
+# Database
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- pg_isready
+
+# Redis
+kubectl exec -n ios-production deploy/redis -c redis -- redis-cli PING
+
+# Elasticsearch
+curl https://elasticsearch.ios-system.com/_cluster/health
+```
+
+### Resolution Procedures
+
+**Scenario A: Pods Not Running**
+```bash
+# 1. Check events
+kubectl get events -n ios-production --sort-by='.lastTimestamp' | tail -20
+
+# 2. If ImagePullBackOff:
+# - Verify image exists in registry
+# - Check registry credentials
+kubectl get secret regcred -n ios-production -o yaml
+
+# 3. If CrashLoopBackOff:
+# - Check logs for crash reason
+# - Roll back to previous version if needed
+kubectl rollout undo deployment/ios-api -n ios-production
+
+# 4. If Pending (insufficient resources):
+# - Scale down other non-critical services
+# - Or add more nodes
+kubectl scale deployment/non-critical --replicas=0 -n ios-production
+```
+
+**Scenario B: Pods Running but Unhealthy**
+```bash
+# 1. Check health endpoint directly
+kubectl exec -n ios-production deployment/ios-api -- \
+  curl -f http://localhost:8000/health
+
+# 2. If database connection issue:
+# - Check database is accessible
+# - Check credentials in secrets
+# - Restart pods to refresh connections
+kubectl rollout restart deployment/ios-api -n ios-production
+
+# 3. If out of memory:
+# - Increase memory limits
+kubectl set resources deployment/ios-api -n ios-production \
+  --limits=memory=2Gi \
+  --requests=memory=1Gi
+```
+
+**Scenario C: Traffic Overload**
+```bash
+# 1. Check request rate
+curl 'https://prometheus.ios-system.com/api/v1/query?query=rate(http_requests_total[1m])'
+
+# 2. Scale up immediately
+kubectl scale deployment/ios-api --replicas=10 -n ios-production
+
+# 3. Enable rate limiting
+kubectl patch configmap waf-config -n ios-production \
+  -p '{"data":{"RATE_LIMIT":"50"}}'
+
+# 4. Enable CloudFlare "Under Attack" mode
+curl -X PATCH "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/settings/security_level" \
+  -H "Authorization: Bearer $CF_TOKEN" \
+  -d '{"value":"under_attack"}'
+```
+
+### Prevention
+- [ ] Set up auto-scaling (HPA)
+- [ ] Configure resource requests/limits properly
+- [ ] Enable liveness/readiness probes
+- [ ] Implement circuit breakers
+- [ ] Set up load testing in CI/CD
+
+### Escalation
+- **15 minutes:** Escalate to Engineering Lead
+- **30 minutes:** Escalate to CTO
+- **1 hour:** Activate incident commander
+
+---
+
+## RUNBOOK 2: High Error Rate
+
+### Symptoms
+- Alert: "HighErrorRate" firing
+- Error rate >1% for 5+ minutes
+- Increased 5xx responses
+- User reports of failures
+
+### Impact
+- **Severity:** Critical (>5%), High (>1%)
+- **User Impact:** Service degradation
+- **Business Impact:** User experience degradation
+
+### Investigation Steps
+
+**Step 1: Identify Error Types**
+```bash
+# Check error distribution
+kubectl logs -n ios-production deployment/ios-api | \
+  grep ERROR | \
+  awk '{print $NF}' | \
+  sort | uniq -c | sort -nr | head -10
+
+# Query Prometheus for error breakdown
+curl 'https://prometheus.ios-system.com/api/v1/query?query=sum(rate(http_requests_total{status=~"5.."}[5m]))by(endpoint,status)'
+```
+
+**Step 2: Check Recent Deployments**
+```bash
+# Was there a recent deployment?
+kubectl rollout history deployment/ios-api -n ios-production
+
+# Check when last deployment occurred
+kubectl get deployment/ios-api -n ios-production -o json | \
+  jq '.metadata.annotations["deployment.kubernetes.io/revision"]'
+
+# If recent deployment, consider rollback
+```
+
+**Step 3: Check Error Logs**
+```bash
+# Get detailed error logs
+kubectl logs -n ios-production deployment/ios-api --tail=500 | \
+  grep ERROR | \
+  tail -20
+
+# Check error patterns
+# - Database connection errors?
+# - External API timeouts?
+# - Validation errors?
+# - Authentication failures?
+```
+
+**Step 4: Check Dependencies**
+```bash
+# Database query performance
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT query, mean_exec_time, calls
+    FROM pg_stat_statements
+    WHERE mean_exec_time > 100
+    ORDER BY mean_exec_time DESC
+    LIMIT 10;
+  "
+
+# Check for database locks
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT pid, query, state, wait_event_type, wait_event
+    FROM pg_stat_activity
+    WHERE state != 'idle'
+    AND wait_event IS NOT NULL;
+  "
+
+# Redis connectivity
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli --stat | head -20
+```
+
+### Resolution Procedures
+
+**Scenario A: Database Connection Errors**
+```bash
+# 1. Check connection pool
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "connection pool"
+
+# 2. Check database connections
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT COUNT(*) FROM pg_stat_activity;
+  "
+
+# 3. If pool exhausted, increase pool size
+kubectl set env deployment/ios-api -n ios-production \
+  DB_POOL_SIZE=50
+
+# 4. If database overloaded, add read replica
+# or scale database resources
+```
+
+**Scenario B: External API Failures**
+```bash
+# 1. Identify failing external service
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "external" | grep ERROR
+
+# 2. Check circuit breaker status
+curl -H "Authorization: Bearer $ADMIN_TOKEN" \
+  https://api.ios-system.com/api/admin/circuit-breakers
+
+# 3. If service is down:
+# - Enable fallback behavior
+# - Disable non-critical integrations
+kubectl set env deployment/ios-api -n ios-production \
+  ENABLE_EXTERNAL_SERVICE=false
+
+# 4. Notify users via status page
+```
+
+**Scenario C: Memory Leak/Resource Exhaustion**
+```bash
+# 1. Check memory usage trend
+kubectl top pods -n ios-production | grep ios-api
+
+# 2. If memory growing:
+# - Restart pods to free memory
+kubectl rollout restart deployment/ios-api -n ios-production
+
+# 3. Monitor for recurrence
+# If memory leak confirmed:
+# - Scale horizontally (more pods, shorter lifespan)
+# - File bug, schedule fix
+
+# 4. Temporary mitigation: Pod lifecycle
+kubectl patch deployment/ios-api -n ios-production -p \
+  '{"spec":{"template":{"spec":{"containers":[{"name":"api","lifecycle":{"preStop":{"exec":{"command":["sleep","30"]}}}}]}}}}'
+```
+
+**Scenario D: Code Bug in Recent Deployment**
+```bash
+# 1. Verify error rate started after deployment
+# Check deployment time vs error spike time
+
+# 2. Immediate rollback
+kubectl rollout undo deployment/ios-api -n ios-production
+
+# 3. Verify error rate drops
+watch -n 10 'curl -s "https://prometheus.ios-system.com/api/v1/query?query=api:http_errors:rate5m"'
+
+# 4. Investigate bug, fix, redeploy
+```
+
+### Prevention
+- [ ] Implement comprehensive error handling
+- [ ] Add circuit breakers for external services
+- [ ] Set up canary deployments
+- [ ] Increase test coverage
+- [ ] Implement feature flags for quick disable
+
+### Escalation
+- **10 minutes:** Alert Engineering team
+- **30 minutes:** Escalate to Engineering Lead
+- **If >5% error rate:** Immediate rollback authorization
+
+---
+
+## RUNBOOK 3: Database Issues
+
+### Symptoms
+- Slow query performance
+- Connection pool exhausted
+- Replication lag
+- Disk space low
+- Database locks
+
+### Impact
+- **Severity:** Critical (if down), High (if degraded)
+- **User Impact:** Slow responses or failures
+- **Business Impact:** Data integrity risk
+
+### Investigation Steps
+
+**Step 1: Check Database Status**
+```bash
+# Connection status
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  pg_isready
+
+# Check running queries
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT pid, usename, application_name, state, query, query_start
+    FROM pg_stat_activity
+    WHERE state != 'idle'
+    ORDER BY query_start;
+  "
+
+# Check database size
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT pg_size_pretty(pg_database_size('ios_production'));
+  "
+```
+
+**Step 2: Identify Slow Queries**
+```bash
+# Top 10 slow queries
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT 
+      query,
+      calls,
+      mean_exec_time,
+      max_exec_time,
+      total_exec_time
+    FROM pg_stat_statements
+    WHERE mean_exec_time > 100
+    ORDER BY mean_exec_time DESC
+    LIMIT 10;
+  "
+
+# Check for missing indexes
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT
+      schemaname,
+      tablename,
+      attname,
+      n_distinct,
+      correlation
+    FROM pg_stats
+    WHERE schemaname = 'public'
+    AND correlation < 0.1
+    ORDER BY tablename;
+  "
+```
+
+**Step 3: Check Locks**
+```bash
+# Check for blocking queries
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT
+      blocked_locks.pid AS blocked_pid,
+      blocked_activity.usename AS blocked_user,
+      blocking_locks.pid AS blocking_pid,
+      blocking_activity.usename AS blocking_user,
+      blocked_activity.query AS blocked_statement,
+      blocking_activity.query AS blocking_statement
+    FROM pg_catalog.pg_locks blocked_locks
+    JOIN pg_catalog.pg_stat_activity blocked_activity ON blocked_activity.pid = blocked_locks.pid
+    JOIN pg_catalog.pg_locks blocking_locks ON blocking_locks.locktype = blocked_locks.locktype
+    JOIN pg_catalog.pg_stat_activity blocking_activity ON blocking_activity.pid = blocking_locks.pid
+    WHERE NOT blocked_locks.granted
+    AND blocking_locks.granted;
+  "
+```
+
+**Step 4: Check Replication**
+```bash
+# Replication status
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT
+      client_addr,
+      application_name,
+      state,
+      sync_state,
+      replay_lag
+    FROM pg_stat_replication;
+  "
+
+# Replication lag
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT
+      EXTRACT(EPOCH FROM (now() - pg_last_xact_replay_timestamp())) AS lag_seconds;
+  "
+```
+
+### Resolution Procedures
+
+**Scenario A: Slow Queries**
+```bash
+# 1. Identify slow query
+# (from investigation step 2)
+
+# 2. Kill long-running query (if needed)
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT pg_cancel_backend(<pid>);
+  "
+
+# 3. Add missing index
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    CREATE INDEX CONCURRENTLY idx_documents_user_created 
+    ON documents(user_id, created_at DESC);
+  "
+
+# 4. Update query statistics
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    ANALYZE documents;
+  "
+```
+
+**Scenario B: Connection Pool Exhausted**
+```bash
+# 1. Check current connections
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT COUNT(*) as connections,
+           state
+    FROM pg_stat_activity
+    GROUP BY state;
+  "
+
+# 2. Identify idle connections
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT pid, usename, application_name, state, state_change
+    FROM pg_stat_activity
+    WHERE state = 'idle'
+    AND state_change < now() - interval '10 minutes';
+  "
+
+# 3. Terminate idle connections
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    SELECT pg_terminate_backend(pid)
+    FROM pg_stat_activity
+    WHERE state = 'idle'
+    AND state_change < now() - interval '10 minutes';
+  "
+
+# 4. Increase max_connections (if needed)
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -c "
+    ALTER SYSTEM SET max_connections = 200;
+  "
+
+# Restart database (scheduled maintenance)
+kubectl rollout restart statefulset/postgresql -n ios-production
+```
+
+**Scenario C: Replication Lag**
+```bash
+# 1. Check lag amount
+# (from investigation step 4)
+
+# 2. Check network between primary and replica
+kubectl exec -n ios-production postgresql-0 -- \
+  ping -c 5 postgresql-replica
+
+# 3. Check replica load
+kubectl top pod postgresql-replica -n ios-production
+
+# 4. If replica overloaded:
+# - Route read queries to primary temporarily
+kubectl set env deployment/ios-api -n ios-production \
+  USE_READ_REPLICA=false
+
+# 5. If lag >5 minutes:
+# - Rebuild replica from primary backup
+./scripts/database/rebuild_replica.sh
+```
+
+**Scenario D: Disk Space Low**
+```bash
+# 1. Check disk usage
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  df -h /var/lib/postgresql/data
+
+# 2. Find large tables
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    SELECT
+      schemaname,
+      tablename,
+      pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
+    FROM pg_tables
+    WHERE schemaname = 'public'
+    ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
+    LIMIT 10;
+  "
+
+# 3. Clean old data (if policy allows)
+kubectl exec -n ios-production deploy/postgresql -c postgresql -- \
+  psql -U postgres -d ios_production -c "
+    DELETE FROM audit_logs WHERE created_at < NOW() - INTERVAL '90 days';
+    VACUUM FULL audit_logs;
+  "
+
+# 4. Expand disk (urgent)
+# AWS EBS:
+aws ec2 modify-volume --volume-id vol-xxx --size 200
+
+# Then resize filesystem
+kubectl exec -n ios-production postgresql-0 -- \
+  resize2fs /dev/xvdf
+```
+
+### Prevention
+- [ ] Monitor query performance continuously
+- [ ] Implement connection pooling (PgBouncer)
+- [ ] Set up automated vacuum
+- [ ] Configure disk space alerts at 70%
+- [ ] Regular index maintenance
+- [ ] Implement read replicas for scaling
+
+### Escalation
+- **15 minutes:** Alert DBA team
+- **30 minutes:** Escalate to Engineering Lead
+- **If data corruption risk:** Immediate escalation to CTO
+
+---
+
+## RUNBOOK 4: Performance Degradation
+
+### Symptoms
+- P95 latency >500ms
+- Slow page loads
+- User complaints about speed
+- Increased timeout errors
+
+### Impact
+- **Severity:** High
+- **User Impact:** Poor user experience
+- **Business Impact:** Reduced engagement
+
+### Investigation Steps
+
+**Step 1: Identify Slow Endpoints**
+```bash
+# Query Prometheus for slow endpoints
+curl 'https://prometheus.ios-system.com/api/v1/query?query=topk(10,api:http_request_duration:p95>0.5)' | \
+  jq '.data.result[] | {endpoint: .metric.endpoint, latency: .value[1]}'
+
+# Check request distribution
+curl 'https://prometheus.ios-system.com/api/v1/query?query=sum(rate(http_requests_total[5m]))by(endpoint)' | \
+  jq '.data.result | sort_by(.value[1] | tonumber) | reverse | .[0:10]'
+```
+
+**Step 2: Check System Resources**
+```bash
+# CPU usage
+kubectl top pods -n ios-production | grep ios-api
+
+# Memory usage
+kubectl top pods -n ios-production | grep ios-api
+
+# Node resources
+kubectl top nodes
+
+# Network I/O
+kubectl exec -n ios-production deployment/ios-api -- \
+  iftop -t -s 10
+```
+
+**Step 3: Check Cache Performance**
+```bash
+# Redis hit rate
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli INFO stats | grep keyspace
+
+# Calculate hit rate
+# hits / (hits + misses)
+
+# Check cache size
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli INFO memory | grep used_memory_human
+
+# Check slow Redis commands
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli SLOWLOG GET 10
+```
+
+**Step 4: Check External Dependencies**
+```bash
+# Database performance (already covered in Runbook 3)
+
+# External API latency
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "external_api" | \
+  grep "duration" | \
+  awk '{print $NF}' | \
+  sort -n | \
+  tail -20
+```
+
+### Resolution Procedures
+
+**Scenario A: CPU Bottleneck**
+```bash
+# 1. Scale horizontally immediately
+kubectl scale deployment/ios-api --replicas=10 -n ios-production
+
+# 2. Check for CPU-intensive operations
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "slow" | \
+  tail -50
+
+# 3. Optimize code (longer-term)
+# - Profile application
+# - Optimize algorithms
+# - Move heavy processing to background workers
+
+# 4. Consider vertical scaling (more CPU per pod)
+kubectl set resources deployment/ios-api -n ios-production \
+  --limits=cpu=2 \
+  --requests=cpu=1
+```
+
+**Scenario B: Memory Pressure**
+```bash
+# 1. Check for memory leaks
+kubectl top pods -n ios-production --sort-by=memory
+
+# 2. Restart pods with high memory
+kubectl delete pod <high-memory-pod> -n ios-production
+
+# 3. Increase memory limits (if needed)
+kubectl set resources deployment/ios-api -n ios-production \
+  --limits=memory=2Gi \
+  --requests=memory=1Gi
+
+# 4. Optimize memory usage
+# - Review object retention
+# - Implement streaming for large datasets
+# - Clear caches more frequently
+```
+
+**Scenario C: Database Slow Queries**
+```bash
+# (See Runbook 3: Database Issues)
+
+# Quick fixes:
+# 1. Add missing indexes
+# 2. Optimize N+1 queries
+# 3. Implement query result caching
+# 4. Use database connection pooling
+```
+
+**Scenario D: Cache Miss Rate High**
+```bash
+# 1. Warm cache with popular content
+curl -X POST https://api.ios-system.com/api/admin/cache/warm \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -d '{"document_limit": 1000}'
+
+# 2. Increase cache TTL for stable data
+kubectl set env deployment/ios-api -n ios-production \
+  CACHE_TTL=3600
+
+# 3. Increase Redis memory
+kubectl set resources statefulset/redis -n ios-production \
+  --limits=memory=4Gi
+
+# 4. Review cache invalidation strategy
+# - Are we invalidating too aggressively?
+# - Can we use cache-aside pattern?
+```
+
+**Scenario E: External API Latency**
+```bash
+# 1. Implement timeout and retry logic
+# Already in code, but verify:
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "timeout"
+
+# 2. Enable circuit breaker
+kubectl set env deployment/ios-api -n ios-production \
+  CIRCUIT_BREAKER_ENABLED=true
+
+# 3. Cache external API responses
+kubectl set env deployment/ios-api -n ios-production \
+  CACHE_EXTERNAL_API=true \
+  EXTERNAL_API_CACHE_TTL=300
+
+# 4. Move to async processing
+# - Queue requests to background workers
+# - Return immediately to user
+```
+
+### Prevention
+- [ ] Implement APM (Application Performance Monitoring)
+- [ ] Regular load testing
+- [ ] Code profiling in development
+- [ ] Cache warming on deployment
+- [ ] Database query optimization review
+- [ ] Implement auto-scaling
+
+### Escalation
+- **30 minutes:** Alert Engineering team
+- **1 hour:** Escalate to Engineering Lead
+- **If user-facing impact significant:** Coordinate with Customer Success
+
+---
+
+## RUNBOOK 5: Cache Problems
+
+### Symptoms
+- High cache miss rate
+- Redis memory full
+- Slow Redis responses
+- Stale data being served
+
+### Impact
+- **Severity:** Medium to High
+- **User Impact:** Slower responses, occasional stale data
+- **Business Impact:** Increased database load
+
+### Investigation Steps
+
+**Step 1: Check Redis Status**
+```bash
+# Connection test
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli PING
+
+# Check memory usage
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli INFO memory
+
+# Check key statistics
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli INFO keyspace
+
+# Check client connections
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CLIENT LIST
+```
+
+**Step 2: Analyze Cache Performance**
+```bash
+# Hit rate calculation
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli INFO stats | grep -E "keyspace_hits|keyspace_misses"
+
+# Calculate: hits / (hits + misses)
+
+# Check eviction policy
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CONFIG GET maxmemory-policy
+
+# Check evicted keys
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli INFO stats | grep evicted_keys
+```
+
+**Step 3: Identify Large Keys**
+```bash
+# Find large keys
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli --bigkeys
+
+# Sample specific keys
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli --scan --pattern "session:*" | head -10
+
+# Get key size
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli DEBUG OBJECT <key>
+```
+
+### Resolution Procedures
+
+**Scenario A: Memory Full**
+```bash
+# 1. Check memory policy
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CONFIG GET maxmemory-policy
+
+# If not allkeys-lru, set it:
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CONFIG SET maxmemory-policy allkeys-lru
+
+# 2. Flush unnecessary keys
+# Sessions older than 24h
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli --scan --pattern "session:*" | \
+  while read key; do
+    ttl=$(redis-cli TTL "$key")
+    if [ $ttl -lt 0 ]; then
+      redis-cli DEL "$key"
+    fi
+  done
+
+# 3. Increase memory limit
+kubectl set resources statefulset/redis -n ios-production \
+  --limits=memory=8Gi \
+  --requests=memory=4Gi
+
+# 4. Scale to Redis cluster (long-term)
+```
+
+**Scenario B: Low Hit Rate**
+```bash
+# 1. Identify frequently accessed data not cached
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "cache_miss" | \
+  awk '{print $NF}' | \
+  sort | uniq -c | sort -nr | head -20
+
+# 2. Implement caching for hot data
+# Update application code to cache these items
+
+# 3. Warm cache on startup
+curl -X POST https://api.ios-system.com/api/admin/cache/warm \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+
+# 4. Increase TTL for stable data
+kubectl set env deployment/ios-api -n ios-production \
+  CACHE_TTL_DOCUMENTS=3600 \
+  CACHE_TTL_USERS=1800
+```
+
+**Scenario C: Stale Data**
+```bash
+# 1. Identify stale keys
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli --scan --pattern "document:*" | \
+  while read key; do
+    ttl=$(redis-cli TTL "$key")
+    echo "$key: $ttl"
+  done | sort -t: -k2 -nr | head -20
+
+# 2. Flush stale keys manually
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli --scan --pattern "document:*" | \
+  xargs redis-cli DEL
+
+# 3. Fix cache invalidation logic
+# - Verify invalidation on updates
+# - Implement cache versioning
+# - Add cache headers
+
+# 4. Force cache refresh
+curl -X POST https://api.ios-system.com/api/admin/cache/invalidate \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -d '{"pattern": "document:*"}'
+```
+
+**Scenario D: Redis Connection Issues**
+```bash
+# 1. Check connection pool
+kubectl logs -n ios-production deployment/ios-api | \
+  grep "redis" | grep "connection"
+
+# 2. Check Redis max clients
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CONFIG GET maxclients
+
+# 3. Increase max clients if needed
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CONFIG SET maxclients 10000
+
+# 4. Close idle connections
+kubectl exec -n ios-production deploy/redis -c redis -- \
+  redis-cli CLIENT LIST | \
+  grep "idle=[5-9][0-9][0-9]" | \
+  awk '{print $2}' | \
+  cut -d= -f2 | \
+  xargs -I {} redis-cli CLIENT KILL ID {}
+```
+
+### Prevention
+- [ ] Monitor cache hit rate (>90%)
+- [ ] Implement cache warming
+- [ ] Set appropriate TTLs
+- [ ] Regular cache key audits
+- [ ] Implement Redis cluster for HA
+- [ ] Cache size alerts
+
+### Escalation
+- **30 minutes:** Alert Engineering team
+- **1 hour:** Escalate to Engineering Lead
+
+---
+
+**Продолжение следует...**
+
+Создано 5 из 10 runbooks:
+- ✅ API Down
+- ✅ High Error Rate
+- ✅ Database Issues
+- ✅ Performance Degradation
+- ✅ Cache Problems
+
+**Следующие runbooks:**
+- Deployment Rollback
+- Database Backup & Restore
+- Certificate Renewal
+- Scaling Operations
+- Security Incident
+
+**Готовы продолжить?**
