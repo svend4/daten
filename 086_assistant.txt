@@ -1,0 +1,871 @@
+Пользователь готов продолжить. Нужно создать следующие файлы для Week 23-24:
+- Kubernetes manifests
+- CI/CD pipeline (GitHub Actions)
+- Monitoring configuration (Prometheus, Grafana)
+- Backup scripts
+- Deployment documentation
+
+Продолжаю с Day 133-134 (Kubernetes и CI/CD).# 🚀 WEEK 23-24: PRODUCTION DEPLOYMENT (ПРОДОЛЖЕНИЕ)
+
+## DAY 133-134: KUBERNETES & CI/CD
+
+---
+
+## ФАЙЛ 7: `kubernetes/namespace.yaml`
+
+```yaml
+# Kubernetes Namespace for IOS System
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ios-system
+  labels:
+    name: ios-system
+    environment: production
+```
+
+---
+
+## ФАЙЛ 8: `kubernetes/configmap.yaml`
+
+```yaml
+# ConfigMap for non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ios-config
+  namespace: ios-system
+data:
+  # Application
+  APP_ENV: "production"
+  LOG_LEVEL: "info"
+  DEBUG: "false"
+  
+  # Database
+  DB_POOL_SIZE: "20"
+  DB_MAX_OVERFLOW: "40"
+  
+  # URLs
+  DATABASE_URL: "postgresql+asyncpg://ios:$(DB_PASSWORD)@postgres-service:5432/ios_production"
+  REDIS_URL: "redis://redis-service:6379/0"
+  REDIS_CACHE_URL: "redis://redis-service:6379/1"
+  ELASTICSEARCH_URL: "http://elasticsearch-service:9200"
+  QDRANT_URL: "http://qdrant-service:6333"
+  
+  # Monitoring
+  PROMETHEUS_ENABLED: "true"
+  
+  # External URLs
+  APP_URL: "https://api.ios-system.com"
+  FRONTEND_URL: "https://ios-system.com"
+```
+
+---
+
+## ФАЙЛ 9: `kubernetes/secrets.yaml`
+
+```yaml
+# Secrets - use SealedSecrets or external secrets management in production
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ios-secrets
+  namespace: ios-system
+type: Opaque
+stringData:
+  # Database
+  DB_PASSWORD: "CHANGE_ME"
+  
+  # Security
+  JWT_SECRET_KEY: "CHANGE_ME_64_CHARS"
+  JWT_REFRESH_SECRET_KEY: "CHANGE_ME_64_CHARS"
+  ENCRYPTION_KEY: "CHANGE_ME_32_BYTES_BASE64"
+  
+  # OAuth
+  GOOGLE_CLIENT_ID: "your_google_client_id"
+  GOOGLE_CLIENT_SECRET: "your_google_client_secret"
+  MICROSOFT_CLIENT_ID: "your_microsoft_client_id"
+  MICROSOFT_CLIENT_SECRET: "your_microsoft_client_secret"
+  GITHUB_CLIENT_ID: "your_github_client_id"
+  GITHUB_CLIENT_SECRET: "your_github_client_secret"
+  
+  # External Services
+  SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/YOUR/WEBHOOK"
+  SMTP_USER: "your@email.com"
+  SMTP_PASSWORD: "your_password"
+  
+  # Monitoring
+  SENTRY_DSN: "https://your_sentry_dsn"
+  GRAFANA_ADMIN_PASSWORD: "CHANGE_ME"
+  
+  # AWS (for backups)
+  AWS_ACCESS_KEY_ID: "your_aws_key"
+  AWS_SECRET_ACCESS_KEY: "your_aws_secret"
+```
+
+---
+
+## ФАЙЛ 10: `kubernetes/postgres-statefulset.yaml`
+
+```yaml
+# PostgreSQL StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: ios-system
+spec:
+  serviceName: postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16-alpine
+        ports:
+        - containerPort: 5432
+          name: postgres
+        env:
+        - name: POSTGRES_USER
+          value: "ios"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ios-secrets
+              key: DB_PASSWORD
+        - name: POSTGRES_DB
+          value: "ios_production"
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-config
+          mountPath: /etc/postgresql/postgresql.conf
+          subPath: postgresql.conf
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - ios
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - ios
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: postgres-config
+        configMap:
+          name: postgres-config
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 50Gi
+
+---
+# PostgreSQL Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: ios-system
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+  clusterIP: None
+
+---
+# PostgreSQL Config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: ios-system
+data:
+  postgresql.conf: |
+    max_connections = 200
+    shared_buffers = 1GB
+    effective_cache_size = 3GB
+    maintenance_work_mem = 256MB
+    checkpoint_completion_target = 0.9
+    wal_buffers = 16MB
+    default_statistics_target = 100
+    random_page_cost = 1.1
+    effective_io_concurrency = 200
+    work_mem = 5MB
+    min_wal_size = 1GB
+    max_wal_size = 4GB
+```
+
+---
+
+## ФАЙЛ 11: `kubernetes/api-deployment.yaml`
+
+```yaml
+# API Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ios-api
+  namespace: ios-system
+  labels:
+    app: ios-api
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ios-api
+  template:
+    metadata:
+      labels:
+        app: ios-api
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: api
+        image: ios-system/api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: WORKERS
+          value: "4"
+        envFrom:
+        - configMapRef:
+            name: ios-config
+        - secretRef:
+            name: ios-secrets
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+        - name: data
+          mountPath: /app/data
+      volumes:
+      - name: logs
+        emptyDir: {}
+      - name: data
+        persistentVolumeClaim:
+          claimName: ios-data-pvc
+
+---
+# API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: ios-api-service
+  namespace: ios-system
+spec:
+  selector:
+    app: ios-api
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP
+
+---
+# PersistentVolumeClaim for data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ios-data-pvc
+  namespace: ios-system
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 20Gi
+```
+
+---
+
+## ФАЙЛ 12: `kubernetes/redis-deployment.yaml`
+
+```yaml
+# Redis Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: ios-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        args:
+        - redis-server
+        - --maxmemory
+        - 1gb
+        - --maxmemory-policy
+        - allkeys-lru
+        - --save
+        - "60 1000"
+        - --appendonly
+        - "yes"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: redis-storage
+        persistentVolumeClaim:
+          claimName: redis-pvc
+
+---
+# Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: ios-system
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+
+---
+# Redis PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: ios-system
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 10Gi
+```
+
+---
+
+## ФАЙЛ 13: `kubernetes/ingress.yaml`
+
+```yaml
+# Nginx Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ios-ingress
+  namespace: ios-system
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://ios-system.com"
+spec:
+  tls:
+  - hosts:
+    - api.ios-system.com
+    secretName: ios-tls-cert
+  rules:
+  - host: api.ios-system.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ios-api-service
+            port:
+              number: 8000
+```
+
+---
+
+## ФАЙЛ 14: `kubernetes/hpa.yaml`
+
+```yaml
+# Horizontal Pod Autoscaler for API
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ios-api-hpa
+  namespace: ios-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ios-api
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      - type: Pods
+        value: 2
+        periodSeconds: 30
+      selectPolicy: Max
+```
+
+---
+
+## ФАЙЛ 15: `.github/workflows/ci-cd.yaml`
+
+```yaml
+# CI/CD Pipeline for IOS System
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ============================================
+  # Test Job
+  # ============================================
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ios_test
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: ios_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Run linting
+      run: |
+        pip install flake8 black mypy
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        black --check .
+        mypy ios_core --ignore-missing-imports
+    
+    - name: Run tests
+      env:
+        DATABASE_URL: postgresql://ios_test:test_password@localhost:5432/ios_test
+        REDIS_URL: redis://localhost:6379/0
+        JWT_SECRET_KEY: test_secret_key_for_ci
+      run: |
+        pytest tests/ -v --cov=ios_core --cov-report=xml --cov-report=html
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  # ============================================
+  # Security Scan Job
+  # ============================================
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-results.sarif'
+    
+    - name: Run Bandit security scan
+      run: |
+        pip install bandit
+        bandit -r ios_core -f json -o bandit-report.json || true
+    
+    - name: Upload Bandit report
+      uses: actions/upload-artifact@v4
+      with:
+        name: bandit-report
+        path: bandit-report.json
+
+  # ============================================
+  # Build and Push Docker Image
+  # ============================================
+  build:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.event_name != 'pull_request'
+    
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: Dockerfile.production
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
+        cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+    
+    - name: Scan Docker image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        format: 'sarif'
+        output: 'trivy-image-results.sarif'
+
+  # ============================================
+  # Deploy to Staging
+  # ============================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: https://staging-api.ios-system.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+    
+    - name: Configure kubectl
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > $HOME/.kube/config
+    
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl set image deployment/ios-api \
+          api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          -n ios-system-staging
+        kubectl rollout status deployment/ios-api -n ios-system-staging
+    
+    - name: Run smoke tests
+      run: |
+        sleep 30
+        curl -f https://staging-api.ios-system.com/health || exit 1
+
+  # ============================================
+  # Deploy to Production
+  # ============================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://api.ios-system.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+    
+    - name: Configure kubectl
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG_PRODUCTION }}" | base64 -d > $HOME/.kube/config
+    
+    - name: Deploy to Kubernetes (Blue-Green)
+      run: |
+        # Update deployment
+        kubectl set image deployment/ios-api \
+          api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+          -n ios-system
+        
+        # Wait for rollout
+        kubectl rollout status deployment/ios-api -n ios-system --timeout=5m
+    
+    - name: Run smoke tests
+      run: |
+        sleep 30
+        curl -f https://api.ios-system.com/health || exit 1
+    
+    - name: Notify Slack
+      if: always()
+      uses: slackapi/slack-github-action@v1
+      with:
+        webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+        webhook-type: incoming-webhook
+        payload: |
+          {
+            "text": "Production Deployment: ${{ job.status }}",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Production deployment *${{ job.status }}*\nCommit: `${{ github.sha }}`\nBranch: `${{ github.ref_name }}`"
+                }
+              }
+            ]
+          }
+
+  # ============================================
+  # Create Release
+  # ============================================
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        git log $(git describe --tags --abbrev=0)..HEAD --oneline --pretty=format:"- %s (%h)" > CHANGELOG.txt
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        cat CHANGELOG.txt >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    
+    - name: Get version
+      id: version
+      run: echo "version=$(date +'%Y.%m.%d')-${{ github.run_number }}" >> $GITHUB_OUTPUT
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.version.outputs.version }}
+        release_name: Release v${{ steps.version.outputs.version }}
+        body: |
+          ## Changes
+          ${{ steps.changelog.outputs.changelog }}
+          
+          ## Docker Image
+          `${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}`
+        draft: false
+        prerelease: false
+```
+
+---
+
+**Продолжение следует...**
+
+Создано:
+- ✅ Kubernetes manifests (namespace, configmap, secrets)
+- ✅ StatefulSet для PostgreSQL
+- ✅ Deployment для API, Redis
+- ✅ Service, Ingress, HPA
+- ✅ Complete CI/CD pipeline (GitHub Actions)
+
+**Следующие файлы:**
+- Monitoring configuration (Prometheus, Grafana)
+- Backup & restore scripts
+- Deployment documentation
+- Runbooks
+
+**Готовы продолжить?**
