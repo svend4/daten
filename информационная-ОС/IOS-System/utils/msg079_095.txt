@@ -1,0 +1,20 @@
+### Rate Limiting
+
+- Respect `Retry-After` headers
+- Implement exponential backoff
+- Cache responses when possible
+- Batch requests
+
+### Security
+
+- Always verify webhook signatures
+- Use HTTPS for webhooks
+- Validate all inputs
+- Implement request timeouts
+- Log security events
+
+---
+
+## Examples
+
+### Complete Application

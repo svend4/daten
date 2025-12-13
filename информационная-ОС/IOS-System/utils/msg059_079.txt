@@ -1,0 +1,9 @@
+**Enhancement Types:**
+- `grammar`: Fix errors
+- `style`: Improve writing
+- `clarity`: Make clearer
+- `formality`: Increase formality
+- `conciseness`: Make shorter
+- `completeness`: Add details
+
+### Template Filling

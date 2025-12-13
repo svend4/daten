@@ -1,0 +1,6 @@
+Отсутствует:
+- Visual workflow builder
+- Automated routing
+- Approval workflows
+- Scheduled tasks UI
+- Webhook triggers

@@ -1,0 +1,3 @@
+Identifies queries that frequently return no results, helping find content gaps.
+
+### Slow Queries

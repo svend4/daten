@@ -1,0 +1,12 @@
+---
+
+## Best Practices
+
+### API Keys
+
+- **Never commit** API keys to version control
+- Use **environment variables**
+- Rotate keys regularly
+- Use different keys for dev/prod
+
+### Error Handling

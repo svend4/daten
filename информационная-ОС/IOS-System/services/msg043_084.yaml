@@ -1,0 +1,38 @@
+# Elasticsearch Configuration
+
+cluster.name: ios-es-cluster
+
+# Network
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+# Discovery
+discovery.type: multi-node
+
+# Paths
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+
+# Memory
+bootstrap.memory_lock: true
+
+# Security
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+
+# Monitoring
+xpack.monitoring.collection.enabled: true
+
+# Index settings
+action.auto_create_index: true
+action.destructive_requires_name: true
+
+# Thread pool
+thread_pool.write.queue_size: 1000
+thread_pool.search.queue_size: 1000
+
+# Circuit breakers
+indices.breaker.total.limit: 70%
+indices.breaker.request.limit: 40%

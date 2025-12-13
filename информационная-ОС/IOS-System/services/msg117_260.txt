@@ -1,0 +1,139 @@
+---
+
+## 📚 LEARNING RESOURCES
+
+### Internal Documentation
+- Architecture Overview: `/docs/architecture/`
+- API Documentation: `https://api.ios-system.com/docs`
+- Runbooks: `/operations/runbooks/`
+- Code Standards: `/docs/coding-standards.md`
+
+### External Resources
+
+**Python/Django:**
+- Django Documentation: https://docs.djangoproject.com/
+- Django REST Framework: https://www.django-rest-framework.org/
+- Python Best Practices: https://realpython.com/
+
+**Kubernetes:**
+- Kubernetes Documentation: https://kubernetes.io/docs/
+- Kubernetes Patterns: https://k8spatterns.io/
+- kubectl Cheat Sheet: https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+**General:**
+- Git Book: https://git-scm.com/book/en/v2
+- PostgreSQL Tutorial: https://www.postgresqltutorial.com/
+- Redis Documentation: https://redis.io/documentation
+
+### Training & Courses
+
+**Recommended (Ask manager for company access):**
+- Pluralsight: Python/Django courses
+- A Cloud Guru: AWS/Kubernetes
+- Udemy: Specific technology courses
+- Internal tech talks (recorded in Google Drive)
+
+---
+
+## 🆘 GETTING HELP
+
+### When You're Stuck
+
+**1. Try to Solve It Yourself First (15-30 minutes):**
+- Read error message carefully
+- Search documentation
+- Google the error
+- Check Stack Overflow
+
+**2. Ask Your Team:**
+- #engineering channel (general questions)
+- #help-wanted channel (specific issues)
+- Direct message (for quick questions)
+- Tag @on-call (urgent issues only)
+
+**3. Escalation:**
+- Your manager (process questions)
+- Tech lead (architecture questions)
+- DevOps team (infrastructure issues)
+- Security team (security concerns)
+
+### Common Questions
+
+**Q: How do I know which issue to work on?**
+A: Check project board for issues labeled "good first issue" or ask your manager.
+
+**Q: Can I deploy to production?**
+A: Not yet! After your first month and production training, you'll get deployment access.
+
+**Q: What if I break something in production?**
+A: Don't panic! We have runbooks, monitoring, and rollback procedures. Alert team immediately.
+
+**Q: How often should I commit code?**
+A: Commit frequently (multiple times per day). Small, focused commits are better.
+
+**Q: When should I create a PR?**
+A: When your feature is complete, tests pass, and you've self-reviewed your code.
+
+**Q: How long should code review take?**
+A: Reviewers aim to respond within 24 hours. Ping reviewer if >48 hours.
+
+---
+
+## ✅ ONBOARDING COMPLETION CHECKLIST
+
+### Week 1
+- [ ] All accounts created and accessible
+- [ ] Development environment set up
+- [ ] First issue completed
+- [ ] First PR submitted
+- [ ] Attended team meetings
+
+### Month 1
+- [ ] 5+ PRs merged
+- [ ] Comfortable with development workflow
+- [ ] Understanding of architecture
+- [ ] Familiar with deployment process
+- [ ] Participated in code reviews
+- [ ] Completed onboarding survey
+
+### Month 3 (Full Productivity)
+- [ ] Working independently on medium complexity issues
+- [ ] On-call rotation ready
+- [ ] Production deployment access
+- [ ] Contributing to architecture discussions
+- [ ] Mentoring new team members
+
+---
+
+## 🎉 WELCOME TO THE TEAM!
+
+You're now part of building something amazing. Don't hesitate to ask questions, share ideas, and contribute your unique perspective.
+
+**Remember:**
+- It's okay to not know everything
+- Asking questions is encouraged
+- Making mistakes is how we learn
+- We're here to help you succeed
+
+**Team Values:**
+- 🚀 **Ship Fast:** Iterate quickly, deploy often
+- 🔍 **Quality First:** Write tests, review code carefully
+- 🤝 **Collaborate:** Help each other, share knowledge
+- 📚 **Learn Continuously:** Technology evolves, so do we
+- 🎯 **User Focus:** Build features that matter
+
+**Next Steps:**
+1. Schedule 1:1 with your manager
+2. Set up coffee chats with team members
+3. Join optional social events
+4. Contribute to team knowledge base
+
+---
+
+**Questions? Reach out:**
+- Your Manager: manager@ios-system.com
+- Engineering Lead: eng-lead@ios-system.com
+- HR: hr@ios-system.com
+- IT Support: it@ios-system.com
+
+**Welcome aboard! 🎊**

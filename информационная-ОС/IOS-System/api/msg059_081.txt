@@ -1,0 +1,52 @@
+### Content Filtering
+
+System automatically:
+- Validates input
+- Sanitizes output
+- Logs all requests
+- Monitors for abuse
+
+### Rate Limiting
+
+- Per-user limits
+- Per-endpoint limits
+- Cost-based throttling
+- Automatic backoff
+
+## Troubleshooting
+
+### High Costs
+
+**Problem:** Unexpected high costs
+
+**Solutions:**
+1. Check usage stats: `GET /api/gpt/usage`
+2. Review recent requests
+3. Reduce `max_tokens`
+4. Use cheaper model
+5. Enable caching
+
+### Low Quality Responses
+
+**Problem:** GPT generates poor content
+
+**Solutions:**
+1. Improve prompt clarity
+2. Add more context
+3. Adjust temperature
+4. Use examples in prompt
+5. Try different model
+
+### Timeout Errors
+
+**Problem:** Requests timeout
+
+**Solutions:**
+1. Reduce `max_tokens`
+2. Simplify prompt
+3. Use streaming for long responses
+4. Increase timeout setting
+
+## Advanced Features
+
+### Function Calling

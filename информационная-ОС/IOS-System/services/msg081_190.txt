@@ -1,0 +1,12 @@
+ios_system/
+├── ios_core/           # Well-structured
+│   ├── database/
+│   ├── search/
+│   ├── ml/
+│   ├── security/
+│   └── ...
+├── api/               # Clean separation
+│   ├── routes/
+│   └── middleware/
+├── sdk/               # Official clients
+└── tests/             # Good coverage

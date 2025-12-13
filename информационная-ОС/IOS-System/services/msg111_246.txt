@@ -1,0 +1,31 @@
+### Prevention
+- [ ] Monitor query performance continuously
+- [ ] Implement connection pooling (PgBouncer)
+- [ ] Set up automated vacuum
+- [ ] Configure disk space alerts at 70%
+- [ ] Regular index maintenance
+- [ ] Implement read replicas for scaling
+
+### Escalation
+- **15 minutes:** Alert DBA team
+- **30 minutes:** Escalate to Engineering Lead
+- **If data corruption risk:** Immediate escalation to CTO
+
+---
+
+## RUNBOOK 4: Performance Degradation
+
+### Symptoms
+- P95 latency >500ms
+- Slow page loads
+- User complaints about speed
+- Increased timeout errors
+
+### Impact
+- **Severity:** High
+- **User Impact:** Poor user experience
+- **Business Impact:** Reduced engagement
+
+### Investigation Steps
+
+**Step 1: Identify Slow Endpoints**

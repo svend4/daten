@@ -1,0 +1,43 @@
+```python
+# search/management/commands/index_document.py
+
+"""
+Management command to index a single document
+"""
+
+from django.core.management.base import BaseCommand
+from search.models import Document
+from search.services.hybrid_search import HybridSearchService
+
+class Command(BaseCommand):
+    help = 'Index a single document by ID'
+    
+    def add_arguments(self, parser):
+        parser.add_argument('document_id', type=str, help='Document UUID')
+    
+    def handle(self, *args, **options):
+        document_id = options['document_id']
+        
+        try:
+            document = Document.objects.get(id=document_id)
+        except Document.DoesNotExist:
+            self.stdout.write(
+                self.style.ERROR(f'Document not found: {document_id}')
+            )
+            return
+        
+        self.stdout.write(f'Indexing document: {document.title}')
+        
+        service = HybridSearchService()
+        result = service.index_document(document)
+        
+        if result['success']:
+            self.stdout.write(
+                self.style.SUCCESS(f'✓ Document indexed successfully')
+            )
+            self.stdout.write(f"  Elasticsearch: {'✓' if result['elasticsearch'] else '✗'}")
+            self.stdout.write(f"  Qdrant: {'✓' if result['qdrant'] else '✗'}")
+        else:
+            self.stdout.write(
+                self.style.ERROR(f'✗ Indexing failed')
+            )

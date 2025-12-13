@@ -1,0 +1,17 @@
+Month 1-2: MVP + Basic features
+  - Быстрая интеграция
+  - Minimal tests (50%)
+  - Basic deployment
+  - Alpha release
+  
+Month 3-4: Feature expansion
+  - WebUI
+  - Advanced ML
+  - Integrations (Slack, Drive)
+  - Beta release
+  
+Month 5-6: Polish & launch
+  - Security audit
+  - Performance tuning
+  - Marketing site
+  - Public launch

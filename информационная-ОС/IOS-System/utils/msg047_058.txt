@@ -1,0 +1,9 @@
+**Parameters:**
+- `user_id`: Filter by user
+- `action`: Filter by action type
+- `resource_type`: Filter by resource
+- `severity`: Filter by severity (info, warning, error, critical)
+- `hours`: Time range
+- `limit`: Max results
+
+**Example:**

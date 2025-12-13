@@ -1,0 +1,25 @@
+**Impact:**
+[What can an attacker do?]
+
+**Affected Component:**
+[API/Web/Database/etc.]
+
+**Remediation:**
+[How to fix]
+
+**References:**
+- [CWE-XXX](https://cwe.mitre.org/)
+- [OWASP Link]
+
+---
+
+## ✅ SIGN-OFF
+
+- [ ] All tests completed
+- [ ] Results documented
+- [ ] Report generated
+- [ ] Development team notified
+- [ ] Retesting scheduled
+
+**Tester Signature:** _______________  
+**Date:** _______________

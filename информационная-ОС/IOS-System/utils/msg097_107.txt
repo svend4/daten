@@ -1,0 +1,9 @@
+**Solutions:**
+1. Increase cache size
+2. Adjust TTL values
+3. Warm cache proactively
+4. Review cache invalidation strategy
+
+### High Database Load
+
+**Diagnosis:**

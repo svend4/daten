@@ -1,0 +1,9 @@
+**Communication:**
+- Slack: #security-incidents
+- War Room: Google Meet (always-on during incident)
+- Status Page: status.ios-system.com
+- Email: security@ios-system.com
+
+### Automation Scripts
+
+**Auto-containment script:**

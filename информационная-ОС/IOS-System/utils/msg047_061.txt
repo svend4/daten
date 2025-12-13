@@ -1,0 +1,10 @@
+Critical alerts are also sent to:
+- Email (admins)
+- Slack (security channel)
+- PagerDuty (critical only)
+
+## Compliance Reporting
+
+### GDPR Compliance
+
+**Article 30 - Records of Processing:**

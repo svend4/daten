@@ -1,0 +1,44 @@
+### 3. Test Webhook
+
+Trigger an event (e.g., create a document) and check your endpoint receives the notification.
+
+---
+
+## Event Types
+
+### Document Events
+
+- `document.created` - New document created
+- `document.updated` - Document modified
+- `document.deleted` - Document removed
+- `document.viewed` - Document accessed
+
+### Search Events
+
+- `search.performed` - Search query executed
+- `search.result_clicked` - Search result clicked
+
+### User Events
+
+- `user.registered` - New user signed up
+- `user.login` - User logged in
+- `user.logout` - User logged out
+
+### Security Events
+
+- `security.breach_detected` - Security incident
+- `security.mfa_enabled` - MFA activated
+- `security.password_changed` - Password updated
+
+### ML Events
+
+- `ml.embedding_created` - Document embedding generated
+- `ml.gpt_generation_completed` - GPT generation finished
+
+Full list: `GET /api/event-types`
+
+---
+
+## Event Format
+
+All webhook events follow this structure:

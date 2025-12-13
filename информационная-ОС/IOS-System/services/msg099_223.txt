@@ -1,0 +1,258 @@
+# ModSecurity WAF Rules for IOS System
+# OWASP Core Rule Set + Custom Rules
+
+# ============================================
+# Basic Configuration
+# ============================================
+
+# Enable ModSecurity
+SecRuleEngine On
+
+# Request body access
+SecRequestBodyAccess On
+SecRequestBodyLimit 13107200
+SecRequestBodyNoFilesLimit 131072
+
+# Response body access
+SecResponseBodyAccess On
+SecResponseBodyMimeType text/plain text/html text/xml application/json
+
+# Audit logging
+SecAuditEngine RelevantOnly
+SecAuditLogRelevantStatus "^(?:5|4(?!04))"
+SecAuditLogParts ABIJDEFHZ
+SecAuditLogType Serial
+SecAuditLog /var/log/modsec_audit.log
+
+# Debug log
+SecDebugLog /var/log/modsec_debug.log
+SecDebugLogLevel 0
+
+# ============================================
+# OWASP CRS Inclusion
+# ============================================
+
+Include /etc/modsecurity/owasp-crs/crs-setup.conf
+Include /etc/modsecurity/owasp-crs/rules/*.conf
+
+# ============================================
+# Custom Rules for IOS System
+# ============================================
+
+# Rule 100001: Block SQL Injection in Query Params
+SecRule ARGS "@detectSQLi" \
+    "id:100001,\
+    phase:2,\
+    block,\
+    log,\
+    msg:'SQL Injection Detected',\
+    logdata:'Matched Data: %{MATCHED_VAR}',\
+    severity:'CRITICAL',\
+    tag:'application-multi',\
+    tag:'language-multi',\
+    tag:'platform-multi',\
+    tag:'attack-sqli'"
+
+# Rule 100002: Block XSS in Request Body
+SecRule REQUEST_BODY "@detectXSS" \
+    "id:100002,\
+    phase:2,\
+    block,\
+    log,\
+    msg:'XSS Attack Detected in Request Body',\
+    logdata:'Matched Data: %{MATCHED_VAR}',\
+    severity:'CRITICAL',\
+    tag:'application-multi',\
+    tag:'language-multi',\
+    tag:'attack-xss'"
+
+# Rule 100003: Rate Limiting - Max 100 requests per minute
+SecAction \
+    "id:100003,\
+    phase:1,\
+    nolog,\
+    pass,\
+    initcol:ip=%{REMOTE_ADDR},\
+    setvar:ip.requests_per_minute=+1,\
+    expirevar:ip.requests_per_minute=60"
+
+SecRule IP:REQUESTS_PER_MINUTE "@gt 100" \
+    "id:100004,\
+    phase:1,\
+    block,\
+    log,\
+    msg:'Rate Limit Exceeded - More than 100 requests per minute',\
+    logdata:'IP: %{REMOTE_ADDR}, Requests: %{IP.REQUESTS_PER_MINUTE}',\
+    severity:'WARNING',\
+    tag:'rate-limiting'"
+
+# Rule 100005: Block Common Attack Patterns
+SecRule REQUEST_URI|ARGS|REQUEST_BODY "@rx (\.\./|\.\.\\|/etc/passwd|cmd\.exe)" \
+    "id:100005,\
+    phase:2,\
+    block,\
+    log,\
+    msg:'Path Traversal or Command Injection Attempt',\
+    severity:'CRITICAL'"
+
+# Rule 100006: Enforce Strong Content-Type
+SecRule REQUEST_HEADERS:Content-Type "!@rx ^(application/json|application/x-www-form-urlencoded|multipart/form-data)" \
+    "id:100006,\
+    phase:1,\
+    block,\
+    log,\
+    msg:'Invalid Content-Type',\
+    chain"
+    SecRule REQUEST_METHOD "@streq POST" \
+        "t:none"
+
+# Rule 100007: Block Suspicious User-Agents
+SecRule REQUEST_HEADERS:User-Agent "@rx (sqlmap|nikto|nmap|masscan|acunetix)" \
+    "id:100007,\
+    phase:1,\
+    block,\
+    log,\
+    msg:'Suspicious User-Agent Detected',\
+    severity:'WARNING'"
+
+# Rule 100008: Protect Authentication Endpoints
+SecRule REQUEST_URI "@beginsWith /api/auth/" \
+    "id:100008,\
+    phase:1,\
+    pass,\
+    nolog,\
+    chain"
+    SecRule IP:AUTH_ATTEMPTS "@gt 5" \
+        "block,\
+        log,\
+        msg:'Too many authentication attempts',\
+        severity:'WARNING',\
+        setvar:ip.auth_block=1,\
+        expirevar:ip.auth_block=300"
+
+SecAction \
+    "id:100009,\
+    phase:1,\
+    pass,\
+    nolog,\
+    initcol:ip=%{REMOTE_ADDR},\
+    setvar:ip.auth_attempts=+1,\
+    expirevar:ip.auth_attempts=60"
+
+# Rule 100010: Block if Previous Auth Block Active
+SecRule IP:AUTH_BLOCK "@eq 1" \
+    "id:100010,\
+    phase:1,\
+    block,\
+    log,\
+    msg:'Authentication blocked due to previous violations',\
+    severity:'WARNING'"
+
+# Rule 100011: Enforce HTTPS
+SecRule REQUEST_SCHEME "!@streq https" \
+    "id:100011,\
+    phase:1,\
+    redirect:https://%{HTTP_HOST}%{REQUEST_URI},\
+    log,\
+    msg:'HTTP Request Redirected to HTTPS'"
+
+# Rule 100012: Block Large Payloads
+SecRule REQUEST_BODY_LENGTH "@gt 10485760" \
+    "id:100012,\
+    phase:2,\
+    block,\
+    log,\
+    msg:'Request Body Too Large (>10MB)',\
+    severity:'WARNING'"
+
+# Rule 100013: Validate JSON Content
+SecRule REQUEST_HEADERS:Content-Type "@streq application/json" \
+    "id:100013,\
+    phase:2,\
+    pass,\
+    nolog,\
+    chain"
+    SecRule REQUEST_BODY "!@validateByteRange 0-255" \
+        "block,\
+        log,\
+        msg:'Invalid JSON Characters',\
+        severity:'WARNING'"
+
+# Rule 100014: API Key Validation
+SecRule REQUEST_HEADERS:Authorization "!@rx ^Bearer [A-Za-z0-9_-]{20,}$" \
+    "id:100014,\
+    phase:1,\
+    block,\
+    log,\
+    msg:'Invalid or Missing Authorization Header',\
+    severity:'WARNING',\
+    chain"
+    SecRule REQUEST_URI "!@beginsWith /api/auth/"
+
+# Rule 100015: Protect Admin Endpoints
+SecRule REQUEST_URI "@beginsWith /api/admin/" \
+    "id:100015,\
+    phase:1,\
+    pass,\
+    log,\
+    msg:'Admin Endpoint Access',\
+    severity:'INFO',\
+    tag:'admin-access'"
+
+# ============================================
+# Response Headers Security
+# ============================================
+
+# Add security headers to all responses
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "no-referrer-when-downgrade"
+Header always set Content-Security-Policy "default-src 'self'"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+# Remove server information
+Header unset Server
+Header unset X-Powered-By
+
+# ============================================
+# Anomaly Scoring
+# ============================================
+
+SecAction \
+    "id:900000,\
+    phase:1,\
+    nolog,\
+    pass,\
+    t:none,\
+    setvar:tx.anomaly_score_threshold=5"
+
+# Block if anomaly score exceeds threshold
+SecRule TX:ANOMALY_SCORE "@ge %{tx.anomaly_score_threshold}" \
+    "id:900001,\
+    phase:2,\
+    block,\
+    log,\
+    msg:'Anomaly Score Exceeded',\
+    logdata:'Anomaly Score: %{TX.ANOMALY_SCORE}'"
+
+# ============================================
+# IP Reputation
+# ============================================
+
+# Block known malicious IPs (integrate with threat intelligence)
+SecRule REMOTE_ADDR "@ipMatchFromFile /etc/modsecurity/blacklist.txt" \
+    "id:900100,\
+    phase:1,\
+    block,\
+    log,\
+    msg:'IP in Blacklist',\
+    severity:'CRITICAL'"
+
+# Whitelist trusted IPs
+SecRule REMOTE_ADDR "@ipMatchFromFile /etc/modsecurity/whitelist.txt" \
+    "id:900101,\
+    phase:1,\
+    pass,\
+    nolog,\
+    ctl:ruleEngine=Off"

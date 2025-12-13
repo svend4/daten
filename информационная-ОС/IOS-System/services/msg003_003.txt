@@ -1,0 +1,34 @@
+/IOS-ROOT/domains/SGB-IX/data/
+├── documents/                   # Документы
+│   ├── gesetze/                 # Законы
+│   │   ├── SGB-IX/
+│   │   │   ├── volltext/        # Полные тексты
+│   │   │   │   └── sgb-ix-2024.pdf
+│   │   │   └── paragraphen/     # Отдельные параграфы
+│   │   │       ├── paragraph-29.md
+│   │   │       └── paragraph-30.md
+│   │   ├── SGB-XI/
+│   │   └── SGB-XII/
+│   ├── anträge/                 # Заявления
+│   │   ├── 2024/
+│   │   └── 2025/
+│   ├── bescheide/               # Решения
+│   │   ├── bewilligungen/       # Одобрения
+│   │   ├── ablehnungen/         # Отказы
+│   │   └── teilbewilligungen/   # Частичные одобрения
+│   ├── widersprüche/            # Возражения
+│   └── gerichtsverfahren/       # Судебные дела
+│       ├── klagen/
+│       └── urteile/
+├── templates/                   # Шаблоны
+│   ├── antrag-persönliches-budget.docx
+│   ├── widerspruch-standard.docx
+│   └── beschwerde-template.docx
+├── notes/                       # Заметки
+│   ├── meetings/
+│   ├── research/
+│   └── ideas/
+└── media/                       # Медиа файлы
+    ├── images/
+    ├── audio/
+    └── video/

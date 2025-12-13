@@ -1,0 +1,3 @@
+### 3. CDN Configuration
+
+**Setup CloudFlare:**

@@ -1,0 +1,50 @@
+### Access Control Policy
+
+**Role-Based Access Control (RBAC):**
+- **Admin**: Full system access
+- **Manager**: Manage team and documents
+- **User**: Own documents only
+- **Viewer**: Read-only access
+
+**Principle of Least Privilege:**
+- Users have minimum necessary permissions
+- Permissions reviewed quarterly
+- Temporary access for specific tasks
+
+**Multi-Factor Authentication:**
+- Required for admin accounts
+- Optional for regular users
+- TOTP or SMS-based
+
+### Encryption Policy
+
+**Data at Rest:**
+- Database: AES-256 encryption
+- File storage: Server-side encryption (SSE-KMS)
+- Backups: Encrypted before transfer
+
+**Data in Transit:**
+- TLS 1.3 only
+- Perfect Forward Secrecy enabled
+- Strong cipher suites only
+
+**Key Management:**
+- HashiCorp Vault for key storage
+- Automatic key rotation (90 days)
+- Keys never stored in code
+
+### Audit Logging Policy
+
+**Events Logged:**
+- Authentication attempts
+- Authorization failures
+- Data access (sensitive)
+- Configuration changes
+- Administrative actions
+
+**Log Retention:**
+- Security logs: 7 years
+- Access logs: 1 year
+- Application logs: 90 days
+
+**Log Format:**

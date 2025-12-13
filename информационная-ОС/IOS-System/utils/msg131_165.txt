@@ -1,0 +1,5 @@
+---
+
+## ⚡ Performance Optimization
+
+### Caching Strategy

@@ -1,0 +1,5 @@
+---
+
+## 🔍 Elasticsearch Scaling
+
+### Cluster Architecture

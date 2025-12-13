@@ -1,0 +1,5 @@
+Impact vs Probability
+High Impact + High Prob = 0 risks ✅
+High Impact + Med Prob = 2 risks ✅ mitigated
+Med Impact + Med Prob = 3 risks ✅ mitigated
+Low Impact = 3 risks ✅ acceptable

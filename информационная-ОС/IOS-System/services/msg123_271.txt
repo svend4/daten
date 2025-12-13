@@ -1,0 +1,16 @@
+**Why Vector Search?**
+
+Traditional keyword search limitations:
+- ❌ "personal budget" doesn't match "individual financial plan"
+- ❌ "disability assistance" doesn't match "support for handicapped"
+- ❌ "how to apply" doesn't match "application procedure"
+
+Vector search solves this:
+- ✅ Semantic similarity (meaning-based)
+- ✅ Language-agnostic (multilingual)
+- ✅ Context-aware
+- ✅ Handles synonyms naturally
+
+---
+
+## 🔧 Qdrant Collection Schema

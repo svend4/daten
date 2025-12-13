@@ -1,0 +1,5 @@
+---
+
+## 🐳 Docker Compose Deployment (Alternative)
+
+For smaller deployments or development:

@@ -1,0 +1,1 @@
+./scripts/restore_postgresql.sh s3://backups/postgresql/latest.dump

@@ -1,0 +1,12 @@
+**This will:**
+1. Analyze current performance
+2. Optimize database (vacuum, indexes)
+3. Warm caches (L1, L2, CDN)
+4. Perform rolling restart
+5. Validate changes
+6. Run performance tests
+7. Generate report
+
+### Scheduled Optimization
+
+**Add to crontab:**

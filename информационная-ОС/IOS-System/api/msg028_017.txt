@@ -1,0 +1,20 @@
+□ Week 1-2: Integration & Core
+  - Создать main.py с полной интеграцией
+  - SQLAlchemy models + repositories
+  - Basic persistence
+  
+□ Week 3-4: Testing & Stability
+  - Unit tests для core (60% coverage)
+  - Integration tests для API
+  - Docker setup verification
+  
+□ Week 5-6: Real Data Testing
+  - Загрузить 100 SGB-IX документов
+  - Проверить классификацию
+  - Построить граф знаний
+  - Протестировать поиск
+  
+□ Week 7-8: Bug Fixing & Optimization
+  - Исправить найденные проблемы
+  - Performance profiling
+  - Memory optimization

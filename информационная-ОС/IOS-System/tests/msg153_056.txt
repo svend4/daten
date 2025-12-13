@@ -1,0 +1,6 @@
+---
+
+#### Task 1.2: Django Settings Configuration
+**Assignee:** Backend Developer
+**Time:** 1 day
+**Priority:** Critical

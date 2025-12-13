@@ -1,0 +1,9 @@
+День 1:   Окружение + Django setup
+День 2-3: Инфраструктура Docker
+День 3-5: Search Services
+День 5-7: API Implementation
+День 7-8: Data Seeding
+День 8-9: Testing
+День 9-10: Monitoring
+День 10-11: Production Deployment
+Неделя 1: Post-launch monitoring

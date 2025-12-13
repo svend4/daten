@@ -1,0 +1,78 @@
+site_name: IOS System Documentation
+site_description: Information Operating System - Knowledge Management Platform
+site_author: IOS Team
+site_url: https://docs.ios-system.com
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/github
+
+repo_name: ios-system/ios-system
+repo_url: https://github.com/ios-system/ios-system
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Getting Started: user-guide/getting-started.md
+    - Advanced Usage: user-guide/advanced-usage.md
+    - FAQ: user-guide/faq.md
+    - Tutorials: user-guide/tutorials.md
+  - Developer Guide:
+    - Overview: developer-guide/README.md
+    - Architecture: developer-guide/architecture.md
+    - API Reference: developer-guide/api-reference.md
+    - SDK Documentation: developer-guide/sdk.md
+    - Plugin Development: developer-guide/plugins.md
+    - Contributing: developer-guide/contributing.md
+  - Deployment:
+    - Installation: deployment/installation.md
+    - Docker: deployment/docker.md
+    - Kubernetes: deployment/kubernetes.md
+    - Configuration: deployment/configuration.md
+    - Monitoring: deployment/monitoring.md
+  - API:
+    - REST API: api/rest.md
+    - WebSocket API: api/websocket.md
+    - Authentication: api/authentication.md
+  - Video Tutorials:
+    - Introduction: video-tutorials/01-introduction.md
+    - Document Upload: video-tutorials/02-upload.md
+    - Search: video-tutorials/03-search.md
+    - Knowledge Graph: video-tutorials/04-graph.md
+  - About:
+    - Changelog: about/changelog.md
+    - License: about/license.md
+    - Support: about/support.md
+
+plugins:
+  - search
+  - mkdocstrings
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.details
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ios-system
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/ios_system
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/company/ios-system

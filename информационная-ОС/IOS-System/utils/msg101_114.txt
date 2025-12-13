@@ -1,0 +1,41 @@
+---
+
+## 🏥 HIPAA COMPLIANCE (if applicable)
+
+### Administrative Safeguards
+
+- ✅ Security management process
+- ✅ Assigned security officer
+- ✅ Workforce training
+- ✅ Access authorization procedures
+
+### Physical Safeguards
+
+- ✅ Facility access controls
+- ✅ Workstation security
+- ✅ Device and media controls
+
+### Technical Safeguards
+
+- ✅ Access control (unique user IDs)
+- ✅ Audit controls
+- ✅ Integrity controls
+- ✅ Transmission security (TLS 1.3)
+
+---
+
+## 🔐 SECURITY POLICIES
+
+### Password Policy
+
+**Requirements:**
+- Minimum 8 characters
+- Must contain:
+  - Uppercase letter
+  - Lowercase letter
+  - Number
+  - Special character
+- Cannot be in common password list
+- Cannot reuse last 5 passwords
+
+**Enforcement:**

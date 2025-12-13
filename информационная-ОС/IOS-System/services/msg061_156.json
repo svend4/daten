@@ -1,0 +1,39 @@
+{
+  "app_name": "Система IOS",
+  "welcome_message": "Добро пожаловать в информационную операционную систему",
+  "login": "Войти",
+  "logout": "Выйти",
+  "username": "Имя пользователя",
+  "password": "Пароль",
+  
+  "document": "Документ",
+  "documents": "Документы",
+  "document_count_one": "{count} документ",
+  "document_count_few": "{count} документа",
+  "document_count_many": "{count} документов",
+  
+  "search": "Поиск",
+  "search_results": "Результаты поиска",
+  "no_results": "Результаты не найдены",
+  
+  "create": "Создать",
+  "edit": "Редактировать",
+  "delete": "Удалить",
+  "save": "Сохранить",
+  "cancel": "Отмена",
+  
+  "personal_budget": "Личный бюджет",
+  "objection": "Возражение",
+  "application": "Заявление",
+  
+  "error_occurred": "Произошла ошибка",
+  "success": "Успешно",
+  
+  "loading": "Загрузка...",
+  "processing": "Обработка...",
+  
+  "language": "Язык",
+  "german": "Немецкий",
+  "russian": "Русский",
+  "english": "Английский"
+}

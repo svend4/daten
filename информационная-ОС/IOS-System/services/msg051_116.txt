@@ -1,0 +1,34 @@
+## Models
+
+### German BERT (GBERT)
+
+**Model**: `deepset/gbert-large`
+- **Language**: German
+- **Size**: 24 layers, 1024 hidden size
+- **Parameters**: 334M
+- **Vocabulary**: 31,102 tokens
+- **Pre-training**: 12GB German text (Wikipedia, News, Legal)
+
+**Use Cases**:
+- General German text understanding
+- Embeddings for semantic search
+- Transfer learning base
+
+### Legal NER Model
+
+**Model**: `deepset/gbert-large-ner-legal` (if available)
+- **Task**: Named Entity Recognition
+- **Entities**: PER, ORG, LOC, LEGAL
+- **Domain**: German legal texts
+
+### Sentence Transformers
+
+**Model**: `paraphrase-multilingual-mpnet-base-v2`
+- **Task**: Sentence embeddings
+- **Languages**: 50+ including German
+- **Dimension**: 768
+- **Speed**: Faster than GBERT
+
+## API Usage
+
+### Semantic Search

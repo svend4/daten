@@ -1,0 +1,5 @@
+## 💡 Key Innovations
+
+### 1. Hybrid Search
+
+Combines semantic understanding (BERT) with keyword matching (Elasticsearch):

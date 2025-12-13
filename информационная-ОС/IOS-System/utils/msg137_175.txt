@@ -1,0 +1,5 @@
+---
+
+## 💾 PostgreSQL Scaling
+
+### Read Replicas Setup

@@ -1,0 +1,29 @@
+# Prometheus alert rule
+groups:
+  - name: certificate_alerts
+    rules:
+      - alert: CertificateExpiringSoon
+        expr: |
+          (
+            probe_ssl_earliest_cert_expiry{job="blackbox"}
+            - time()
+          ) / 86400 < 30
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Certificate expiring in {{ $value }} days"
+          description: "Certificate for {{ $labels.instance }} expires in {{ $value }} days"
+      
+      - alert: CertificateExpired
+        expr: |
+          (
+            probe_ssl_earliest_cert_expiry{job="blackbox"}
+            - time()
+          ) < 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Certificate expired!"
+          description: "Certificate for {{ $labels.instance }} has expired"

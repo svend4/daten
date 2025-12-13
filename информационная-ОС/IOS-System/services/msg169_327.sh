@@ -1,0 +1,1 @@
+docker-compose exec app python manage.py rebuild_search_index

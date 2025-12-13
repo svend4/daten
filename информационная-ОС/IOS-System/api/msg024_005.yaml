@@ -1,0 +1,42 @@
+# prometheus/prometheus.yml
+# Prometheus конфигурация
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # IOS API
+  - job_name: 'ios-api'
+    static_configs:
+      - targets: ['ios-api:8000']
+    metrics_path: '/metrics'
+  
+  # PostgreSQL
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+  
+  # Redis
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+  
+  # Node Exporter (system metrics)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+  
+  # Docker
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+# Alerting rules
+rule_files:
+  - 'alerts.yml'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']

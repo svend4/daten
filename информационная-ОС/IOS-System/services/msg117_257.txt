@@ -1,0 +1,7 @@
+**Google Workspace:**
+- [ ] Access Gmail: mail.google.com
+- [ ] Access Google Drive: drive.google.com/drive/u/0/folders/team
+- [ ] Access Google Calendar
+- [ ] Join team calendar: "IOS System Engineering"
+
+**1Password (Secrets Management):**

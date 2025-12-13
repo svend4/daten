@@ -1,0 +1,11 @@
+□ Week 9-10: Security & Deployment
+  - Security hardening
+  - SSL/TLS setup
+  - Production deployment на VPS
+  - Backup automation
+  
+□ Week 11-12: Monitoring & Documentation
+  - Prometheus + Grafana dashboards
+  - Alerting rules
+  - Complete API docs
+  - User guide

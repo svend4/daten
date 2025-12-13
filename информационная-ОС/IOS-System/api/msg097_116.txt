@@ -1,0 +1,15 @@
+### Alert Configuration
+
+**Critical alerts:**
+- API response time p95 > 1s
+- Cache hit rate < 70%
+- Database connections > 80%
+- Slow queries > 50/min
+
+---
+
+## 🔧 Troubleshooting
+
+### High Response Times
+
+**Diagnosis:**

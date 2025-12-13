@@ -1,0 +1,18 @@
+Fields:
+- `id` - Unique event ID
+- `type` - Event type (see above)
+- `source` - Component that generated event
+- `timestamp` - Event time (ISO 8601)
+- `user_id` - User who triggered event (if applicable)
+- `correlation_id` - Request correlation ID (for tracing)
+- `data` - Event-specific data
+
+---
+
+## Security
+
+### Signature Verification
+
+**Always verify webhook signatures** to ensure authenticity.
+
+Headers:

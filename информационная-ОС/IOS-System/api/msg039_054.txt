@@ -1,0 +1,5 @@
+❌ Проблемы:
+- Минимальный README
+- Нет API docs
+- Нет user guide
+- Нет developer guide

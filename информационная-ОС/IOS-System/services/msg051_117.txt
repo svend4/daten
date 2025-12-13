@@ -1,0 +1,9 @@
+### 2. Background Processing
+
+The system automatically:
+1. Monitors for new/updated documents
+2. Generates embeddings in batches
+3. Stores vectors in Qdrant
+4. Updates database status
+
+### 3. Search

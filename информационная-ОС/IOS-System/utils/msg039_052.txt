@@ -1,0 +1,10 @@
+Есть:
+✓ Prometheus metrics
+✓ Grafana dashboards
+✓ Basic alerts
+
+Отсутствует:
+❌ Distributed tracing (Jaeger/Zipkin)
+❌ Centralized logging (ELK stack)
+❌ APM (Application Performance Monitoring)
+❌ Error tracking (Sentry integration)

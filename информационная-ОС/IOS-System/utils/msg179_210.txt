@@ -1,0 +1,3 @@
+Если есть staging/demo:
+- URL
+- Credentials (если нужны)

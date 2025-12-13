@@ -1,0 +1,6 @@
+---
+
+#### Task 3.3: Hybrid Search Fusion Implementation
+**Assignee:** Backend Developer
+**Time:** 2 days
+**Priority:** Critical

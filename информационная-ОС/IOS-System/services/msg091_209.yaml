@@ -1,0 +1,172 @@
+# Load Test Scenarios Configuration
+# Used by automation scripts to run various test scenarios
+
+scenarios:
+  # Quick smoke test
+  smoke:
+    description: "Quick smoke test to verify basic functionality"
+    duration: 1m
+    vus: 5
+    thresholds:
+      http_req_duration:
+        - p(95)<1000
+      http_req_failed:
+        - rate<0.05
+
+  # Baseline performance
+  baseline:
+    description: "Baseline performance test with normal load"
+    duration: 5m
+    vus: 20
+    thresholds:
+      http_req_duration:
+        - p(95)<500
+        - p(99)<1000
+      http_req_failed:
+        - rate<0.01
+
+  # Stress test
+  stress:
+    description: "Stress test to find breaking point"
+    stages:
+      - duration: 2m
+        target: 50
+      - duration: 5m
+        target: 50
+      - duration: 2m
+        target: 100
+      - duration: 5m
+        target: 100
+      - duration: 2m
+        target: 150
+      - duration: 5m
+        target: 150
+      - duration: 2m
+        target: 0
+    thresholds:
+      http_req_duration:
+        - p(95)<1000
+      http_req_failed:
+        - rate<0.05
+
+  # Spike test
+  spike:
+    description: "Spike test to verify recovery from sudden load"
+    stages:
+      - duration: 1m
+        target: 20
+      - duration: 10s
+        target: 200
+      - duration: 3m
+        target: 200
+      - duration: 10s
+        target: 20
+      - duration: 1m
+        target: 20
+    thresholds:
+      http_req_duration:
+        - p(95)<2000
+      http_req_failed:
+        - rate<0.10
+
+  # Soak test
+  soak:
+    description: "Soak test for memory leaks and stability"
+    duration: 2h
+    vus: 30
+    thresholds:
+      http_req_duration:
+        - p(95)<600
+      http_req_failed:
+        - rate<0.02
+
+  # Capacity test
+  capacity:
+    description: "Find maximum sustained capacity"
+    stages:
+      - duration: 5m
+        target: 50
+      - duration: 10m
+        target: 50
+      - duration: 5m
+        target: 100
+      - duration: 10m
+        target: 100
+      - duration: 5m
+        target: 150
+      - duration: 10m
+        target: 150
+      - duration: 5m
+        target: 200
+      - duration: 10m
+        target: 200
+      - duration: 5m
+        target: 0
+    thresholds:
+      http_req_duration:
+        - p(95)<800
+      http_req_failed:
+        - rate<0.03
+
+# Performance benchmarks
+benchmarks:
+  targets:
+    api_response_p95: 500ms
+    api_response_p99: 1000ms
+    database_query: 100ms
+    search_latency: 150ms
+    throughput: 1000 req/s
+    error_rate: <1%
+    uptime: 99.9%
+
+  current:
+    api_response_p95: 200ms
+    api_response_p99: 400ms
+    database_query: 50ms
+    search_latency: 120ms
+    throughput: 500 req/s
+    error_rate: 0.5%
+    uptime: 99.5%
+
+# Test data
+test_data:
+  users:
+    - username: test_user_1
+      password: test_password
+      role: user
+    - username: test_user_2
+      password: test_password
+      role: user
+    - username: admin_user
+      password: admin_password
+      role: admin
+
+  documents:
+    count: 1000
+    titles:
+      - "Personal Budget Application"
+      - "Disability Support Guide"
+      - "Legal Assistance Information"
+      - "Social Services Overview"
+      - "Care Plan Template"
+
+  search_queries:
+    - "personal budget"
+    - "disability assistance"
+    - "legal support"
+    - "social services"
+    - "care planning"
+
+# Environment configurations
+environments:
+  local:
+    base_url: http://localhost:8000
+    database: postgresql://localhost:5432/ios_test
+    
+  staging:
+    base_url: https://staging-api.ios-system.com
+    database: postgresql://staging-db:5432/ios_staging
+    
+  production:
+    base_url: https://api.ios-system.com
+    database: postgresql://production-db:5432/ios_production

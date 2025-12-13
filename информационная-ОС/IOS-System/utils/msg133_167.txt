@@ -1,0 +1,5 @@
+---
+
+## 🔍 Application Logging
+
+### Structured Logging Configuration

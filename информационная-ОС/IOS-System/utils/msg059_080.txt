@@ -1,0 +1,15 @@
+Maintains context across questions.
+
+### Progressive Summarization
+
+Creates multi-level summaries:
+1. Detailed summary
+2. Medium summary
+3. Short summary
+4. Brief summary
+
+Each level summarizes the previous.
+
+## Cost Management
+
+### Tracking

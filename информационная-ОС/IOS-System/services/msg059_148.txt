@@ -1,0 +1,18 @@
+With `auto_complete: true`, GPT fills missing variables intelligently.
+
+## Features
+
+### RAG (Retrieval-Augmented Generation)
+
+Q&A system combines:
+1. **Retrieval**: Search relevant documents
+2. **Augmentation**: Build context
+3. **Generation**: Generate answer with GPT
+
+**Benefits:**
+- Factual accuracy
+- Source attribution
+- Up-to-date information
+- Domain-specific knowledge
+
+### Multi-turn Conversations

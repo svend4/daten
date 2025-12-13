@@ -1,0 +1,5 @@
+## Resources
+
+- [BERT Paper](https://arxiv.org/abs/1810.04805)
+- [Elasticsearch Guide](https://www.elastic.co/guide/)
+- [Search Quality Metrics](https://en.wikipedia.org/wiki/Information_retrieval)

@@ -1,0 +1,37 @@
+{
+  "name": "@ios-system/sdk",
+  "version": "1.0.0",
+  "description": "Official JavaScript/TypeScript SDK for IOS System API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ios-system",
+    "api",
+    "sdk",
+    "client"
+  ],
+  "author": "IOS System",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ios-system/ios-sdk-js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  }
+}

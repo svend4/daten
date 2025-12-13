@@ -1,0 +1,249 @@
+```python
+# tests/integration/test_elasticsearch_integration.py
+
+"""
+Integration tests for Elasticsearch
+"""
+
+import pytest
+from elasticsearch import Elasticsearch
+from search.models import Document
+from search.services.elasticsearch_service import ElasticsearchService
+import time
+
+@pytest.mark.integration
+@pytest.mark.elasticsearch
+class TestElasticsearchIntegration:
+    """Test Elasticsearch integration"""
+    
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        """Setup Elasticsearch for tests"""
+        self.es_client = Elasticsearch(['http://localhost:9200'])
+        self.service = ElasticsearchService()
+        
+        # Create test index
+        self.index_name = 'test-ios-documents'
+        
+        # Delete if exists
+        if self.es_client.indices.exists(index=self.index_name):
+            self.es_client.indices.delete(index=self.index_name)
+        
+        # Create index with mapping
+        self.es_client.indices.create(
+            index=self.index_name,
+            body={
+                'settings': {
+                    'number_of_shards': 1,
+                    'number_of_replicas': 0,
+                    'analysis': {
+                        'analyzer': {
+                            'german_analyzer': {
+                                'type': 'german'
+                            }
+                        }
+                    }
+                },
+                'mappings': {
+                    'properties': {
+                        'title': {
+                            'type': 'text',
+                            'analyzer': 'german_analyzer',
+                            'fields': {
+                                'keyword': {'type': 'keyword'}
+                            }
+                        },
+                        'content': {
+                            'type': 'text',
+                            'analyzer': 'german_analyzer'
+                        },
+                        'document_type': {'type': 'keyword'},
+                        'category': {'type': 'keyword'},
+                        'legal_code': {'type': 'keyword'},
+                        'paragraph': {'type': 'keyword'},
+                        'tags': {'type': 'keyword'},
+                        'created_at': {'type': 'date'},
+                        'is_active': {'type': 'boolean'}
+                    }
+                }
+            }
+        )
+        
+        yield
+        
+        # Cleanup
+        if self.es_client.indices.exists(index=self.index_name):
+            self.es_client.indices.delete(index=self.index_name)
+    
+    def test_index_document(self):
+        """Test indexing a document"""
+        doc_id = 'test-doc-1'
+        document = {
+            'title': 'Test Dokument',
+            'content': 'Dies ist ein Test-Dokument über Sozialrecht',
+            'document_type': 'LAW',
+            'category': 'Sozialrecht',
+            'legal_code': 'SGB IX',
+            'is_active': True
+        }
+        
+        # Index document
+        result = self.es_client.index(
+            index=self.index_name,
+            id=doc_id,
+            document=document
+        )
+        
+        assert result['result'] in ['created', 'updated']
+        
+        # Refresh index
+        self.es_client.indices.refresh(index=self.index_name)
+        
+        # Verify document exists
+        doc = self.es_client.get(index=self.index_name, id=doc_id)
+        assert doc['_source']['title'] == 'Test Dokument'
+    
+    def test_bulk_indexing(self):
+        """Test bulk indexing performance"""
+        from elasticsearch.helpers import bulk
+        
+        # Prepare 1000 documents
+        documents = [
+            {
+                '_index': self.index_name,
+                '_id': f'doc-{i}',
+                '_source': {
+                    'title': f'Dokument {i}',
+                    'content': f'Inhalt für Dokument {i} über Sozialrecht',
+                    'document_type': 'LAW',
+                    'category': 'Test',
+                    'is_active': True
+                }
+            }
+            for i in range(1000)
+        ]
+        
+        # Bulk index
+        start = time.time()
+        success, failed = bulk(self.es_client, documents)
+        elapsed = time.time() - start
+        
+        assert success == 1000
+        assert failed == 0
+        assert elapsed < 5.0  # Should complete in < 5 seconds
+        
+        # Refresh and verify count
+        self.es_client.indices.refresh(index=self.index_name)
+        count = self.es_client.count(index=self.index_name)
+        assert count['count'] == 1000
+    
+    def test_search_german_text(self):
+        """Test German text search with analyzer"""
+        # Index German documents
+        documents = [
+            {
+                'title': 'Persönliches Budget',
+                'content': 'Das Persönliche Budget ermöglicht Menschen mit Behinderungen...',
+                'legal_code': 'SGB IX'
+            },
+            {
+                'title': 'Pflegeversicherung',
+                'content': 'Die Pflegeversicherung bietet Unterstützung...',
+                'legal_code': 'SGB XI'
+            }
+        ]
+        
+        for i, doc in enumerate(documents):
+            self.es_client.index(
+                index=self.index_name,
+                id=f'doc-{i}',
+                document=doc
+            )
+        
+        self.es_client.indices.refresh(index=self.index_name)
+        
+        # Search with German stemming
+        result = self.es_client.search(
+            index=self.index_name,
+            body={
+                'query': {
+                    'multi_match': {
+                        'query': 'persönlich',  # Should match "Persönliches"
+                        'fields': ['title^2', 'content'],
+                        'analyzer': 'german_analyzer'
+                    }
+                }
+            }
+        )
+        
+        assert result['hits']['total']['value'] == 1
+        assert 'Persönliches Budget' in result['hits']['hits'][0]['_source']['title']
+    
+    def test_filtered_search(self):
+        """Test search with filters"""
+        # Index documents with different types
+        docs = [
+            {'title': 'Law 1', 'document_type': 'LAW', 'legal_code': 'SGB IX'},
+            {'title': 'Law 2', 'document_type': 'LAW', 'legal_code': 'SGB XI'},
+            {'title': 'Court Decision', 'document_type': 'COURT', 'legal_code': 'SGB IX'}
+        ]
+        
+        for i, doc in enumerate(docs):
+            self.es_client.index(index=self.index_name, id=f'doc-{i}', document=doc)
+        
+        self.es_client.indices.refresh(index=self.index_name)
+        
+        # Search with filters
+        result = self.es_client.search(
+            index=self.index_name,
+            body={
+                'query': {
+                    'bool': {
+                        'must': {'match_all': {}},
+                        'filter': [
+                            {'term': {'document_type': 'LAW'}},
+                            {'term': {'legal_code': 'SGB IX'}}
+                        ]
+                    }
+                }
+            }
+        )
+        
+        assert result['hits']['total']['value'] == 1
+        assert result['hits']['hits'][0]['_source']['title'] == 'Law 1'
+    
+    def test_aggregations(self):
+        """Test aggregations for faceted search"""
+        # Index documents
+        for i in range(100):
+            self.es_client.index(
+                index=self.index_name,
+                id=f'doc-{i}',
+                document={
+                    'title': f'Document {i}',
+                    'document_type': 'LAW' if i % 2 == 0 else 'COURT',
+                    'legal_code': f'SGB {(i % 3) + 1}'
+                }
+            )
+        
+        self.es_client.indices.refresh(index=self.index_name)
+        
+        # Search with aggregations
+        result = self.es_client.search(
+            index=self.index_name,
+            body={
+                'size': 0,
+                'aggs': {
+                    'by_type': {
+                        'terms': {'field': 'document_type'}
+                    },
+                    'by_code': {
+                        'terms': {'field': 'legal_code'}
+                    }
+                }
+            }
+        )
+        
+        assert 'aggregations' in result
+        assert len(result['aggregations']['by_type']['buckets']) == 2
+        assert len(result['aggregations']['by_code']['buckets']) == 3

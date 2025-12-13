@@ -1,0 +1,5 @@
+---
+
+## 📊 Popular Query Tracking
+
+### Query Popularity Service

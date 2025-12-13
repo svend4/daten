@@ -1,0 +1,7 @@
+---
+
+## 📊 Search Performance Metrics
+
+### Key Performance Indicators
+
+**Latency Breakdown:**

@@ -1,0 +1,16 @@
+System alerts when approaching limits.
+
+### Optimization
+
+**Reduce costs:**
+1. Use GPT-3.5-Turbo for simple tasks
+2. Limit `max_tokens`
+3. Cache common responses
+4. Use summarization for long texts
+5. Batch requests when possible
+
+## Best Practices
+
+### 1. Prompt Engineering
+
+**Good:**

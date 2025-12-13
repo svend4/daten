@@ -1,0 +1,5 @@
+КОМПЬЮТЕР:              IOS:
+- Process scheduler  →  Context Manager (управление контекстами)
+- Memory manager     →  Knowledge Cache (кэш активных знаний)
+- File system        →  Information File System (иерархия смыслов)
+- Device drivers     →  Format Parsers (парсеры форматов: PDF, DOCX, MD)

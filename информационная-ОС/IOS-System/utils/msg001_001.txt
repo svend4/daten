@@ -1,0 +1,5 @@
+КОМПЬЮТЕР:              IOS:
+- Network stack      →  Link Graph (граф связей между документами)
+- Security           →  Access Control (кто может видеть что)
+- Logging            →  Change History (история изменений знаний)
+- Background tasks   →  Auto-indexing, Auto-tagging

@@ -1,0 +1,4 @@
+Search API:        327ms
+Autocomplete:       45ms
+Document Detail:    89ms
+Click Tracking:     23ms

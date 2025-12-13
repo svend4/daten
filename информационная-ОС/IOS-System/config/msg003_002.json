@@ -1,0 +1,34 @@
+{
+  "entity_types": [
+    {
+      "name": "Gesetz",
+      "pattern": "SGB-[IVX]+",
+      "properties": ["name", "full_name", "url"],
+      "example": "SGB-IX"
+    },
+    {
+      "name": "Paragraph",
+      "pattern": "§\\s*\\d+[a-z]?",
+      "properties": ["number", "title", "law", "text"],
+      "example": "§29"
+    },
+    {
+      "name": "Behörde",
+      "pattern": null,
+      "properties": ["name", "type", "address", "zuständigkeit"],
+      "examples": ["Sozialamt", "Landkreis", "Bezirk"]
+    },
+    {
+      "name": "Person",
+      "pattern": null,
+      "properties": ["role", "organization"],
+      "examples": ["Sachbearbeiter", "Richter", "Gutachter"]
+    },
+    {
+      "name": "Datum",
+      "pattern": "\\d{2}\\.\\d{2}\\.\\d{4}",
+      "properties": ["date", "event"],
+      "example": "01.01.2025"
+    }
+  ]
+}

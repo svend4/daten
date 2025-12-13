@@ -1,0 +1,73 @@
+{
+  "dashboard": {
+    "title": "IOS System Overview",
+    "panels": [
+      {
+        "id": 1,
+        "title": "API Request Rate",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{method}} {{endpoint}}"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 2,
+        "title": "Response Time (p95)",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "p95"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 3,
+        "title": "Error Rate",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status=~\"5..\"}[5m]) / rate(http_requests_total[5m])",
+            "legendFormat": "Error Rate"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 4,
+        "title": "Documents Processed",
+        "targets": [
+          {
+            "expr": "ios_documents_total",
+            "legendFormat": "{{domain}}"
+          }
+        ],
+        "type": "stat"
+      },
+      {
+        "id": 5,
+        "title": "Database Connections",
+        "targets": [
+          {
+            "expr": "pg_stat_activity_count",
+            "legendFormat": "Active"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "id": 6,
+        "title": "Cache Hit Rate",
+        "targets": [
+          {
+            "expr": "rate(redis_keyspace_hits_total[5m]) / (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m]))",
+            "legendFormat": "Hit Rate"
+          }
+        ],
+        "type": "gauge"
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+### 2. Circuit Breaker Placement
+
+Use circuit breakers for:
+- External API calls
+- Database queries (if problematic)
+- Long-running operations
+- Third-party services
+
+### 3. Load Balancing
+
+- Use **Weighted** for servers with different capacities
+- Use **Sticky Sessions** for stateful applications
+- Use **Least Connections** for variable request times
+
+### 4. Monitoring
+
+Set up alerts for:
+- Rate limit exceeded (>10% of users)
+- Circuit breaker opens
+- Backend health failures
+- High error rates (>5%)
+- Slow response times (p95 > 1s)
+
+---
+
+## Production Deployment
+
+### Docker Compose

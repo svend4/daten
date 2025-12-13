@@ -1,0 +1,64 @@
+```python
+# ios_core/urls.py
+
+"""
+Main URL configuration
+"""
+
+from django.contrib import admin
+from django.urls import path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+# Swagger/OpenAPI schema
+schema_view = get_schema_view(
+    openapi.Info(
+        title="IOS Search API",
+        default_version='v1',
+        description="""
+        Information Operating System (IOS) Search API
+        
+        ## Features
+        - Hybrid search (Elasticsearch + Qdrant vector search)
+        - Autocomplete suggestions
+        - Document management
+        - Click tracking and analytics
+        - Multi-language support (German focus)
+        
+        ## Authentication
+        API supports both authenticated and anonymous access.
+        Rate limits apply based on authentication status.
+        
+        ## Rate Limits
+        - Anonymous: 100 requests/hour
+        - Authenticated: 1000 requests/hour
+        
+        ## Search Algorithm
+        Combines full-text search (Elasticsearch) with semantic search (Qdrant)
+        using Reciprocal Rank Fusion (RRF) for optimal results.
+        """,
+        terms_of_service="https://www.ios-search.com/terms/",
+        contact=openapi.Contact(email="support@ios-search.com"),
+        license=openapi.License(name="Proprietary"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
+urlpatterns = [
+    # Admin
+    path('admin/', admin.site.urls),
+    
+    # API
+    path('api/', include('search.urls')),
+    
+    # API Documentation
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger.yaml', schema_view.without_ui(cache_timeout=0), name='schema-yaml'),
+    
+    # Authentication (if using DRF auth)
+    path('api-auth/', include('rest_framework.urls')),
+]

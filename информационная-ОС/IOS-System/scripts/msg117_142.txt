@@ -1,0 +1,20 @@
+### End of Day 4-5
+
+**Checklist Review:**
+- [ ] First issue assigned
+- [ ] Feature branch created
+- [ ] Changes implemented
+- [ ] Tests written and passing
+- [ ] Code reviewed
+- [ ] Pull request created
+- [ ] Code review feedback addressed
+- [ ] PR merged (if approved)
+- [ ] Understood deployment process
+
+---
+
+## 📅 WEEK 2: DEEPER DIVE
+
+### Monday: Staging Environment
+
+**Access Staging:**

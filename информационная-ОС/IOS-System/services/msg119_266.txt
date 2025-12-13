@@ -1,0 +1,1 @@
+**Example 3: Hybrid Search (Cached)**

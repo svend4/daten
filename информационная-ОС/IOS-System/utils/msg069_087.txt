@@ -1,0 +1,12 @@
+---
+
+## Load Balancing
+
+### Strategies
+
+1. **Round Robin** - Distribute evenly
+2. **Weighted** - Based on server capacity
+3. **Least Connections** - Route to least busy
+4. **Sticky Session** - Keep user on same server
+
+### Setup

@@ -1,0 +1,38 @@
+{
+  "app_name": "IOS System",
+  "welcome_message": "Welcome to the Information Operating System",
+  "login": "Login",
+  "logout": "Logout",
+  "username": "Username",
+  "password": "Password",
+  
+  "document": "Document",
+  "documents": "Documents",
+  "document_count_one": "{count} document",
+  "document_count_other": "{count} documents",
+  
+  "search": "Search",
+  "search_results": "Search Results",
+  "no_results": "No results found",
+  
+  "create": "Create",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "cancel": "Cancel",
+  
+  "personal_budget": "Personal Budget",
+  "objection": "Objection",
+  "application": "Application",
+  
+  "error_occurred": "An error occurred",
+  "success": "Success",
+  
+  "loading": "Loading...",
+  "processing": "Processing...",
+  
+  "language": "Language",
+  "german": "German",
+  "russian": "Russian",
+  "english": "English"
+}

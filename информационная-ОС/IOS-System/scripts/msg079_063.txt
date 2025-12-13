@@ -1,0 +1,3 @@
+### 2. Circuit Breaker Pattern
+
+Prevents cascading failures:

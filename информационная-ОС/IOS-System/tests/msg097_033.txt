@@ -1,0 +1,7 @@
+---
+
+## ⚡ Optimization Strategies
+
+### 1. Database Optimization
+
+**Create Indexes:**

@@ -1,0 +1,25 @@
+Finds queries taking longer than threshold for optimization.
+
+## Features
+
+### Query Understanding
+
+**Intent Classification:**
+- `application` - "beantragen", "apply"
+- `objection` - "widerspruch", "appeal"
+- `information` - "was ist", "what is"
+- `legal_reference` - "§ 29", "SGB IX"
+
+**Entity Extraction:**
+- PER (Person names)
+- ORG (Organizations)
+- LOC (Locations)
+- MISC (Laws, amounts)
+
+**Legal References:**
+- Paragraphs: § 29, § 29 Abs. 1
+- Laws: SGB IX, BGB, StGB
+
+### Query Expansion
+
+Automatically expands queries with synonyms:

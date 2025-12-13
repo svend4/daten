@@ -1,0 +1,151 @@
+# docker-compose.yml
+# Docker Compose конфигурация для полного стека IOS
+
+version: '3.8'
+
+services:
+  # ========================================================================
+  # IOS API Server
+  # ========================================================================
+  ios-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ios-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ios-data:/data/ios-root
+      - ios-uploads:/data/uploads
+      - ios-exports:/data/exports
+      - ./logs:/app/logs
+    environment:
+      - IOS_ROOT_PATH=/data/ios-root
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - DATABASE_URL=postgresql://ios_user:ios_password@postgres:5432/ios_db
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+  # ========================================================================
+  # PostgreSQL Database
+  # ========================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: ios-postgres
+    environment:
+      - POSTGRES_DB=ios_db
+      - POSTGRES_USER=ios_user
+      - POSTGRES_PASSWORD=ios_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+  # ========================================================================
+  # Redis Cache
+  # ========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: ios-redis
+    volumes:
+      - redis-data:/data
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+  # ========================================================================
+  # Nginx Reverse Proxy
+  # ========================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: ios-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ios-exports:/usr/share/nginx/html/exports:ro
+    depends_on:
+      - ios-api
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+  # ========================================================================
+  # ElasticSearch (опционально для продвинутого поиска)
+  # ========================================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: ios-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+  # ========================================================================
+  # Monitoring (опционально)
+  # ========================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ios-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ios-prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - ios-network
+    restart: unless-stopped
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+volumes:
+  ios-data:
+    driver: local
+  ios-uploads:
+    driver: local
+  ios-exports:
+    driver: local
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  grafana-data:
+    driver: local
+  prometheus-data:
+    driver: local
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+networks:
+  ios-network:
+    driver: bridge

@@ -1,0 +1,35 @@
+## Troubleshooting
+
+### Slow Embeddings
+
+**Problem**: Embedding generation takes too long
+
+**Solutions**:
+1. Enable GPU support
+2. Reduce batch size
+3. Use sentence-transformers instead of BERT
+4. Process in background
+
+### Low Quality Results
+
+**Problem**: Search returns irrelevant documents
+
+**Solutions**:
+1. Increase score_threshold
+2. Add domain filter
+3. Improve document quality
+4. Use more specific queries
+
+### Memory Issues
+
+**Problem**: Out of memory errors
+
+**Solutions**:
+1. Reduce batch size
+2. Use CPU-only mode
+3. Clear model cache
+4. Process in smaller chunks
+
+## Advanced Features
+
+### Custom Fine-tuning

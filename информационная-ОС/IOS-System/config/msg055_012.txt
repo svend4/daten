@@ -1,0 +1,14 @@
+# ... (existing requirements)
+
+# Machine Learning
+torch==2.1.2
+transformers==4.37.0
+sentence-transformers==2.3.1
+qdrant-client==1.7.3
+
+# NLP
+langdetect==1.0.9
+deep-translator==1.11.4
+spacy==3.7.2
+
+# ... (rest of existing requirements)

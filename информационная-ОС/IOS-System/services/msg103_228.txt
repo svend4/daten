@@ -1,0 +1,12 @@
+### Phase 4: RECOVERY
+
+**Service Restoration:**
+
+**Pre-restoration Checklist:**
+- [ ] Threat completely removed
+- [ ] Systems fully patched
+- [ ] Monitoring in place
+- [ ] Backups verified clean
+- [ ] Team briefed on changes
+
+**Restoration Steps:**

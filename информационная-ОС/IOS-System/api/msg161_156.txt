@@ -1,0 +1,6 @@
+---
+
+#### Task 5.2: API Views
+**Assignee:** Backend Developer
+**Time:** 3 days
+**Priority:** Critical

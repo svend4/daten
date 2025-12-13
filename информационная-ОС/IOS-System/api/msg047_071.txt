@@ -1,0 +1,11 @@
+### Backup Codes
+
+If you lose access to your authenticator app:
+
+1. Use a backup code instead of MFA code
+2. Regenerate backup codes after use:
+   ```bash
+   POST /api/auth/mfa/regenerate-backup-codes
+   ```
+
+### Disable MFA
