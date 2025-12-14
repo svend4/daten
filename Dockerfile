@@ -19,11 +19,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy entire project
 COPY . /app/
 
+# Copy and make startup script executable
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Set working directory to ios-system
 WORKDIR /app/ios-system
 
 # Expose port (Railway sets PORT env variable)
 EXPOSE 8000
 
-# Start command - Railway will override PORT
-CMD ["sh", "-c", "uvicorn ios_bootstrap.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Start command - use startup script
+CMD ["/app/start.sh"]
