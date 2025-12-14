@@ -1,7 +1,29 @@
 const cartCountEl = document.getElementById('cartCount');
 const cartToast = document.getElementById('cartToast');
 const addToCartButtons = document.querySelectorAll('.add-to-cart');
+const topbar = document.querySelector('.topbar');
 let cartCount = 0;
+
+function setDynamicNavOffset() {
+  if (!topbar) return;
+
+  const styles = getComputedStyle(topbar);
+  const top = parseFloat(styles.top || '0');
+  const marginBottom = parseFloat(styles.marginBottom || '0');
+  const height = topbar.getBoundingClientRect().height;
+  const offset = Math.ceil(height + top + marginBottom + 8);
+
+  document.documentElement.style.setProperty('--nav-offset', `${offset}px`);
+}
+
+window.addEventListener('resize', setDynamicNavOffset);
+window.addEventListener('load', setDynamicNavOffset);
+document.addEventListener('DOMContentLoaded', setDynamicNavOffset);
+
+if (typeof ResizeObserver !== 'undefined' && topbar) {
+  const observer = new ResizeObserver(() => setDynamicNavOffset());
+  observer.observe(topbar);
+}
 
 function showToast(message) {
   if (!cartToast) return;
