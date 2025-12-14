@@ -19,9 +19,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy entire project
 COPY . /app/
 
-# Copy and make startup script executable
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+# Copy and make startup scripts executable
+COPY start.py /app/start.py
+RUN chmod +x /app/start.py
 
 # Set working directory to ios-system
 WORKDIR /app/ios-system
@@ -29,5 +29,5 @@ WORKDIR /app/ios-system
 # Expose port (Railway sets PORT env variable)
 EXPOSE 8000
 
-# Start command - use startup script
-CMD ["/app/start.sh"]
+# Start command - use Python startup script that handles PORT correctly
+CMD ["python3", "/app/start.py"]
