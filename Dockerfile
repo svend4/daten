@@ -26,4 +26,4 @@ WORKDIR /app/ios-system
 EXPOSE 8000
 
 # Start command - Railway will override PORT
-CMD uvicorn ios_bootstrap.main:app --host 0.0.0.0 --port ${PORT:-8000}
+CMD ["sh", "-c", "uvicorn ios_bootstrap.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
