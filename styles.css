@@ -109,6 +109,34 @@ a:hover {
   color: var(--text);
 }
 
+.cart-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 700;
+  color: #fff;
+}
+
+.cart-status__label {
+  color: var(--muted);
+}
+
+.cart-status__count {
+  display: inline-flex;
+  min-width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, var(--accent), #7cc0ff);
+  color: #0f172a;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
 .btn:hover {
   transform: translateY(-2px);
 }
@@ -368,12 +396,41 @@ main {
   gap: 10px;
 }
 
+.cta__form .field {
+  display: grid;
+  gap: 6px;
+}
+
+.cta__form label {
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
 .cta__form input {
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
   color: #fff;
+}
+
+.cta__form input:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+
+.form-status {
+  grid-column: 1 / -1;
+  min-height: 20px;
+  font-weight: 600;
+}
+
+.form-status--success {
+  color: #7cc0ff;
+}
+
+.form-status--error {
+  color: #f3b1c6;
 }
 
 .footer {
@@ -390,6 +447,27 @@ main {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+}
+
+.cart-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 14px 16px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.cart-toast--visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (max-width: 640px) {

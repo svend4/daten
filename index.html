@@ -18,7 +18,10 @@
       <a href="#care">Уход</a>
       <a href="#contact">Контакты</a>
     </nav>
-    <button class="btn ghost">Войти</button>
+    <div class="cart-status" aria-live="polite" aria-label="Статус корзины">
+      <span class="cart-status__label">Корзина</span>
+      <span class="cart-status__count" id="cartCount">0</span>
+    </div>
   </header>
 
   <main>
@@ -48,7 +51,7 @@
         <p class="card__text">Эвкалипт, лавандовая роза, маттиола и хлопок в шёлковой упаковке.</p>
         <div class="price-row">
           <span class="price">3 200 ₽</span>
-          <button class="btn primary">В корзину</button>
+          <button class="btn primary add-to-cart" data-product="Лавандовый рассвет">В корзину</button>
         </div>
         <ul class="card__list">
           <li>Свежесрезанные цветы из фермерских теплиц</li>
@@ -64,7 +67,7 @@
           <p class="eyebrow">Популярные букеты</p>
           <h2>Собранные флористами композиции</h2>
         </div>
-        <a class="link" href="#">Смотреть все</a>
+        <a class="link" href="#bouquets">Смотреть все</a>
       </div>
       <div class="cards">
         <article class="product">
@@ -74,7 +77,7 @@
             <p>Тёплая палитра, много текстуры и ароматные акценты.</p>
             <div class="product__footer">
               <span class="price">3 850 ₽</span>
-              <button class="btn ghost">В корзину</button>
+              <button class="btn ghost add-to-cart" data-product="Солнечный сад">В корзину</button>
             </div>
           </div>
         </article>
@@ -85,7 +88,7 @@
             <p>Пастельные тона и воздушная упаковка для трепетных моментов.</p>
             <div class="product__footer">
               <span class="price">4 100 ₽</span>
-              <button class="btn ghost">В корзину</button>
+              <button class="btn ghost add-to-cart" data-product="Нежное облако">В корзину</button>
             </div>
           </div>
         </article>
@@ -96,7 +99,7 @@
             <p>Контраст холодных оттенков и яркого акцента фаленопсиса.</p>
             <div class="product__footer">
               <span class="price">4 600 ₽</span>
-              <button class="btn ghost">В корзину</button>
+              <button class="btn ghost add-to-cart" data-product="Северное сияние">В корзину</button>
             </div>
           </div>
         </article>
@@ -153,10 +156,17 @@
         <h2>Свяжитесь с флористом</h2>
         <p class="lede">Оставьте номер — мы предложим идеи и отправим подборку на ваш вкус в течение 15 минут.</p>
       </div>
-      <form class="cta__form">
-        <input type="text" placeholder="Имя" aria-label="Имя">
-        <input type="tel" placeholder="Телефон" aria-label="Телефон">
+      <form class="cta__form" id="ctaForm" novalidate>
+        <div class="field">
+          <label for="ctaName">Имя</label>
+          <input id="ctaName" name="name" type="text" placeholder="Имя" aria-label="Имя" required>
+        </div>
+        <div class="field">
+          <label for="ctaPhone">Телефон</label>
+          <input id="ctaPhone" name="phone" type="tel" placeholder="Телефон" aria-label="Телефон" required>
+        </div>
         <button class="btn primary" type="submit">Жду звонка</button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
     </section>
   </main>
@@ -172,5 +182,7 @@
       <a href="tel:+78001234567">+7 (800) 123-45-67</a>
     </div>
   </footer>
+  <div class="cart-toast" id="cartToast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
 </body>
 </html>
