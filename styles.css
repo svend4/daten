@@ -9,6 +9,12 @@
   --border: #e2e8f0;
   --accent-soft: rgba(139, 92, 246, 0.12);
   --accent-2-soft: rgba(236, 72, 153, 0.12);
+  --nav-offset: 192px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-offset);
 }
 
 * {
@@ -24,6 +30,10 @@ body {
   color: var(--text);
   min-height: 100vh;
   padding: 28px;
+}
+
+section {
+  scroll-margin-top: calc(var(--nav-offset) + 12px);
 }
 
 h1, h2, h3 {
@@ -1037,6 +1047,10 @@ main {
 }
 
 @media (max-width: 640px) {
+  :root {
+    --nav-offset: 228px;
+  }
+
   body {
     padding: 20px;
   }
