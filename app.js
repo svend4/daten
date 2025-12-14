@@ -58,3 +58,22 @@ if (ctaForm) {
     }, 400);
   });
 }
+
+const faqToggles = document.querySelectorAll('.faq__toggle');
+
+faqToggles.forEach((toggle) => {
+  const panel = toggle.nextElementSibling;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    toggle.querySelector('.faq__icon').textContent = isOpen ? '+' : '–';
+    if (panel) {
+      panel.hidden = isOpen;
+    }
+
+    if (!isOpen) {
+      toggle.focus();
+    }
+  });
+});
