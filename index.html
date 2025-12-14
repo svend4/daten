@@ -17,6 +17,7 @@
       <a href="#builder">Конструктор</a>
       <a href="#collections">Коллекции</a>
       <a href="#care">Уход</a>
+      <a href="#delivery">Доставка</a>
       <a href="#reviews">Отзывы</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Контакты</a>
@@ -246,6 +247,56 @@
       </div>
     </section>
 
+    <section class="delivery" id="delivery">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Доставка и сроки</p>
+          <h2>Рассчитайте время и стоимость</h2>
+          <p class="lede">Укажите расстояние и режим доставки, чтобы узнать ориентировочное время прибытия курьера.</p>
+        </div>
+        <div class="pill pill--accent">Доставляем за 90 минут в центре</div>
+      </div>
+      <form class="eta" id="etaForm">
+        <div class="field">
+          <label for="etaDistance">Расстояние до вас</label>
+          <input id="etaDistance" name="distance" type="range" min="1" max="25" step="1" value="6">
+          <div class="range-labels">
+            <span>1 км</span>
+            <span>25 км</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="etaMode">Режим доставки</label>
+          <select id="etaMode" name="mode">
+            <option value="standard">Стандартная</option>
+            <option value="express">Экспресс</option>
+            <option value="evening">Вечерняя после 18:00</option>
+          </select>
+        </div>
+        <div class="eta__summary" id="etaSummary">
+          <p class="eta__title">Доставка за 75 минут</p>
+          <p class="eta__meta">Оценка для 6 км, режим: стандарт</p>
+          <p class="eta__price">Стоимость: 390 ₽</p>
+        </div>
+        <button class="btn primary" type="submit">Забронировать слот</button>
+        <p class="form-status" id="etaStatus" role="status" aria-live="polite"></p>
+      </form>
+      <div class="delivery__perks">
+        <article class="perk">
+          <h3>Трекинг и фото</h3>
+          <p>Отправляем ссылку на карту и фото вручения, чтобы вы были спокойны.</p>
+        </article>
+        <article class="perk">
+          <h3>Тёплая/холодная защита</h3>
+          <p>Зимой — утеплённые чехлы, летом — термобоксы и холодные пакеты.</p>
+        </article>
+        <article class="perk">
+          <h3>Ожидание до 15 минут</h3>
+          <p>Курьер дождётся получателя и уточнит подъезд, если это необходимо.</p>
+        </article>
+      </div>
+    </section>
+
     <section class="reviews" id="reviews">
       <div class="section-header">
         <div>
@@ -342,6 +393,50 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="guides" id="guides">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Советы и подборки</p>
+          <h2>Подписка на вдохновение</h2>
+          <p class="lede">Получайте раз в неделю идеи букетов, памятки по уходу и закрытые акции.</p>
+        </div>
+        <div class="pill pill--outline">Без спама, только полезное</div>
+      </div>
+      <div class="guide-grid">
+        <article class="guide">
+          <div class="guide__tag">Уход</div>
+          <h3>Как продлить жизнь роз до 10 дней</h3>
+          <p>Чек-лист воды, срезов и света, который мы используем в доставке.</p>
+        </article>
+        <article class="guide">
+          <div class="guide__tag">События</div>
+          <h3>5 идей букетов для корпоратива</h3>
+          <p>Сценарии для офиса, фуршета и благодарности партнёрам.</p>
+        </article>
+        <article class="guide">
+          <div class="guide__tag">Тренды</div>
+          <h3>Палитры весны: сиреневый + персик</h3>
+          <p>Комбинируем модные оттенки и упаковку, чтобы букет выглядел актуально.</p>
+        </article>
+      </div>
+      <form class="subscribe" id="newsletterForm" novalidate>
+        <div class="field">
+          <label for="newsletterEmail">E-mail</label>
+          <input id="newsletterEmail" name="email" type="email" placeholder="you@example.com" aria-label="E-mail" required>
+        </div>
+        <div class="field">
+          <label for="newsletterChannel">Удобный канал</label>
+          <select id="newsletterChannel" name="channel">
+            <option value="email">Email-рассылка</option>
+            <option value="telegram">Telegram</option>
+            <option value="whatsapp">WhatsApp</option>
+          </select>
+        </div>
+        <button class="btn primary" type="submit">Получать подсказки</button>
+        <p class="form-status" id="newsletterStatus" role="status" aria-live="polite"></p>
+      </form>
     </section>
 
     <section class="cta" id="contact">

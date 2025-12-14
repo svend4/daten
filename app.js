@@ -109,6 +109,13 @@ const builderBudget = document.getElementById('builderBudget');
 const builderSummary = document.getElementById('builderSummary');
 const builderStatus = document.getElementById('builderStatus');
 const sizeRadios = builderForm?.querySelectorAll('input[name="size"]') || [];
+const etaForm = document.getElementById('etaForm');
+const etaDistance = document.getElementById('etaDistance');
+const etaMode = document.getElementById('etaMode');
+const etaSummary = document.getElementById('etaSummary');
+const etaStatus = document.getElementById('etaStatus');
+const newsletterForm = document.getElementById('newsletterForm');
+const newsletterStatus = document.getElementById('newsletterStatus');
 
 const occasionLabels = {
   birthday: 'для дня рождения',
@@ -179,3 +186,76 @@ builderForm?.addEventListener('submit', (event) => {
 });
 
 updateBuilderSummary();
+
+function updateEtaSummary() {
+  if (!etaSummary) return;
+
+  const distance = Number(etaDistance?.value || 0);
+  const mode = etaMode?.value || 'standard';
+
+  const baseTime = Math.max(45, distance * 9 + 30);
+  const timeMultiplier = mode === 'express' ? 0.75 : mode === 'evening' ? 1.2 : 1;
+  const etaMinutes = Math.round(baseTime * timeMultiplier);
+
+  const baseCost = 250 + distance * 20;
+  const costMultiplier = mode === 'express' ? 1.35 : mode === 'evening' ? 1.1 : 1;
+  const cost = Math.round(baseCost * costMultiplier / 10) * 10;
+
+  const modeLabel =
+    mode === 'express'
+      ? 'экспресс'
+      : mode === 'evening'
+      ? 'вечерняя после 18:00'
+      : 'стандарт';
+
+  etaSummary.querySelector('.eta__title').textContent = `Доставка за ${etaMinutes} минут`;
+  etaSummary.querySelector('.eta__meta').textContent = `Оценка для ${distance} км, режим: ${modeLabel}`;
+  etaSummary.querySelector('.eta__price').textContent = `Стоимость: ${formatCurrency(cost)}`;
+}
+
+etaDistance?.addEventListener('input', updateEtaSummary);
+etaMode?.addEventListener('change', updateEtaSummary);
+
+etaForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  updateEtaSummary();
+  if (etaStatus) {
+    etaStatus.textContent = 'Бронируем ближайший слот доставки…';
+    etaStatus.classList.add('form-status--success');
+  }
+  setTimeout(() => {
+    if (etaStatus) {
+      etaStatus.textContent = 'Слот закреплён! Мы подтвердим время в течение 5 минут.';
+    }
+  }, 400);
+});
+
+updateEtaSummary();
+
+newsletterForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (!newsletterForm) return;
+
+  const email = newsletterForm.elements.email?.value.trim();
+  if (!email || !email.includes('@')) {
+    if (newsletterStatus) {
+      newsletterStatus.textContent = 'Укажите корректный e-mail, чтобы получать подборки.';
+      newsletterStatus.classList.add('form-status--error');
+      newsletterStatus.classList.remove('form-status--success');
+    }
+    return;
+  }
+
+  if (newsletterStatus) {
+    newsletterStatus.textContent = 'Добавляем вас в рассылку…';
+    newsletterStatus.classList.remove('form-status--error');
+    newsletterStatus.classList.add('form-status--success');
+  }
+
+  setTimeout(() => {
+    if (newsletterStatus) {
+      newsletterStatus.textContent = 'Готово! Мы пришлём первое письмо уже на этой неделе.';
+    }
+    newsletterForm.reset();
+  }, 400);
+});
