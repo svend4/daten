@@ -14,7 +14,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--nav-offset);
+  scroll-padding-top: calc(var(--nav-offset) + 12px);
 }
 
 * {
@@ -33,7 +33,7 @@ body {
 }
 
 section {
-  scroll-margin-top: calc(var(--nav-offset) + 12px);
+  scroll-margin-top: calc(var(--nav-offset) + 20px);
 }
 
 h1, h2, h3 {

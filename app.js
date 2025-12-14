@@ -3,6 +3,9 @@ const cartToast = document.getElementById('cartToast');
 const addToCartButtons = document.querySelectorAll('.add-to-cart');
 const topbar = document.querySelector('.topbar');
 let cartCount = 0;
+let navOffsetValue = Number(
+  parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 0
+);
 
 function setDynamicNavOffset() {
   if (!topbar) return;
@@ -14,16 +17,51 @@ function setDynamicNavOffset() {
   const offset = Math.ceil(height + top + marginBottom + 8);
 
   document.documentElement.style.setProperty('--nav-offset', `${offset}px`);
+  navOffsetValue = offset;
 }
 
 window.addEventListener('resize', setDynamicNavOffset);
-window.addEventListener('load', setDynamicNavOffset);
 document.addEventListener('DOMContentLoaded', setDynamicNavOffset);
 
 if (typeof ResizeObserver !== 'undefined' && topbar) {
   const observer = new ResizeObserver(() => setDynamicNavOffset());
   observer.observe(topbar);
 }
+
+function scrollToHash(hash) {
+  if (!hash || hash === '#') return;
+
+  const target = document.querySelector(hash);
+  if (!target) return;
+
+  const offset = (Number(navOffsetValue) || 0) + 14;
+  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+
+  window.scrollTo({ top: targetTop - offset, behavior: 'smooth' });
+}
+
+window.addEventListener('load', () => {
+  setDynamicNavOffset();
+  if (location.hash) {
+    setTimeout(() => scrollToHash(location.hash), 60);
+  }
+});
+
+window.addEventListener('hashchange', () => scrollToHash(location.hash));
+
+const anchorLinks = document.querySelectorAll('a[href^="#"]:not([href="#"])');
+
+anchorLinks.forEach((link) => {
+  link.addEventListener('click', (event) => {
+    const hash = link.getAttribute('href');
+    const target = document.querySelector(hash);
+
+    if (!target) return;
+
+    event.preventDefault();
+    scrollToHash(hash);
+  });
+});
 
 function showToast(message) {
   if (!cartToast) return;
