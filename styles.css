@@ -52,7 +52,7 @@ a:hover {
   z-index: 10;
   display: grid;
   grid-template-columns: 140px 1fr auto;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(14px);
@@ -66,13 +66,15 @@ a:hover {
   font-weight: 800;
   letter-spacing: 0.5px;
   color: #0f172a;
+  align-self: center;
 }
 
 .nav {
   display: flex;
-  gap: 18px;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   font-weight: 600;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .nav a {
@@ -121,6 +123,7 @@ a:hover {
   background: #f8fafc;
   font-weight: 700;
   color: #0f172a;
+  align-self: center;
 }
 
 .cart-status__label {
