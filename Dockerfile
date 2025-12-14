@@ -27,7 +27,7 @@ RUN chmod +x /app/start.py
 WORKDIR /app/ios-system
 
 # Expose port (Railway sets PORT env variable)
-EXPOSE 8000
+EXPOSE 8080
 
 # Start command - use Python startup script that handles PORT correctly
 CMD ["python3", "/app/start.py"]

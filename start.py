@@ -7,8 +7,8 @@ import os
 import sys
 import subprocess
 
-# Get PORT from environment, default to 8000
-port = os.environ.get('PORT', '8000')
+# Get PORT from environment, default to 8080
+port = os.environ.get('PORT', '8080')
 
 # Ensure we're in the correct directory
 os.chdir('/app/ios-system')
