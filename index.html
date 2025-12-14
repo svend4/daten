@@ -14,6 +14,7 @@
     <div class="logo">Bloomery</div>
     <nav class="nav">
       <a href="#bouquets">Букеты</a>
+      <a href="#builder">Конструктор</a>
       <a href="#collections">Коллекции</a>
       <a href="#care">Уход</a>
       <a href="#reviews">Отзывы</a>
@@ -63,6 +64,75 @@
       </div>
     </section>
 
+    <section class="builder" id="builder">
+      <div>
+        <p class="eyebrow">Соберите свой букет</p>
+        <h2>Конструктор для персональных подборок</h2>
+        <p class="lede">Выберите повод, палитру и размер, чтобы мы предложили идеальный вариант в вашем бюджете.</p>
+      </div>
+      <form class="builder__form" id="builderForm">
+        <div class="field">
+          <label for="builderOccasion">Повод</label>
+          <select id="builderOccasion" name="occasion">
+            <option value="birthday">День рождения</option>
+            <option value="wedding">Свадьба</option>
+            <option value="home">Для дома</option>
+            <option value="office">Для офиса</option>
+            <option value="justbecause">Без повода</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="label">Палитра</span>
+          <div class="pill-group pill-group--select" role="group" aria-label="Выбор палитры">
+            <button class="pill pill--button is-active" type="button" data-palette="tender">Нежные</button>
+            <button class="pill pill--button" type="button" data-palette="contrast">Контраст</button>
+            <button class="pill pill--button" type="button" data-palette="mono">Монохром</button>
+          </div>
+          <input type="hidden" name="palette" id="builderPalette" value="tender">
+        </div>
+        <div class="field">
+          <span class="label">Размер букета</span>
+          <div class="segmented">
+            <label class="segmented__option">
+              <input type="radio" name="size" value="midi" data-delta="0" checked>
+              <span>Миди</span>
+            </label>
+            <label class="segmented__option">
+              <input type="radio" name="size" value="classic" data-delta="800">
+              <span>Стандарт</span>
+            </label>
+            <label class="segmented__option">
+              <input type="radio" name="size" value="premium" data-delta="1600">
+              <span>Премиум</span>
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="builderBudget">Бюджет</label>
+          <input id="builderBudget" name="budget" type="range" min="2400" max="8200" step="200" value="4200">
+          <div class="range-labels">
+            <span>2 400 ₽</span>
+            <span>8 200 ₽</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="builderNotes">Пожелания</label>
+          <textarea id="builderNotes" name="notes" rows="3" placeholder="Добавьте любимые цветы, оттенки или ограничения"></textarea>
+        </div>
+        <div class="builder__footer">
+          <div class="builder__summary" id="builderSummary">
+            <p class="builder__title">Букет для дня рождения</p>
+            <p class="builder__meta">Палитра: нежные • Размер: Миди</p>
+            <p class="builder__budget">Оценка бюджета: 4 200 ₽ – 5 000 ₽</p>
+          </div>
+          <div class="builder__cta">
+            <button class="btn primary" type="submit">Получить подборку</button>
+            <p class="form-status" id="builderStatus" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </form>
+    </section>
+
     <section class="grid" id="bouquets">
       <div class="section-header">
         <div>
@@ -71,8 +141,8 @@
         </div>
         <a class="link" href="#bouquets">Смотреть все</a>
       </div>
-      <div class="cards">
-        <article class="product">
+      <div class="cards" id="bouquetGrid">
+        <article class="product" data-tags="birthday,home">
           <div class="product__image alt-rose">Ранункулюсы и садовые розы</div>
           <div class="product__body">
             <h3>Солнечный сад</h3>
@@ -83,7 +153,7 @@
             </div>
           </div>
         </article>
-        <article class="product">
+        <article class="product" data-tags="romantic,wedding">
           <div class="product__image alt-peony">Пионы и гвоздика</div>
           <div class="product__body">
             <h3>Нежное облако</h3>
@@ -94,7 +164,7 @@
             </div>
           </div>
         </article>
-        <article class="product">
+        <article class="product" data-tags="home,office">
           <div class="product__image alt-eucalyptus">Эвкалипт и орхидея</div>
           <div class="product__body">
             <h3>Северное сияние</h3>
@@ -102,6 +172,28 @@
             <div class="product__footer">
               <span class="price">4 600 ₽</span>
               <button class="btn ghost add-to-cart" data-product="Северное сияние">В корзину</button>
+            </div>
+          </div>
+        </article>
+        <article class="product" data-tags="office,justbecause">
+          <div class="product__image alt-lilac">Лилии и эустома</div>
+          <div class="product__body">
+            <h3>Городские огни</h3>
+            <p>Стильная вертикальная композиция для офиса или в подарок партнёрам.</p>
+            <div class="product__footer">
+              <span class="price">3 900 ₽</span>
+              <button class="btn ghost add-to-cart" data-product="Городские огни">В корзину</button>
+            </div>
+          </div>
+        </article>
+        <article class="product" data-tags="birthday,romantic">
+          <div class="product__image alt-sunset">Розы и альстромерия</div>
+          <div class="product__body">
+            <h3>Вечерний закат</h3>
+            <p>Тёплые оттенки и лёгкие переходы цвета для душевных поздравлений.</p>
+            <div class="product__footer">
+              <span class="price">3 300 ₽</span>
+              <button class="btn ghost add-to-cart" data-product="Вечерний закат">В корзину</button>
             </div>
           </div>
         </article>
@@ -113,11 +205,13 @@
         <p class="eyebrow">Коллекции сезона</p>
         <h2>Букеты на разные поводы</h2>
         <p class="lede">Свадебные композиции, подписка на еженедельную доставку и букеты для офиса — выберите готовый набор или соберите свой.</p>
-        <div class="pill-group">
-          <span class="pill">Свадебные</span>
-          <span class="pill">День рождения</span>
-          <span class="pill">Для дома</span>
-          <span class="pill">Для офиса</span>
+        <div class="pill-group" id="collectionFilters" role="group" aria-label="Фильтр коллекций">
+          <button class="pill pill--button is-active" type="button" data-filter="all">Все</button>
+          <button class="pill pill--button" type="button" data-filter="wedding">Свадебные</button>
+          <button class="pill pill--button" type="button" data-filter="birthday">День рождения</button>
+          <button class="pill pill--button" type="button" data-filter="home">Для дома</button>
+          <button class="pill pill--button" type="button" data-filter="office">Для офиса</button>
+          <button class="pill pill--button" type="button" data-filter="romantic">Романтика</button>
         </div>
       </div>
       <div class="steps">
