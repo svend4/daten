@@ -6,7 +6,7 @@ nixPkgs = ["python311", "postgresql"]
 
 [phases.install]
 cmds = [
-  "pip install -r requirements.txt"
+  "pip install -r ios-system/requirements.txt"
 ]
 
 [phases.build]
@@ -15,4 +15,4 @@ cmds = [
 ]
 
 [start]
-cmd = "uvicorn информационная-ОС.ios_bootstrap.main:app --host 0.0.0.0 --port $PORT"
+cmd = "cd ios-system && uvicorn ios_bootstrap.main:app --host 0.0.0.0 --port $PORT"
