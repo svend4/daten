@@ -116,6 +116,13 @@ const etaSummary = document.getElementById('etaSummary');
 const etaStatus = document.getElementById('etaStatus');
 const newsletterForm = document.getElementById('newsletterForm');
 const newsletterStatus = document.getElementById('newsletterStatus');
+const giftForm = document.getElementById('giftForm');
+const giftAmount = document.getElementById('giftAmount');
+const giftRecipient = document.getElementById('giftRecipient');
+const giftNote = document.getElementById('giftNote');
+const giftPreview = document.getElementById('giftPreview');
+const giftStatus = document.getElementById('giftStatus');
+const giftFormatRadios = document.querySelectorAll('input[name="giftFormat"]');
 
 const occasionLabels = {
   birthday: 'для дня рождения',
@@ -259,3 +266,83 @@ newsletterForm?.addEventListener('submit', (event) => {
     newsletterForm.reset();
   }, 400);
 });
+
+function selectedGiftFormatLabel() {
+  let label = 'Цифровой';
+  giftFormatRadios.forEach((radio) => {
+    if (radio.checked) {
+      label = radio.dataset.label || radio.value;
+    }
+  });
+  return label;
+}
+
+function updateGiftPreview() {
+  if (!giftPreview) return;
+
+  const amount = Number(giftAmount?.value || 0);
+  const recipient = giftRecipient?.value.trim() || 'Имя пока не указано';
+  const note = giftNote?.value.trim();
+  const formatLabel = selectedGiftFormatLabel();
+
+  const amountEl = giftPreview.querySelector('.gift-preview__amount');
+  if (amountEl) amountEl.textContent = formatCurrency(amount);
+
+  const recipientEl = giftPreview.querySelector('.gift-preview__recipient');
+  if (recipientEl) recipientEl.textContent = recipient;
+
+  const badgeEl = giftPreview.querySelector('.badge');
+  if (badgeEl) badgeEl.textContent = formatLabel;
+
+  const noteEl = giftPreview.querySelector('.gift-preview__note');
+  if (noteEl) {
+    noteEl.textContent =
+      note ||
+      'Можем доставить завтра после 10:00 или отправить e-mail в указанную дату.';
+  }
+}
+
+giftAmount?.addEventListener('input', updateGiftPreview);
+giftRecipient?.addEventListener('input', updateGiftPreview);
+giftNote?.addEventListener('input', updateGiftPreview);
+giftFormatRadios.forEach((radio) => radio.addEventListener('change', updateGiftPreview));
+
+giftForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const amount = Number(giftAmount?.value || 0);
+  const recipient = giftRecipient?.value.trim();
+
+  if (!recipient) {
+    if (giftStatus) {
+      giftStatus.textContent = 'Укажите имя получателя, чтобы мы подписали открытку.';
+      giftStatus.classList.add('form-status--error');
+      giftStatus.classList.remove('form-status--success');
+    }
+    return;
+  }
+
+  if (amount < 1500) {
+    if (giftStatus) {
+      giftStatus.textContent = 'Минимальная сумма сертификата — 1 500 ₽.';
+      giftStatus.classList.add('form-status--error');
+      giftStatus.classList.remove('form-status--success');
+    }
+    return;
+  }
+
+  if (giftStatus) {
+    giftStatus.textContent = 'Оформляем сертификат…';
+    giftStatus.classList.remove('form-status--error');
+    giftStatus.classList.add('form-status--success');
+  }
+
+  setTimeout(() => {
+    if (giftStatus) {
+      giftStatus.textContent = 'Готово! Мы отправим подтверждение и макет упаковки в течение 10 минут.';
+    }
+    giftForm.reset();
+    updateGiftPreview();
+  }, 450);
+});
+
+updateGiftPreview();

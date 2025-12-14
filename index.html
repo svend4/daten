@@ -18,6 +18,8 @@
       <a href="#collections">Коллекции</a>
       <a href="#care">Уход</a>
       <a href="#delivery">Доставка</a>
+      <a href="#loyalty">Программа</a>
+      <a href="#gifts">Сертификаты</a>
       <a href="#reviews">Отзывы</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Контакты</a>
@@ -347,6 +349,50 @@
       </div>
     </section>
 
+    <section class="loyalty" id="loyalty">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Лояльность</p>
+          <h2>Бонусы за каждую доставку</h2>
+          <p class="lede">Кэшбэк баллами, персональные подарки ко дню рождения и приоритетные слоты доставки для постоянных клиентов.</p>
+        </div>
+        <div class="pill pill--accent">1 балл = 1 ₽</div>
+      </div>
+      <div class="loyalty__content">
+        <div class="loyalty__progress" aria-label="Прогресс уровня">
+          <div class="loyalty__progress-header">
+            <span>Текущий уровень</span>
+            <span class="pill pill--soft">Silver</span>
+          </div>
+          <div class="loyalty__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="55">
+            <span class="loyalty__fill" style="width: 55%"></span>
+          </div>
+          <div class="loyalty__meta">
+            <span>Осталось 3 заказа до Gold</span>
+            <span>Бонусы: 740 ₽</span>
+          </div>
+        </div>
+        <ul class="loyalty__perks">
+          <li>
+            <h3>Повышенный кэшбэк</h3>
+            <p>5% на все букеты, 8% на подписку и корпоративные доставки.</p>
+          </li>
+          <li>
+            <h3>Закрытые коллекции</h3>
+            <p>Ранний доступ к лимитированным палитрам и упаковке сезона.</p>
+          </li>
+          <li>
+            <h3>Подарки к праздникам</h3>
+            <p>Открытки, свечи и мини-букеты для близких на ваш выбор.</p>
+          </li>
+          <li>
+            <h3>Приоритет доставки</h3>
+            <p>Бесплатное окно на утро или вечер и ручной контроль сборки.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
     <section class="faq" id="faq">
       <div class="section-header">
         <div>
@@ -437,6 +483,65 @@
         <button class="btn primary" type="submit">Получать подсказки</button>
         <p class="form-status" id="newsletterStatus" role="status" aria-live="polite"></p>
       </form>
+    </section>
+
+    <section class="gifts" id="gifts">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Сертификаты</p>
+          <h2>Подарочные карты для близких и партнёров</h2>
+          <p class="lede">Выберите сумму, формат и персонализируйте подписанное поздравление — мы доставим красиво упакованный сертификат или электронную версию.</p>
+        </div>
+        <div class="pill pill--outline">От 1 500 до 15 000 ₽</div>
+      </div>
+      <div class="gifts__layout">
+        <div class="gift-preview" id="giftPreview" aria-live="polite">
+          <div class="gift-preview__header">
+            <span class="badge">Цифровой</span>
+            <span class="gift-preview__amount">5 000 ₽</span>
+          </div>
+          <h3>Для получателя</h3>
+          <p class="gift-preview__recipient">Имя пока не указано</p>
+          <p class="gift-preview__note">Можем доставить завтра после 10:00 или отправить e-mail в указанную дату.</p>
+        </div>
+        <form class="gift-form" id="giftForm" novalidate>
+          <div class="field">
+            <label for="giftAmount">Сумма сертификата</label>
+            <input id="giftAmount" name="amount" type="range" min="1500" max="15000" step="500" value="5000">
+            <div class="range-labels">
+              <span>1 500 ₽</span>
+              <span>15 000 ₽</span>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label">Формат</span>
+            <div class="segmented">
+              <label class="segmented__option">
+                <input type="radio" name="giftFormat" value="digital" data-label="Цифровой" checked>
+                <span>Цифровой</span>
+              </label>
+              <label class="segmented__option">
+                <input type="radio" name="giftFormat" value="physical" data-label="В коробке">
+                <span>В коробке</span>
+              </label>
+              <label class="segmented__option">
+                <input type="radio" name="giftFormat" value="envelope" data-label="Подарочный конверт">
+                <span>Конверт</span>
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="giftRecipient">Кому адресуем?</label>
+            <input id="giftRecipient" name="recipient" type="text" placeholder="Имя получателя" required>
+          </div>
+          <div class="field">
+            <label for="giftNote">Поздравление (опционально)</label>
+            <textarea id="giftNote" name="note" rows="3" placeholder="Добавьте пару тёплых слов"></textarea>
+          </div>
+          <button class="btn primary" type="submit">Оформить сертификат</button>
+          <p class="form-status" id="giftStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
     </section>
 
     <section class="cta" id="contact">
