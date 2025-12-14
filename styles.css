@@ -52,8 +52,8 @@ a:hover {
   z-index: 10;
   display: grid;
   grid-template-columns: 140px 1fr auto;
-  align-items: flex-start;
-  gap: 20px;
+  align-items: center;
+  gap: 16px 20px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(14px);
   border: 1px solid var(--border);
@@ -71,18 +71,37 @@ a:hover {
 
 .nav {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav__row {
+  display: flex;
   flex-wrap: wrap;
-  gap: 12px 16px;
+  gap: 10px 14px;
   font-weight: 600;
   justify-content: flex-start;
 }
 
-.nav a {
+.nav a,
+.nav__row a {
   padding: 8px 12px;
   border-radius: 12px;
   transition: background 0.3s ease;
 }
 
+.nav__row--primary a {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+}
+
+.nav__row--secondary a {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+}
+
+.nav__row--primary a:hover,
+.nav__row--secondary a:hover,
 .nav a:hover {
   background: #eef2ff;
 }
