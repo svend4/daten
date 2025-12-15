@@ -60,3 +60,30 @@ htmlcov/
 *.temp
 tmp/
 temp/
+
+# Frontend
+node_modules/
+ios-system/frontend/node_modules/
+ios-system/frontend/dist/
+ios-system/frontend/build/
+ios-system/frontend/.vite/
+
+# Docker volumes & data
+postgres_data/
+redis_data/
+elasticsearch_data/
+qdrant_data/
+prometheus_data/
+grafana_data/
+certbot/
+
+# Logs
+logs/
+*.log
+
+# Backups
+backups/
+*.backup
+
+# Nginx
+nginx/logs/
