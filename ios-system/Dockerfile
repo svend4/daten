@@ -5,11 +5,11 @@ FROM node:18-alpine as frontend-build
 WORKDIR /app/frontend
 
 # Copy frontend package files
-COPY IOS-System/frontend/package*.json ./
+COPY ios-system/IOS-System/frontend/package*.json ./
 RUN npm install
 
 # Copy frontend source
-COPY IOS-System/frontend/ ./
+COPY ios-system/IOS-System/frontend/ ./
 
 # Build frontend
 RUN npm run build
@@ -29,15 +29,15 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy requirements
-COPY requirements.txt .
+COPY ios-system/requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy backend code
-COPY IOS-System/ /app/IOS-System/
-COPY ios_bootstrap/ /app/ios_bootstrap/
+COPY ios-system/IOS-System/ /app/IOS-System/
+COPY ios-system/ios_bootstrap/ /app/ios_bootstrap/
 
 # Copy built frontend from stage 1
 COPY --from=frontend-build /app/frontend/dist /app/frontend-dist
