@@ -7,9 +7,11 @@ Main FastAPI Application - Bootstrap Entry Point
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 import logging
 import sys
+import os
 from pathlib import Path
 
 # Добавить IOS-System в Python path
@@ -139,6 +141,39 @@ async def global_exception_handler(request: Request, exc: Exception):
 # TODO: Import and include existing routers from IOS-System/
 # from IOS-System.api import ...
 # app.include_router(...)
+
+
+# ============================================================================
+# Frontend Static Files Serving
+# ============================================================================
+
+# Get frontend dist path from environment or use default
+frontend_dist = os.getenv("FRONTEND_DIST", "/app/frontend-dist")
+
+# Mount static files if frontend dist exists
+if os.path.exists(frontend_dist):
+    logger.info(f"Mounting frontend from {frontend_dist}")
+
+    # Mount static assets
+    app.mount("/assets", StaticFiles(directory=f"{frontend_dist}/assets"), name="assets")
+
+    # Serve index.html for all other routes (SPA fallback)
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        """Serve React SPA for all non-API routes"""
+        # Skip API routes
+        if full_path.startswith("api/") or full_path == "health":
+            return JSONResponse({"error": "Not found"}, status_code=404)
+
+        # Serve static files if they exist
+        file_path = Path(frontend_dist) / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+
+        # Otherwise serve index.html for client-side routing
+        return FileResponse(f"{frontend_dist}/index.html")
+else:
+    logger.warning(f"Frontend dist directory not found: {frontend_dist}")
 
 
 if __name__ == "__main__":
