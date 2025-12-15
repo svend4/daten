@@ -6,7 +6,7 @@ WORKDIR /app/frontend
 
 # Copy frontend package files
 COPY IOS-System/frontend/package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy frontend source
 COPY IOS-System/frontend/ ./
