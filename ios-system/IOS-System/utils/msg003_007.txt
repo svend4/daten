@@ -1,0 +1,12 @@
+/IOS-ROOT/
+├── global-index.db              # Главный индекс (SQLite)
+├── master-ontology.json         # Глобальная онтология
+├── system-registry.yaml         # Реестр подсистем
+├── config/
+│   ├── domains.config           # Конфигурация доменов
+│   ├── plugins.config           # Конфигурация плагинов
+│   └── security.config          # Настройки безопасности
+└── logs/
+    ├── system.log               # Системный лог
+    ├── access.log               # Лог доступа
+    └── errors.log               # Лог ошибок

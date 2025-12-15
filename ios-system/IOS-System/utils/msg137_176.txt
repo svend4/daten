@@ -1,0 +1,5 @@
+---
+
+## 🔄 Auto-Scaling Policies
+
+### Kubernetes HPA Configuration

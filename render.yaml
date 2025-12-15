@@ -1,0 +1,38 @@
+# Render.com deployment configuration
+# https://render.com - бесплатный хостинг с автодеплоем
+
+services:
+  - type: web
+    name: ios-system-api
+    env: python
+    region: frankfurt
+    buildCommand: "cd ios-system && pip install -r requirements.txt"
+    startCommand: "cd ios-system && uvicorn ios_bootstrap.main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ios-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ios-redis
+          property: connectionString
+
+  - type: pserv
+    name: ios-db
+    env: docker
+    plan: free
+    ipAllowList: []
+
+  - type: redis
+    name: ios-redis
+    plan: free
+    ipAllowList: []

@@ -1,0 +1,209 @@
+### 2. Upload Your First Document
+
+1. Click **"Documents"** in the sidebar
+2. Click **"Upload Document"** button
+3. Drag and drop a PDF, Word, or text file
+4. Select the domain (e.g., "Legal Documents")
+5. Click **"Upload"**
+
+**What happens next:**
+- IOS automatically classifies your document
+- Extracts key entities (people, organizations, concepts)
+- Makes it searchable
+- Builds knowledge connections
+
+### 3. Search for Information
+
+1. Click **"Search"** in the sidebar
+2. Enter your query (e.g., "contract review")
+3. Choose search type:
+   - **Full-text**: Traditional keyword search
+   - **Semantic**: Meaning-based search
+   - **Hybrid**: Best of both (recommended)
+4. View results with relevance scores
+
+### 4. Explore the Knowledge Graph
+
+1. Click **"Knowledge Graph"** in the sidebar
+2. See how your documents are connected
+3. Click on entities to explore relationships
+4. Discover patterns and insights
+
+## Core Concepts
+
+### Domains
+
+Domains are like folders for organizing your knowledge. Examples:
+- Legal Documents
+- Medical Records
+- Research Papers
+- Customer Contracts
+
+### Document Types
+
+IOS automatically classifies documents into types:
+- **Contracts**: Legal agreements
+- **Reports**: Analysis and findings
+- **Correspondence**: Letters and emails
+- **Forms**: Applications and forms
+
+### Entities
+
+Entities are important concepts extracted from your documents:
+- **People**: John Smith, Dr. Schmidt
+- **Organizations**: Acme Corp, Health Department
+- **Locations**: Munich, Berlin
+- **Concepts**: Personal Budget, Legal Rights
+
+### Knowledge Graph
+
+The knowledge graph shows how entities are connected:
+- Which documents mention the same person?
+- How are different concepts related?
+- What patterns exist in your knowledge base?
+
+## Best Practices
+
+### Organizing Documents
+
+✓ **DO:**
+- Use consistent domain names
+- Add meaningful titles
+- Tag important documents
+- Review classifications
+
+✗ **DON'T:**
+- Upload everything to one domain
+- Use generic filenames
+- Ignore classification results
+
+### Searching Effectively
+
+✓ **DO:**
+- Use specific keywords
+- Try different search types
+- Use filters (date, type, domain)
+- Explore related documents
+
+✗ **DON'T:**
+- Use very generic terms
+- Ignore search suggestions
+- Search without context
+
+### Managing Knowledge
+
+✓ **DO:**
+- Regularly review and update
+- Delete outdated documents
+- Verify entity extraction
+- Check graph connections
+
+✗ **DON'T:**
+- Let data become stale
+- Ignore duplicate entities
+- Skip quality checks
+
+## Common Tasks
+
+### How to find a specific document
+
+1. Go to **Search**
+2. Enter the document title or content
+3. Use filters to narrow down:
+   - Domain: "Legal Documents"
+   - Type: "Contract"
+   - Date: "Last 30 days"
+
+### How to see all documents about a topic
+
+1. Search for the topic
+2. Click on an entity in the results
+3. View **"Related Documents"**
+4. Explore the knowledge graph
+
+### How to export data
+
+1. Go to **Settings** → **Export**
+2. Choose export format:
+   - JSON (for data processing)
+   - CSV (for spreadsheets)
+   - PDF (for reports)
+3. Select what to export
+4. Click **"Export"**
+
+### How to share with team members
+
+1. Select a document
+2. Click **"Share"**
+3. Enter team member email
+4. Set permissions:
+   - View only
+   - Can edit
+   - Can delete
+5. Click **"Send Invitation"**
+
+## Troubleshooting
+
+### Document won't upload
+
+**Problem**: Upload fails or times out
+
+**Solutions:**
+- Check file size (max 100MB)
+- Verify file format (PDF, DOCX, TXT)
+- Check internet connection
+- Try uploading during off-peak hours
+
+### Search returns no results
+
+**Problem**: Can't find documents you know exist
+
+**Solutions:**
+- Check domain filter
+- Try different keywords
+- Use "Hybrid" search type
+- Check if document was successfully indexed
+
+### Classification is incorrect
+
+**Problem**: Document classified as wrong type
+
+**Solutions:**
+- Manually correct the classification
+- Report the issue (helps improve system)
+- Add more context in document title
+- Use tags to provide hints
+
+## Getting Help
+
+### In-App Help
+
+- Click **"?"** icon in any screen
+- Hover over fields for tooltips
+- Check the **"Help Center"** in settings
+
+### Support Channels
+
+- Email: support@ios-system.com
+- Chat: Available 9-5 CET
+- Forum: community.ios-system.com
+
+### Resources
+
+- Video Tutorials: youtube.com/ios-system
+- Knowledge Base: docs.ios-system.com
+- API Documentation: api.ios-system.com/docs
+
+## Next Steps
+
+Now that you know the basics:
+
+1. **Upload more documents** - The more data, the better the insights
+2. **Explore the graph** - Discover hidden connections
+3. **Set up workflows** - Automate repetitive tasks
+4. **Invite team members** - Collaborate on knowledge
+5. **Integrate with tools** - Connect to Slack, Drive, etc.
+
+---
+
+**Need more help?** Check our [Advanced User Guide](advanced-usage.md) or [Video Tutorials](tutorials.md).

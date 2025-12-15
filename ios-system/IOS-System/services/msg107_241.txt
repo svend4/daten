@@ -1,0 +1,39 @@
+---
+
+## 📋 ROLLBACK CHECKLIST
+
+### Pre-Rollback
+
+- [ ] Rollback decision approved by Incident Commander
+- [ ] War room active (all stakeholders present)
+- [ ] Backup verified available
+- [ ] Maintenance notification sent to users
+- [ ] Rollback script ready
+- [ ] Team roles assigned
+
+### During Rollback
+
+- [ ] Maintenance mode enabled
+- [ ] Application rolled back
+- [ ] Database rolled back (if needed)
+- [ ] Caches cleared
+- [ ] Configuration restored
+- [ ] Secrets verified
+- [ ] Smoke tests passed
+
+### Post-Rollback
+
+- [ ] All services healthy
+- [ ] Error rate normalized (<1%)
+- [ ] Response time normalized (<500ms)
+- [ ] Critical functionality verified
+- [ ] Monitoring dashboards green
+- [ ] No active alerts
+- [ ] User notification sent (service restored)
+- [ ] Incident report initiated
+
+---
+
+## 🚨 ROLLBACK AUTOMATION
+
+### Automated Rollback Script

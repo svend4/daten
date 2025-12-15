@@ -1,0 +1,10 @@
+Текущее состояние:
+- WebSocket для уведомлений
+- Но нет collaborative editing
+- Нет conflict resolution
+- Нет version control для документов
+
+Проблемы:
+❌ Users can't edit documents together
+❌ No document versioning
+❌ No change tracking

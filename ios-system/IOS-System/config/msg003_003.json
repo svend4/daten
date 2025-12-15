@@ -1,0 +1,28 @@
+{
+  "relation_types": [
+    {
+      "name": "verweist_auf",
+      "source": ["Paragraph", "Gesetz"],
+      "target": ["Paragraph", "Gesetz"],
+      "description": "Ссылается на другой закон или параграф"
+    },
+    {
+      "name": "ersetzt",
+      "source": ["Paragraph", "Gesetz"],
+      "target": ["Paragraph", "Gesetz"],
+      "description": "Заменяет/отменяет предыдущую версию"
+    },
+    {
+      "name": "konkretisiert",
+      "source": ["Paragraph"],
+      "target": ["Paragraph"],
+      "description": "Конкретизирует общую норму"
+    },
+    {
+      "name": "zuständig_für",
+      "source": ["Behörde"],
+      "target": ["Leistung"],
+      "description": "Отвечает за предоставление услуги"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+**Why Different Analyzers?**
+- Index time: Expand with synonyms (broader matching)
+- Search time: No synonyms (precise user intent)
+- Result: Query "Budget" matches document with "Haushalt"
+
+---
+
+## 🔎 Search Implementation
+
+### Elasticsearch Client

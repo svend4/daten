@@ -1,0 +1,24 @@
+# German Legal Synonyms for IOS System
+
+# SGB Variations
+sgb, sozialgesetzbuch
+sgb ix, sgb 9, sozialgesetzbuch neuntes buch
+sgb xii, sgb 12, sozialgesetzbuch zwölftes buch
+
+# Document Types
+widerspruch, beschwerde, einspruch
+antrag, gesuch, beantragung
+bescheid, entscheidung, verfügung
+urteil, entscheidung, richterspruch
+
+# Common Terms
+persönliches budget, pb, persönliche budget
+eingliederungshilfe, teilhabeleistung
+teilhabe, partizipation
+behinderung, handicap
+schwerbehinderung, schwerbehindert
+
+# Organizations
+bezirk, landkreis
+sozialamt, amt für soziales
+versorgungsamt, amt für versorgung

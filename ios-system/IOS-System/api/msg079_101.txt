@@ -1,0 +1,15 @@
+[Full Webhook Guide →](./WEBHOOK_GUIDE.md)
+
+---
+
+## OAuth Integration
+
+### Google OAuth
+
+**Flow:**
+1. Redirect user to `/api/auth/google`
+2. User authorizes
+3. Callback to `/api/auth/google/callback`
+4. Receive JWT token
+
+**Frontend:**

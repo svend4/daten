@@ -1,0 +1,217 @@
+# Prometheus Alert Rules for IOS System
+groups:
+  # ============================================
+  # API Health Alerts
+  # ============================================
+  - name: api_health
+    interval: 30s
+    rules:
+      - alert: APIDown
+        expr: up{job="ios-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API instance is down"
+          description: "API instance {{ $labels.instance }} has been down for more than 1 minute."
+
+      - alert: APIHighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API error rate"
+          description: "API error rate is {{ $value | humanizePercentage }} over the last 5 minutes."
+
+      - alert: APISlowResponse
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API response time is slow"
+          description: "95th percentile response time is {{ $value }}s, exceeding 1s threshold."
+
+      - alert: APIHighRequestRate
+        expr: rate(http_requests_total[1m]) > 1000
+        for: 2m
+        labels:
+          severity: info
+        annotations:
+          summary: "High API request rate"
+          description: "Request rate is {{ $value }} req/s, which is unusually high."
+
+  # ============================================
+  # Database Alerts
+  # ============================================
+  - name: database
+    interval: 30s
+    rules:
+      - alert: PostgresDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL instance has been down for more than 1 minute."
+
+      - alert: PostgresHighConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL connection usage is high"
+          description: "Connection usage is {{ $value | humanizePercentage }}, approaching max connections."
+
+      - alert: PostgresSlowQueries
+        expr: rate(pg_stat_statements_mean_exec_time[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL queries are slow"
+          description: "Average query time is {{ $value }}ms, exceeding 1000ms threshold."
+
+      - alert: PostgresDiskSpace
+        expr: (pg_database_size_bytes / 1024 / 1024 / 1024) > 40
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL disk space is running low"
+          description: "Database size is {{ $value }}GB, approaching storage limit."
+
+  # ============================================
+  # Redis Alerts
+  # ============================================
+  - name: redis
+    interval: 30s
+    rules:
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis is down"
+          description: "Redis instance has been down for more than 1 minute."
+
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}."
+
+      - alert: RedisRejectedConnections
+        expr: rate(redis_rejected_connections_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis is rejecting connections"
+          description: "Redis rejected {{ $value }} connections in the last 5 minutes."
+
+  # ============================================
+  # Elasticsearch Alerts
+  # ============================================
+  - name: elasticsearch
+    interval: 30s
+    rules:
+      - alert: ElasticsearchDown
+        expr: up{job="elasticsearch"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Elasticsearch is down"
+          description: "Elasticsearch instance has been down for more than 1 minute."
+
+      - alert: ElasticsearchClusterRed
+        expr: elasticsearch_cluster_health_status{color="red"} == 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Elasticsearch cluster status is RED"
+          description: "Elasticsearch cluster health is RED for more than 5 minutes."
+
+      - alert: ElasticsearchDiskSpaceLow
+        expr: elasticsearch_filesystem_data_available_bytes / elasticsearch_filesystem_data_size_bytes < 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Elasticsearch disk space is low"
+          description: "Available disk space is {{ $value | humanizePercentage }}."
+
+  # ============================================
+  # Container Alerts
+  # ============================================
+  - name: containers
+    interval: 30s
+    rules:
+      - alert: ContainerCPUHigh
+        expr: rate(container_cpu_usage_seconds_total{namespace="ios-system"}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container CPU usage is high"
+          description: "Container {{ $labels.pod }} CPU usage is {{ $value | humanizePercentage }}."
+
+      - alert: ContainerMemoryHigh
+        expr: container_memory_usage_bytes{namespace="ios-system"} / container_spec_memory_limit_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container memory usage is high"
+          description: "Container {{ $labels.pod }} memory usage is {{ $value | humanizePercentage }}."
+
+      - alert: ContainerRestarting
+        expr: rate(kube_pod_container_status_restarts_total{namespace="ios-system"}[15m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container is restarting frequently"
+          description: "Container {{ $labels.pod }} has restarted {{ $value }} times in the last 15 minutes."
+
+  # ============================================
+  # Kubernetes Alerts
+  # ============================================
+  - name: kubernetes
+    interval: 30s
+    rules:
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total{namespace="ios-system"}[1h]) > 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pod is crash looping"
+          description: "Pod {{ $labels.pod }} is crash looping."
+
+      - alert: PodNotReady
+        expr: kube_pod_status_phase{namespace="ios-system",phase!~"Running|Succeeded"} > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pod is not ready"
+          description: "Pod {{ $labels.pod }} has been in {{ $labels.phase }} state for more than 5 minutes."
+
+      - alert: DeploymentReplicasMismatch
+        expr: kube_deployment_spec_replicas{namespace="ios-system"} != kube_deployment_status_replicas_available{namespace="ios-system"}
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Deployment replicas mismatch"
+          description: "Deployment {{ $labels.deployment }} has {{ $value }} replicas mismatch."

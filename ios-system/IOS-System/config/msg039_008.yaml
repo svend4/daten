@@ -1,0 +1,17 @@
+Adoption:
+  active_installations: 1000+
+  github_stars: 5000+
+  docker_pulls: 50K+
+  community_size: 500+
+
+Quality:
+  user_satisfaction: >4.5/5
+  documentation_rating: >4.7/5
+  support_response_time: <4h
+  bug_resolution_time: <48h
+
+Ecosystem:
+  integrations: 15+
+  plugins: 20+
+  client_sdks: 5+
+  community_contributions: 100+

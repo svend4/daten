@@ -1,0 +1,15 @@
+**Features:**
+- Full TypeScript support
+- Promise-based
+- Browser and Node.js compatible
+- Automatic retries
+
+[Full JavaScript SDK Documentation →](./SDK_JAVASCRIPT.md)
+
+---
+
+## Webhook Integration
+
+### Setup
+
+1. **Create Webhook:**

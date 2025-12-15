@@ -1,0 +1,11 @@
+□ Month 4: Enhanced Capabilities
+  - Background tasks (Celery)
+  - Advanced search (semantic + fuzzy)
+  - RBAC implementation
+  - WebSocket improvements
+  
+□ Month 5: Polish & Extensions
+  - WebUI admin panel (basic)
+  - Enhanced analytics
+  - Export/import features
+  - Plugin system foundation

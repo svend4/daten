@@ -1,0 +1,5 @@
+Полностью отсутствует:
+❌ Tenant isolation
+❌ Per-tenant databases
+❌ Resource quotas
+❌ Billing integration

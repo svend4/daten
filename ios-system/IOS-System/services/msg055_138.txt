@@ -1,0 +1,24 @@
+### Hybrid Ranking
+
+Combines multiple signals:
+
+| Signal | Weight | Description |
+|--------|--------|-------------|
+| Semantic Score | 35% | BERT similarity |
+| Keyword Score | 25% | ES match score |
+| Entity Match | 15% | Query entities in doc |
+| Freshness | 10% | Document age |
+| Quality | 10% | Document completeness |
+| User Signals | 5% | Click history, preferences |
+
+### Personalization
+
+- Boosts preferred domains (+20%)
+- Uses search history
+- Adapts to user patterns
+
+## Best Practices
+
+### 1. Query Formulation
+
+**Good:**

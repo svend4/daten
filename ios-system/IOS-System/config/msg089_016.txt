@@ -1,0 +1,9 @@
+**Required Variables:**
+- `DB_PASSWORD` - Strong database password
+- `JWT_SECRET_KEY` - 64-character random string
+- `ENCRYPTION_KEY` - 32-byte base64 encoded key
+- `GRAFANA_ADMIN_PASSWORD` - Grafana admin password
+- `AWS_ACCESS_KEY_ID` - AWS credentials for backups
+- `AWS_SECRET_ACCESS_KEY` - AWS secret key
+
+**Generate Secrets:**

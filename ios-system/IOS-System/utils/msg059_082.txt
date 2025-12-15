@@ -1,0 +1,8 @@
+### 3. Temperature Tuning
+
+- **0.0-0.3**: Factual, deterministic (legal docs)
+- **0.4-0.7**: Balanced (general content)
+- **0.8-1.0**: Creative (brainstorming)
+- **1.1-2.0**: Very creative (not recommended)
+
+### 4. Token Management

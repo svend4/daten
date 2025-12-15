@@ -1,0 +1,4 @@
+1. Аудит существующего
+2. Gap analysis
+3. Incremental improvements
+4. Migration plan

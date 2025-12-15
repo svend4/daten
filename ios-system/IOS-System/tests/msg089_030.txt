@@ -1,0 +1,7 @@
+**URL:** http://localhost:9090
+
+### Configure Alerts
+
+Alerts are automatically configured via `monitoring/prometheus/alerts.yml`.
+
+**Test alert:**

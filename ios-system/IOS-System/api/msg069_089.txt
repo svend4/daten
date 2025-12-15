@@ -1,0 +1,39 @@
+---
+
+## Troubleshooting
+
+### Rate Limit Issues
+
+**Problem:** Users getting rate limited too quickly
+
+**Solutions:**
+1. Check tier assignment
+2. Review rate limit windows
+3. Check for retry storms
+4. Increase limits for specific users
+
+### Circuit Breaker Issues
+
+**Problem:** Circuit stays open
+
+**Solutions:**
+1. Check backend health
+2. Review failure threshold
+3. Increase recovery timeout
+4. Manual reset if needed
+
+### Load Balancing Issues
+
+**Problem:** Uneven distribution
+
+**Solutions:**
+1. Check backend weights
+2. Review routing strategy
+3. Monitor connection counts
+4. Check health check frequency
+
+---
+
+## API Reference
+
+See [API Documentation](/api/docs) for complete endpoint reference.

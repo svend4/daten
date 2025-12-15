@@ -1,0 +1,189 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ios-system
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ios-config
+  namespace: ios-system
+data:
+  IOS_ROOT_PATH: "/data/ios-root"
+  DEBUG: "false"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ios-secrets
+  namespace: ios-system
+type: Opaque
+stringData:
+  db-password: "CHANGE_ME"
+  secret-key: "CHANGE_ME"
+  grafana-password: "CHANGE_ME"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ios-api
+  namespace: ios-system
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ios-api
+  template:
+    metadata:
+      labels:
+        app: ios-api
+    spec:
+      containers:
+      - name: ios-api
+        image: ios-system:0.1.0
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - containerPort: 8000
+          name: http
+        
+        env:
+        - name: DATABASE_URL
+          value: "postgresql+asyncpg://ios_user:$(DB_PASSWORD)@postgres:5432/ios_db"
+        - name: REDIS_URL
+          value: "redis://redis:6379/0"
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ios-secrets
+              key: secret-key
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: ios-secrets
+              key: db-password
+        
+        envFrom:
+        - configMapRef:
+            name: ios-config
+        
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        volumeMounts:
+        - name: ios-data
+          mountPath: /data
+      
+      volumes:
+      - name: ios-data
+        persistentVolumeClaim:
+          claimName: ios-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ios-api
+  namespace: ios-system
+spec:
+  selector:
+    app: ios-api
+  ports:
+  - port: 8000
+    targetPort: 8000
+    name: http
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ios-ingress
+  namespace: ios-system
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - ios.yourdomain.com
+    secretName: ios-tls
+  rules:
+  - host: ios.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ios-api
+            port:
+              number: 8000
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ios-data-pvc
+  namespace: ios-system
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ios-api-hpa
+  namespace: ios-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ios-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

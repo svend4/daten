@@ -1,0 +1,9 @@
+KNOWLEDGE METRICS:
+- Total documents: 1,234
+- Indexed documents: 1,180 (95%)
+- Unclassified: 54 (5%)
+- Active contexts: 3
+- Recent searches: 127
+- Knowledge graph nodes: 3,456
+- Knowledge graph edges: 8,901
+- Cache hit rate: 87%

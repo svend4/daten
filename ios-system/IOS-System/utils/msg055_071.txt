@@ -1,0 +1,5 @@
+Too vague, ambiguous intent.
+
+### 2. Weight Tuning
+
+**High Precision** (fewer, better results):

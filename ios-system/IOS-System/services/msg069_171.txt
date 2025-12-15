@@ -1,0 +1,14 @@
+---
+
+## Circuit Breaker
+
+### Overview
+
+Protects against cascading failures when calling external services.
+
+**States:**
+- **CLOSED**: Normal operation, all requests pass through
+- **OPEN**: Too many failures, requests blocked
+- **HALF_OPEN**: Testing if service recovered
+
+### Configuration

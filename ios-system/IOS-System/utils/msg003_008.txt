@@ -1,0 +1,21 @@
+/IOS-ROOT/domains/SGB-IX/
+├── domain.config                # Конфигурация домена
+├── metadata/                    # Метаданные домена
+│   ├── taxonomy.json            # Таксономия (иерархия понятий)
+│   ├── entity-types.json        # Типы сущностей (законы, параграфы)
+│   ├── relation-types.json      # Типы отношений (ссылается, отменяет)
+│   └── templates/               # Шаблоны документов
+│       ├── widerspruch.template
+│       ├── antrag.template
+│       └── beschwerde.template
+├── knowledge-graph/             # Граф знаний домена
+│   ├── entities.db              # База сущностей
+│   ├── relations.db             # База отношений
+│   └── graph.json               # Граф в JSON
+├── indexes/                     # Индексы для быстрого поиска
+│   ├── full-text.index          # Полнотекстовый индекс
+│   ├── entity.index             # Индекс сущностей
+│   └── date.index               # Индекс по датам
+├── cache/                       # Кэш часто используемых данных
+│   └── hot-documents.cache
+└── data/                        # Сырые данные (переход к Level 4)

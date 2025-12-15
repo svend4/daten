@@ -1,0 +1,263 @@
+version: '3.8'
+
+services:
+  # ========================================================================
+  # Jaeger - Distributed Tracing
+  # ========================================================================
+  jaeger:
+    image: jaegertracing/all-in-one:1.52
+    container_name: ios-jaeger
+    restart: unless-stopped
+    
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+      - METRICS_STORAGE_TYPE=prometheus
+    
+    ports:
+      - "5775:5775/udp"   # Zipkin compact
+      - "6831:6831/udp"   # Jaeger compact
+      - "6832:6832/udp"   # Jaeger binary
+      - "5778:5778"       # Serve configs
+      - "16686:16686"     # UI
+      - "14250:14250"     # gRPC
+      - "14268:14268"     # HTTP
+      - "14269:14269"     # Admin
+      - "9411:9411"       # Zipkin
+    
+    networks:
+      - ios-network
+    
+    volumes:
+      - jaeger-data:/badger
+
+  # ========================================================================
+  # Elasticsearch - Logs & Search
+  # ========================================================================
+  elasticsearch:
+    image: elasticsearch:8.11.3
+    container_name: ios-elasticsearch
+    restart: unless-stopped
+    
+    environment:
+      - node.name=es01
+      - cluster.name=ios-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+    
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    
+    networks:
+      - ios-network
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ========================================================================
+  # Logstash - Log Processing
+  # ========================================================================
+  logstash:
+    image: logstash:8.11.3
+    container_name: ios-logstash
+    restart: unless-stopped
+    
+    environment:
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    
+    ports:
+      - "5044:5044"     # Beats input
+      - "9600:9600"     # Monitoring
+      - "5000:5000/tcp" # TCP input
+      - "5000:5000/udp" # UDP input
+    
+    volumes:
+      - ./observability/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./observability/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - logstash-data:/usr/share/logstash/data
+    
+    networks:
+      - ios-network
+    
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  # ========================================================================
+  # Kibana - Log Visualization
+  # ========================================================================
+  kibana:
+    image: kibana:8.11.3
+    container_name: ios-kibana
+    restart: unless-stopped
+    
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=ios-kibana
+      - SERVER_HOST=0.0.0.0
+    
+    ports:
+      - "5601:5601"
+    
+    networks:
+      - ios-network
+    
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ========================================================================
+  # Filebeat - Log Shipper
+  # ========================================================================
+  filebeat:
+    image: elastic/filebeat:8.11.3
+    container_name: ios-filebeat
+    restart: unless-stopped
+    
+    user: root
+    
+    volumes:
+      - ./observability/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat-data:/usr/share/filebeat/data
+    
+    networks:
+      - ios-network
+    
+    depends_on:
+      - logstash
+    
+    command: filebeat -e -strict.perms=false
+
+  # ========================================================================
+  # Sentry - Error Tracking
+  # ========================================================================
+  sentry-postgres:
+    image: postgres:15-alpine
+    container_name: ios-sentry-postgres
+    restart: unless-stopped
+    
+    environment:
+      - POSTGRES_USER=sentry
+      - POSTGRES_PASSWORD=${SENTRY_DB_PASSWORD}
+      - POSTGRES_DB=sentry
+    
+    volumes:
+      - sentry-postgres-data:/var/lib/postgresql/data
+    
+    networks:
+      - ios-network
+
+  sentry-redis:
+    image: redis:7-alpine
+    container_name: ios-sentry-redis
+    restart: unless-stopped
+    
+    volumes:
+      - sentry-redis-data:/data
+    
+    networks:
+      - ios-network
+
+  sentry:
+    image: sentry:latest
+    container_name: ios-sentry
+    restart: unless-stopped
+    
+    environment:
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+      - SENTRY_POSTGRES_HOST=sentry-postgres
+      - SENTRY_DB_USER=sentry
+      - SENTRY_DB_PASSWORD=${SENTRY_DB_PASSWORD}
+      - SENTRY_REDIS_HOST=sentry-redis
+    
+    ports:
+      - "9000:9000"
+    
+    volumes:
+      - sentry-data:/var/lib/sentry/files
+    
+    networks:
+      - ios-network
+    
+    depends_on:
+      - sentry-postgres
+      - sentry-redis
+
+  sentry-worker:
+    image: sentry:latest
+    container_name: ios-sentry-worker
+    restart: unless-stopped
+    
+    command: run worker
+    
+    environment:
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+      - SENTRY_POSTGRES_HOST=sentry-postgres
+      - SENTRY_DB_USER=sentry
+      - SENTRY_DB_PASSWORD=${SENTRY_DB_PASSWORD}
+      - SENTRY_REDIS_HOST=sentry-redis
+    
+    networks:
+      - ios-network
+    
+    depends_on:
+      - sentry
+
+  sentry-cron:
+    image: sentry:latest
+    container_name: ios-sentry-cron
+    restart: unless-stopped
+    
+    command: run cron
+    
+    environment:
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY}
+      - SENTRY_POSTGRES_HOST=sentry-postgres
+      - SENTRY_DB_USER=sentry
+      - SENTRY_DB_PASSWORD=${SENTRY_DB_PASSWORD}
+      - SENTRY_REDIS_HOST=sentry-redis
+    
+    networks:
+      - ios-network
+    
+    depends_on:
+      - sentry
+
+volumes:
+  jaeger-data:
+  es-data:
+  logstash-data:
+  filebeat-data:
+  sentry-postgres-data:
+  sentry-redis-data:
+  sentry-data:
+
+networks:
+  ios-network:
+    external: true

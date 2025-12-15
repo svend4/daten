@@ -1,0 +1,31 @@
+### Prevention
+- [ ] Implement APM (Application Performance Monitoring)
+- [ ] Regular load testing
+- [ ] Code profiling in development
+- [ ] Cache warming on deployment
+- [ ] Database query optimization review
+- [ ] Implement auto-scaling
+
+### Escalation
+- **30 minutes:** Alert Engineering team
+- **1 hour:** Escalate to Engineering Lead
+- **If user-facing impact significant:** Coordinate with Customer Success
+
+---
+
+## RUNBOOK 5: Cache Problems
+
+### Symptoms
+- High cache miss rate
+- Redis memory full
+- Slow Redis responses
+- Stale data being served
+
+### Impact
+- **Severity:** Medium to High
+- **User Impact:** Slower responses, occasional stale data
+- **Business Impact:** Increased database load
+
+### Investigation Steps
+
+**Step 1: Check Redis Status**

@@ -1,0 +1,8 @@
+**Checklist:**
+- [ ] Create `.env` file with secrets
+- [ ] Test `docker-compose up -d`
+- [ ] Verify all containers healthy
+- [ ] Test connection to each service
+- [ ] Document startup process
+
+**Testing:**

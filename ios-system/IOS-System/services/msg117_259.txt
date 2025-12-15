@@ -1,0 +1,28 @@
+---
+
+## 📅 MONTH 1: BECOMING PRODUCTIVE
+
+### Week 3-4 Goals
+
+**Technical:**
+- [ ] Complete 3-5 issues independently
+- [ ] Write comprehensive tests (>80% coverage)
+- [ ] Participate in code reviews
+- [ ] Contribute to documentation
+- [ ] Shadow on-call engineer
+
+**Process:**
+- [ ] Understand sprint planning
+- [ ] Familiar with deployment process
+- [ ] Know when to ask for help
+- [ ] Comfortable with team tools
+
+**Culture:**
+- [ ] Connect with team members
+- [ ] Understand team values
+- [ ] Participate in discussions
+- [ ] Share knowledge
+
+### Month 1 Review
+
+**Self-Assessment:**

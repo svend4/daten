@@ -1,0 +1,34 @@
+{
+  "name": "SGB-IX Taxonomy",
+  "version": "1.0",
+  "hierarchy": {
+    "SGB-IX": {
+      "type": "domain",
+      "children": {
+        "Teilhabe": {
+          "type": "category",
+          "description": "Teilhabe und Rehabilitation",
+          "children": {
+            "Persönliches Budget": {
+              "type": "subcategory",
+              "paragraphs": ["§29", "§30"],
+              "related_laws": ["SGB-XII", "SGB-XI"]
+            },
+            "Assistenz": {
+              "type": "subcategory",
+              "paragraphs": ["§78", "§79"]
+            }
+          }
+        },
+        "Leistungen": {
+          "type": "category",
+          "children": {
+            "Medizinische Rehabilitation": {},
+            "Teilhabe am Arbeitsleben": {},
+            "Teilhabe an Bildung": {}
+          }
+        }
+      }
+    }
+  }
+}

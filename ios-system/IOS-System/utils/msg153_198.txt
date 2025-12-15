@@ -1,0 +1,24 @@
+```python
+# ios_core/settings/development.py
+
+from .base import *
+
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
+# Disable some security for development
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
+# Enable CORS for development
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Debug toolbar
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+INTERNAL_IPS = ['127.0.0.1']
+
+# Detailed logging
+LOGGING['root']['level'] = 'DEBUG'

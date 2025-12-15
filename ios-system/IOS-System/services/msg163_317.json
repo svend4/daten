@@ -1,0 +1,160 @@
+{
+  "info": {
+    "name": "IOS Search API",
+    "description": "API collection for IOS Search System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Basic Search",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"persönliches budget\",\n  \"page\": 1,\n  \"page_size\": 20\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search with Filters",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"pflege\",\n  \"filters\": {\n    \"document_type\": \"LAW\",\n    \"legal_code\": \"SGB XI\"\n  },\n  \"page\": 1,\n  \"page_size\": 10,\n  \"sort_by\": \"date_desc\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Autocomplete",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/autocomplete/?query=pers&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "autocomplete"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "pers"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Get Document",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/documents/{{document_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "documents", "{{document_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Similar Documents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/documents/{{document_id}}/similar/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "documents", "{{document_id}}", "similar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Track Click",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query_id\": \"{{query_id}}\",\n  \"document_id\": \"{{document_id}}\",\n  \"position\": 1,\n  \"score\": 0.95\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/track-click/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "track-click"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/health/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "query_id",
+      "value": ""
+    },
+    {
+      "key": "document_id",
+      "value": ""
+    }
+  ]
+}

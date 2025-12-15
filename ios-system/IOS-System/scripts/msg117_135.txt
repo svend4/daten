@@ -1,0 +1,5 @@
+### Afternoon: Development Tools
+
+**Step 4: Development Environment (2:00 PM)**
+
+**Install Homebrew (macOS):**

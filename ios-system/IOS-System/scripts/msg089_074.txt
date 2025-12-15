@@ -1,0 +1,7 @@
+### Database Connection Pool Exhausted
+
+**Symptoms:**
+- `ConnectionPoolExhausted` errors
+- Alert: `PostgresHighConnections`
+
+**Investigation:**

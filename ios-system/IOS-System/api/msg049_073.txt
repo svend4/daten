@@ -1,0 +1,15 @@
+# BERT Server Requirements
+
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+
+# ML
+torch==2.1.2
+transformers==4.37.0
+sentencepiece==0.1.99
+accelerate==0.26.1
+
+# Utils
+numpy==1.26.3
+scipy==1.12.0

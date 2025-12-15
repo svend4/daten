@@ -1,0 +1,7 @@
+---
+
+## 🔍 EXTENDED VALIDATION (T+15min to T+1hr)
+
+### 1. Integration Tests
+
+**OAuth Integration:**

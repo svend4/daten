@@ -1,0 +1,7 @@
+### 3. Threshold Tuning
+
+- **High Precision** (fewer, better results): threshold=0.8
+- **Balanced**: threshold=0.7
+- **High Recall** (more results): threshold=0.6
+
+### 4. Domain Filtering

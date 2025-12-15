@@ -1,0 +1,10 @@
+Текущее состояние:
+- Single-node deployment работает до ~100K документов
+- PostgreSQL начинает замедляться на >1M документов
+- Whoosh search не масштабируется горизонтально
+- Knowledge graph в памяти ограничен RAM
+
+Проблемы:
+❌ Нет horizontal scaling для search
+❌ Нет sharding для больших графов
+❌ Limited to single-region deployment

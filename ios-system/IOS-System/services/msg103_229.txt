@@ -1,0 +1,77 @@
+---
+
+## ✅ INCIDENT RESPONSE CHECKLIST
+
+### Detection Phase
+- [ ] Alert received and acknowledged
+- [ ] Initial assessment completed
+- [ ] Severity classified
+- [ ] Incident commander assigned
+- [ ] War room established
+- [ ] Initial notification sent
+
+### Containment Phase
+- [ ] Affected systems identified
+- [ ] Immediate containment applied
+- [ ] Evidence preserved
+- [ ] Backups verified
+- [ ] Additional monitoring enabled
+- [ ] Status update sent (30 min)
+
+### Eradication Phase
+- [ ] Root cause identified
+- [ ] Threat removed
+- [ ] Systems patched
+- [ ] Vulnerability closed
+- [ ] Security measures enhanced
+- [ ] Status update sent (1 hour)
+
+### Recovery Phase
+- [ ] Systems restored from clean state
+- [ ] Service functionality verified
+- [ ] Monitoring confirmed normal
+- [ ] Users notified of restoration
+- [ ] Enhanced monitoring active
+- [ ] Status update sent (2 hours)
+
+### Post-Incident Phase
+- [ ] Incident report completed
+- [ ] Post-mortem scheduled
+- [ ] Action items created
+- [ ] JIRA tickets opened
+- [ ] Lessons learned documented
+- [ ] Compliance notifications filed
+- [ ] Final status update sent
+
+---
+
+## 📚 APPENDIX
+
+### A. Contact Lists
+[Detailed contact information for response team]
+
+### B. System Diagrams
+[Network and application architecture diagrams]
+
+### C. Runbook Links
+- [Database recovery runbook]
+- [Kubernetes disaster recovery]
+- [Backup restoration procedures]
+
+### D. Legal Requirements
+- GDPR breach notification: 72 hours
+- User notification: "without undue delay"
+- Insurance notification: 24 hours
+- Law enforcement: As required
+
+### E. Vendor Contacts
+- AWS Support: 1-xxx-xxx-xxxx
+- CloudFlare: enterprise-support@cloudflare.com
+- Security Consultant: [Contact]
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** 2025-01-15  
+**Next Review:** 2025-04-15  
+**Owner:** Security Team

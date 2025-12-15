@@ -1,0 +1,19 @@
+# Скопировать из ФАЙЛА 13, секция "Docker Compose Development"
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    # ... настройки из спецификации
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    # ... настройки из спецификации
+  
+  qdrant:
+    image: qdrant/qdrant:v1.7.0
+    # ... настройки из спецификации
+  
+  redis:
+    image: redis:7-alpine
+    # ... настройки из спецификации

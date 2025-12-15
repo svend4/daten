@@ -1,0 +1,6 @@
+## Resources
+
+- [OpenAI API Docs](https://platform.openai.com/docs)
+- [GPT-4 Guide](https://platform.openai.com/docs/guides/gpt)
+- [Prompt Engineering](https://platform.openai.com/docs/guides/prompt-engineering)
+- [Token Limits](https://platform.openai.com/docs/models)

@@ -1,0 +1,7 @@
+---
+
+## 🔍 DETAILED ROLLBACK PROCEDURES
+
+### Rollback Scenario 1: Application Only
+
+**When:** Code issues, no database changes

@@ -1,0 +1,34 @@
+---
+
+## 🎓 Lessons Learned
+
+### What Worked Well
+
+1. **Sliding Window Algorithm** - More accurate than fixed window
+2. **Circuit Breaker** - Prevented cascade failures during testing
+3. **Event Bus** - Clean separation of concerns
+4. **SDK Design** - Consistent API across languages
+
+### Challenges
+
+1. **Rate Limit Persistence**
+   - Challenge: Lost state on restart
+   - Solution: Redis persistence
+
+2. **Webhook Retries**
+   - Challenge: Exponential backoff complexity
+   - Solution: Queue-based processing
+
+3. **OAuth State Management**
+   - Challenge: CSRF protection
+   - Solution: Secure state tokens
+
+4. **SDK Error Handling**
+   - Challenge: Consistent error types
+   - Solution: Custom exception hierarchy
+
+---
+
+## 🔧 Technical Highlights
+
+### Rate Limiter Implementation

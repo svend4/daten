@@ -1,0 +1,5 @@
+КОМПЬЮТЕР:              IOS:
+- Desktop            →  Knowledge Dashboard
+- File Explorer      →  Knowledge Navigator
+- Search             →  Semantic Search
+- Applications       →  Knowledge Tools (анализ, синтез, экспорт)

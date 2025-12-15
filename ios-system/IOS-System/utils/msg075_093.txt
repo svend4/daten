@@ -1,0 +1,14 @@
+## Requirements
+
+- Python 3.8+
+- requests
+
+## License
+
+MIT
+
+## Support
+
+- Documentation: https://docs.ios-system.com
+- GitHub: https://github.com/ios-system/ios-sdk-python
+- Email: support@ios-system.com

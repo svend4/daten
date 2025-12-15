@@ -1,0 +1,9 @@
+**Key dashboards:**
+- Performance Overview
+- Database Performance
+- Cache Statistics
+- API Response Times
+
+### Prometheus Queries
+
+**Useful queries:**

@@ -1,0 +1,13 @@
+**Length Options:**
+- `brief`: 1-2 sentences
+- `short`: 1 paragraph
+- `medium`: 2-3 paragraphs
+- `detailed`: Full summary
+
+**Style Options:**
+- `executive`: For decision-makers
+- `technical`: Detailed technical
+- `simple`: Easy to understand
+- `legal`: Legal terminology
+
+### Content Enhancement

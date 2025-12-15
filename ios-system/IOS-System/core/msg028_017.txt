@@ -1,0 +1,23 @@
+Month 1: MVP + Testing
+  - Интеграция компонентов
+  - Unit tests 80%+
+  - Integration tests
+  - Bug fixing
+  
+Month 2: Production deployment
+  - Security hardening
+  - Performance optimization
+  - Monitoring setup
+  - Backup/restore
+  
+Month 3: Documentation & polish
+  - Complete documentation
+  - User guide
+  - Video tutorials
+  - Code cleanup
+  
+Month 4: Real-world usage
+  - Load real SGB-IX documents
+  - Fine-tune classifiers
+  - Build knowledge graph
+  - Iterate based on usage

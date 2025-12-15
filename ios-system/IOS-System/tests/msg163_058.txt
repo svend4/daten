@@ -1,0 +1,6 @@
+Target         Achieved
+━━━━━━━━━━━━━━━━━━━━━━━
+P95 < 500ms    ✓ 327ms
+P99 < 1000ms   ✓ 658ms
+Cache hit      ✓ 73%
+Error rate     ✓ 0.02%

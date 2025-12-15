@@ -1,0 +1,9 @@
+### Auto-scaling (HPA)
+
+Already configured via `kubernetes/hpa.yaml`:
+- Min replicas: 3
+- Max replicas: 10
+- Target CPU: 70%
+- Target Memory: 80%
+
+**View HPA status:**

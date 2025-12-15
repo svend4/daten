@@ -1,0 +1,50 @@
+### 2. RAG (Retrieval-Augmented Generation)
+
+Q&A system that:
+1. Retrieves relevant documents (neural search)
+2. Builds context
+3. Generates answer (GPT)
+4. Attributes sources
+
+### 3. Cross-lingual Search
+
+Search in one language, find results in others:
+- Query: "Personal budget" (en)
+- Translates to: "Persönliches Budget" (de), "Личный бюджет" (ru)
+- Searches all languages
+- Merges results
+
+### 4. Smart Caching
+
+Multi-level caching:
+- Translation cache (Redis)
+- Embedding cache
+- Query result cache
+- Token-based invalidation
+
+## 🎓 Lessons Learned
+
+### What Worked Well
+
+1. **Ensemble Approach**: Multiple detection methods increased accuracy
+2. **Hybrid Ranking**: Combined signals outperformed single methods
+3. **Caching Strategy**: Reduced costs by 80%
+4. **Progressive Enhancement**: Users got value at each stage
+
+### Challenges
+
+1. **Model Size**: BERT models are large (1.3GB+)
+   - Solution: Model quantization, GPU acceleration
+
+2. **Translation Costs**: High volume = high costs
+   - Solution: Aggressive caching, batch processing
+
+3. **Language Detection**: Mixed-language text was tricky
+   - Solution: Ensemble of detectors, script analysis
+
+4. **Response Time**: Initial searches were slow
+   - Solution: Caching, pre-indexing, optimization
+
+## 🔧 Technical Highlights
+
+### Docker Compose ML Services

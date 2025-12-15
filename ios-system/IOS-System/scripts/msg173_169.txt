@@ -1,0 +1,14 @@
+**Time: 18:00 CET (Day -1)**
+
+- [ ] All team members briefed
+- [ ] On-call schedule confirmed
+- [ ] Rollback plan reviewed
+- [ ] Communication channels tested
+- [ ] Final backup completed
+- [ ] Monitoring dashboards open
+
+### Launch Execution
+
+**Time: 00:00 CET (Launch Day)**
+
+#### Phase 1: Deployment (00:00 - 00:30)

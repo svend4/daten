@@ -1,0 +1,30 @@
+### Prevention
+- [ ] Set up auto-scaling (HPA)
+- [ ] Configure resource requests/limits properly
+- [ ] Enable liveness/readiness probes
+- [ ] Implement circuit breakers
+- [ ] Set up load testing in CI/CD
+
+### Escalation
+- **15 minutes:** Escalate to Engineering Lead
+- **30 minutes:** Escalate to CTO
+- **1 hour:** Activate incident commander
+
+---
+
+## RUNBOOK 2: High Error Rate
+
+### Symptoms
+- Alert: "HighErrorRate" firing
+- Error rate >1% for 5+ minutes
+- Increased 5xx responses
+- User reports of failures
+
+### Impact
+- **Severity:** Critical (>5%), High (>1%)
+- **User Impact:** Service degradation
+- **Business Impact:** User experience degradation
+
+### Investigation Steps
+
+**Step 1: Identify Error Types**

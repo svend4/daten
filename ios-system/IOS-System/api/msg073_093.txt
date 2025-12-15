@@ -1,0 +1,40 @@
+**Important:**
+- Use constant-time comparison (`hmac.compare_digest`)
+- Verify before processing event
+- Return 401 for invalid signatures
+
+### Best Practices
+
+1. **Use HTTPS** - Always use `https://` URLs
+2. **Validate signatures** - Don't trust unsigned webhooks
+3. **Handle replays** - Store processed event IDs to prevent duplicates
+4. **Rate limiting** - Implement rate limiting on your endpoint
+5. **Timeouts** - Respond within 30 seconds
+
+---
+
+## Retry Logic
+
+Failed deliveries are retried with exponential backoff:
+
+- Attempt 1: Immediate
+- Attempt 2: After 2 seconds
+- Attempt 3: After 4 seconds
+- Attempt 4: After 8 seconds (if configured)
+
+**Success criteria:**
+- HTTP status 200-299
+- Response within timeout (default: 30s)
+
+**Failure criteria:**
+- HTTP status 400-599
+- Timeout
+- Network error
+
+After all retries fail, delivery is marked as failed. Check delivery history to debug.
+
+---
+
+## Managing Webhooks
+
+### List Webhooks

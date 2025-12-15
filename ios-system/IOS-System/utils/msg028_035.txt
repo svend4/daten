@@ -1,0 +1,5 @@
+LEVEL 5: OPTIMIZING     ◯ - Continuous improvement
+LEVEL 4: MANAGED        ◯ - Quantitatively managed
+LEVEL 3: DEFINED        ◯ - Process defined
+LEVEL 2: EMERGING       ● - Basic practices (ТЕКУЩИЙ)
+LEVEL 1: INITIAL        ○ - Ad-hoc

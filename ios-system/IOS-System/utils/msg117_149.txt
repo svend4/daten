@@ -1,0 +1,5 @@
+### Day 5 Afternoon: Deployment Process
+
+**Step 6: Understanding Deployment (2:00 PM)**
+
+**CI/CD Pipeline Overview:**

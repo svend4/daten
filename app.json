@@ -1,0 +1,45 @@
+{
+  "name": "ios-search-system",
+  "description": "Information Operating System - Search System",
+  "repository": "https://github.com/svend4/daten",
+  "logo": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png",
+  "keywords": ["python", "fastapi", "search", "whoosh", "postgresql"],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0",
+      "as": "DATABASE"
+    },
+    {
+      "plan": "heroku-redis:mini",
+      "as": "REDIS"
+    }
+  ],
+  "env": {
+    "ENVIRONMENT": {
+      "description": "Application environment",
+      "value": "production"
+    },
+    "SECRET_KEY": {
+      "description": "Secret key for JWT tokens",
+      "generator": "secret"
+    },
+    "PYTHONUNBUFFERED": {
+      "description": "Unbuffered Python output",
+      "value": "1"
+    }
+  },
+  "scripts": {
+    "postdeploy": "cd информационная-ОС && python -c 'print(\"IOS System deployed!\")'"
+  }
+}

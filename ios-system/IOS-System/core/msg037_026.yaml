@@ -1,0 +1,299 @@
+openapi: 3.0.0
+info:
+  title: IOS System API
+  description: Information Operating System - Knowledge Management API
+  version: 0.2.0
+  contact:
+    name: API Support
+    email: support@ios-system.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.ios-system.com
+    description: Production server
+  - url: https://staging.ios-system.com
+    description: Staging server
+  - url: http://localhost:8000
+    description: Development server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Documents
+    description: Document management operations
+  - name: Search
+    description: Search and discovery
+  - name: Knowledge Graph
+    description: Knowledge graph operations
+  - name: Domains
+    description: Domain management
+
+paths:
+  /api/auth/token:
+    post:
+      tags:
+        - Authentication
+      summary: Login and get JWT token
+      description: Authenticate user and receive access token
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  format: password
+                  example: admin
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/documents/upload:
+    post:
+      tags:
+        - Documents
+      summary: Upload and process document
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - domain_name
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Document file (PDF, DOCX, TXT)
+                domain_name:
+                  type: string
+                  example: SGB-IX
+                title:
+                  type: string
+                  example: My Document
+                author:
+                  type: string
+                  example: Max Mustermann
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: ["legal", "important"]
+      responses:
+        '201':
+          description: Document uploaded and processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '413':
+          description: File too large
+
+  /api/search:
+    post:
+      tags:
+        - Search
+      summary: Search for documents
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+
+  /api/graph/{domain_name}/entities:
+    get:
+      tags:
+        - Knowledge Graph
+      summary: List entities in domain
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: domain_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: entity_type
+          in: query
+          schema:
+            type: string
+          description: Filter by entity type
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+            maximum: 1000
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+      responses:
+        '200':
+          description: List of entities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          example: bearer
+        expires_in:
+          type: integer
+          example: 86400
+
+    DocumentResponse:
+      type: object
+      properties:
+        document_id:
+          type: string
+        title:
+          type: string
+        classification:
+          type: object
+          properties:
+            type:
+              type: string
+            category:
+              type: string
+            confidence:
+              type: number
+        entities_count:
+          type: integer
+        relations_count:
+          type: integer
+        status:
+          type: string
+
+    SearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          example: Persönliches Budget
+        domain_name:
+          type: string
+          example: SGB-IX
+        search_type:
+          type: string
+          enum: [full_text, semantic, hybrid]
+          default: hybrid
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        offset:
+          type: integer
+          minimum: 0
+          default: 0
+
+    SearchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        total_count:
+          type: integer
+        query:
+          type: string
+        search_time_ms:
+          type: number
+
+    SearchResult:
+      type: object
+      properties:
+        doc_id:
+          type: string
+        title:
+          type: string
+        document_type:
+          type: string
+        score:
+          type: number
+        highlights:
+          type: string
+
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        properties:
+          type: object
+        confidence:
+          type: number
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        detail:
+          type: string

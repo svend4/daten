@@ -1,0 +1,7 @@
+---
+
+## 🛠️ ESSENTIAL TOOLS REFERENCE
+
+### Daily Use Tools
+
+**Terminal:**

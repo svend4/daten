@@ -1,0 +1,26 @@
+ROOT/
+├── IOS-Core/                          # Ядро системы
+│   ├── entity-recognizer/             # Распознавание законов, параграфов
+│   ├── relation-extractor/            # Извлечение связей между законами
+│   └── auto-classifier/               # Автоклассификация документов
+│
+├── Knowledge-Domains/                 # Домены знаний
+│   ├── SGB-IX/                        # Социальное право
+│   │   ├── metadata/                  # Метаданные
+│   │   │   ├── taxonomy.json          # Таксономия законов
+│   │   │   ├── entity-index.json      # Индекс сущностей
+│   │   │   └── relation-graph.json    # Граф связей
+│   │   ├── templates/                 # Шаблоны
+│   │   └── documents/                 # Сырые документы
+│   │
+│   ├── Medical/                       # Медицина
+│   └── Technical/                     # Техническая документация
+│
+├── Active-Projects/                   # Активные проекты
+│   ├── Personal-Budget-2025/
+│   └── Court-Case-XYZ/
+│
+└── Tools/                             # Инструменты
+    ├── smart-search/                  # Умный поиск
+    ├── document-analyzer/             # Анализатор документов
+    └── report-generator/              # Генератор отчётов

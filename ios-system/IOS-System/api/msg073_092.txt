@@ -1,0 +1,3 @@
+**Important:** Save the `secret` - you'll need it to verify webhook signatures.
+
+### 2. Implement Webhook Endpoint

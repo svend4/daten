@@ -1,0 +1,28 @@
+## Multi-Factor Authentication (MFA)
+
+### Setup MFA
+
+1. **Enable MFA:**
+   ```bash
+   POST /api/auth/mfa/setup
+   ```
+
+2. **Scan QR Code:**
+   - Use Google Authenticator, Authy, or similar app
+   - Scan the QR code provided
+
+3. **Verify Code:**
+   ```bash
+   POST /api/auth/mfa/verify
+   {
+     "code": "123456"
+   }
+   ```
+
+4. **Save Backup Codes:**
+   - Store backup codes securely
+   - Each code can only be used once
+
+### Using MFA
+
+After login, you'll be prompted for MFA code:

@@ -1,0 +1,9 @@
+**Returns:**
+- **CTR** (Click-Through Rate): % of searches with clicks
+- **MRR** (Mean Reciprocal Rank): Average position of first click
+- **Zero Results Rate**: % of searches with no results
+- **Average Execution Time**: Performance metric
+- **Top Queries**: Most frequent searches
+- **Intent Distribution**: Query types breakdown
+
+### Failed Queries

@@ -1,0 +1,16 @@
+---
+
+## Analytics
+
+### Metrics Tracked
+
+- Total requests
+- Response times (avg, p95, p99)
+- Status code distribution
+- Error rates
+- Endpoint popularity
+- User activity
+
+### Endpoints
+
+**Summary:**

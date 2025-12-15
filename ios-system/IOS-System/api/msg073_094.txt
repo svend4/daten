@@ -1,0 +1,61 @@
+### Common Issues
+
+**Problem:** Not receiving webhooks
+
+**Solutions:**
+- Check webhook is active (`is_active: true`)
+- Verify URL is accessible
+- Check event types match
+- Review delivery history for errors
+
+**Problem:** Signature verification fails
+
+**Solutions:**
+- Ensure using raw request body (not parsed JSON)
+- Check secret is correct
+- Use constant-time comparison
+- Verify HMAC algorithm (SHA-256)
+
+**Problem:** Timeouts
+
+**Solutions:**
+- Process events asynchronously
+- Return 200 immediately, process in background
+- Optimize endpoint performance
+- Increase timeout setting
+
+---
+
+## Rate Limits
+
+Webhooks respect the same rate limits as API requests. If you exceed limits, deliveries may be delayed.
+
+---
+
+## Support
+
+For issues or questions:
+- Check delivery history: `/api/webhooks/{id}/deliveries`
+- Review error messages in delivery logs
+- Contact support with delivery ID
+
+---
+
+## Security Checklist
+
+- [ ] Using HTTPS URLs
+- [ ] Verifying signatures
+- [ ] Handling duplicate events
+- [ ] Rate limiting webhook endpoint
+- [ ] Logging webhook events
+- [ ] Monitoring delivery failures
+- [ ] Keeping secrets secure
+
+---
+
+## Next Steps
+
+- Set up webhook monitoring
+- Implement event processing
+- Test error scenarios
+- Monitor delivery success rates

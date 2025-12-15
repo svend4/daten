@@ -1,0 +1,7 @@
+## API Reference
+
+### Authentication
+
+All API endpoints require authentication except `/health` and `/api/auth/token`.
+
+**Get Token:**

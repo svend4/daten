@@ -1,0 +1,5 @@
+---
+
+## 📈 Grafana Dashboards
+
+### Main Search Dashboard

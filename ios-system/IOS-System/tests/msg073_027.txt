@@ -1,0 +1,7 @@
+---
+
+## Debugging
+
+### Test Webhook
+
+Use tools like [webhook.site](https://webhook.site) or [ngrok](https://ngrok.com) for testing:

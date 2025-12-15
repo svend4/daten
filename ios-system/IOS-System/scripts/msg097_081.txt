@@ -1,0 +1,8 @@
+**Key metrics to review:**
+- Slow queries (>100ms)
+- Sequential scans on large tables
+- Missing indexes
+- Table bloat (dead tuples)
+- Index usage statistics
+
+**Example output:**

@@ -1,0 +1,28 @@
+**Warning:** Disabling MFA reduces security. This action is logged.
+
+## Security Monitoring
+
+### Automatic Threat Detection
+
+The system automatically detects:
+
+**Brute Force Attacks:**
+- 5+ failed logins from same IP in 5 minutes
+- Action: Alert + temporary IP block (future)
+
+**Mass Data Exports:**
+- 10+ exports by user in 1 hour
+- Action: Alert security team
+
+**Privilege Escalation:**
+- Suspicious permission changes
+- Action: Alert + require approval
+
+**Unusual Activity:**
+- Access from new location
+- Access at unusual time
+- Multiple concurrent sessions
+
+### Security Alerts
+
+View recent alerts:

@@ -1,0 +1,3 @@
+### Rollback Scenario 3: Data Corruption
+
+**When:** Bad data written, database intact

@@ -1,0 +1,12 @@
+## Features
+
+- **Documents** - Create, read, update, delete
+- **Search** - Basic, neural, semantic search
+- **Webhooks** - Manage webhook subscriptions
+- **Users** - User management
+- **Type hints** - Full typing support
+- **Error handling** - Comprehensive exceptions
+
+## Usage
+
+### Documents

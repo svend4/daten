@@ -1,0 +1,37 @@
+## Troubleshooting
+
+### No Results
+
+**Problem**: Search returns 0 results
+
+**Solutions**:
+1. Lower semantic threshold
+2. Enable query expansion
+3. Remove domain filter
+4. Check query language
+5. Try keyword-only search
+
+### Irrelevant Results
+
+**Problem**: Results don't match intent
+
+**Solutions**:
+1. Increase semantic_weight
+2. Add domain filter
+3. Include more specific terms
+4. Use legal references
+
+### Slow Performance
+
+**Problem**: Searches take too long
+
+**Solutions**:
+1. Check analytics for slow queries
+2. Reduce limit
+3. Optimize Elasticsearch
+4. Add more BERT servers
+5. Use GPU acceleration
+
+## Analytics & Optimization
+
+### Track Clicks

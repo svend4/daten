@@ -1,0 +1,12 @@
+**Short-term Containment (30 min - 24 hours):**
+- [ ] Change all administrative passwords
+- [ ] Rotate database credentials
+- [ ] Update firewall rules
+- [ ] Apply security patches
+- [ ] Enable additional monitoring
+
+### Phase 3: ERADICATION
+
+**Remove Threat:**
+
+**Malware Removal:**

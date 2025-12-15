@@ -1,0 +1,8 @@
+### Out of Memory (OOM)
+
+**Symptoms:**
+- Pods restarting
+- `OOMKilled` status
+- Alert: `ContainerMemoryHigh`
+
+**Investigation:**

@@ -1,0 +1,9 @@
+Есть:
+✓ Database backups
+✓ Rollback procedures
+
+Отсутствует:
+❌ Geo-redundancy
+❌ Automated failover
+❌ Point-in-time recovery
+❌ Backup testing automation
