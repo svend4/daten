@@ -63,10 +63,10 @@ temp/
 
 # Frontend
 node_modules/
-ios-system/frontend/node_modules/
-ios-system/frontend/dist/
-ios-system/frontend/build/
-ios-system/frontend/.vite/
+ios-system/IOS-System/frontend/node_modules/
+ios-system/IOS-System/frontend/dist/
+ios-system/IOS-System/frontend/build/
+ios-system/IOS-System/frontend/.vite/
 
 # Docker volumes & data
 postgres_data/
