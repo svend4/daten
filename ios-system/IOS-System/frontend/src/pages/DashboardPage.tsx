@@ -12,13 +12,6 @@ import {
 } from 'lucide-react'
 import api from '@services/api'
 
-interface DashboardStats {
-  totalDocuments: number
-  recentSearches: number
-  activeUsers: number
-  documentsToday: number
-}
-
 interface RecentActivity {
   id: string
   type: string
