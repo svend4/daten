@@ -37,6 +37,7 @@ import {
   Clock,
   SlidersHorizontal,
   Tag as TagIcon,
+  TrendingUp,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -94,6 +95,17 @@ const navigation: NavigationItem[] = [
       { name: 'Классификация', href: '/ai/classify', icon: Brain },
       { name: 'Извлечение данных', href: '/ai/extract', icon: Sparkles },
       { name: 'AI Чат', href: '/ai/chat', icon: MessageSquare },
+    ],
+  },
+  {
+    name: 'Аналитика',
+    icon: BarChart3,
+    children: [
+      { name: 'Dashboard', href: '/analytics', icon: BarChart3 },
+      { name: 'Статистика документов', href: '/analytics/documents', icon: FileIcon },
+      { name: 'Карта активности', href: '/analytics/heatmap', icon: Activity },
+      { name: 'Отчёты', href: '/analytics/reports', icon: Download },
+      { name: 'Trending', href: '/analytics/trending', icon: TrendingUp },
     ],
   },
   {

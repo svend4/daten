@@ -43,6 +43,13 @@ import AdminServicesPage from '@pages/admin/AdminServicesPage'
 import AdminLogsPage from '@pages/admin/AdminLogsPage'
 import AdminReindexPage from '@pages/admin/AdminReindexPage'
 
+// Analytics Pages
+import AnalyticsDashboardPage from '@pages/analytics/AnalyticsDashboardPage'
+import DocumentStatsPage from '@pages/analytics/DocumentStatsPage'
+import ActivityHeatmapPage from '@pages/analytics/ActivityHeatmapPage'
+import ReportsPage from '@pages/analytics/ReportsPage'
+import TrendingPage from '@pages/analytics/TrendingPage'
+
 // Layout
 import Layout from './components/Layout'
 
@@ -115,6 +122,13 @@ function App() {
                     <Route path="/admin/services" element={<AdminServicesPage />} />
                     <Route path="/admin/logs" element={<AdminLogsPage />} />
                     <Route path="/admin/reindex" element={<AdminReindexPage />} />
+
+                    {/* Analytics */}
+                    <Route path="/analytics" element={<AnalyticsDashboardPage />} />
+                    <Route path="/analytics/documents" element={<DocumentStatsPage />} />
+                    <Route path="/analytics/heatmap" element={<ActivityHeatmapPage />} />
+                    <Route path="/analytics/reports" element={<ReportsPage />} />
+                    <Route path="/analytics/trending" element={<TrendingPage />} />
 
                     {/* Settings */}
                     <Route path="/settings" element={<SettingsPage />} />
