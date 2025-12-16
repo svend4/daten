@@ -56,6 +56,12 @@ import SessionManagementPage from '@pages/security/SessionManagementPage'
 import SecurityAlertsPage from '@pages/security/SecurityAlertsPage'
 import PermissionsPage from '@pages/security/PermissionsPage'
 
+// API Pages
+import WebhooksPage from '@pages/api/WebhooksPage'
+import ApiTokensPage from '@pages/api/ApiTokensPage'
+import RateLimitingPage from '@pages/api/RateLimitingPage'
+import ApiLogsPage from '@pages/api/ApiLogsPage'
+
 // Layout
 import Layout from './components/Layout'
 
@@ -141,6 +147,12 @@ function App() {
                     <Route path="/security/sessions" element={<SessionManagementPage />} />
                     <Route path="/security/alerts" element={<SecurityAlertsPage />} />
                     <Route path="/security/permissions" element={<PermissionsPage />} />
+
+                    {/* API */}
+                    <Route path="/api/webhooks" element={<WebhooksPage />} />
+                    <Route path="/api/tokens" element={<ApiTokensPage />} />
+                    <Route path="/api/rate-limiting" element={<RateLimitingPage />} />
+                    <Route path="/api/logs" element={<ApiLogsPage />} />
 
                     {/* Settings */}
                     <Route path="/settings" element={<SettingsPage />} />

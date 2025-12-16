@@ -42,6 +42,8 @@ import {
   UserCheck,
   AlertCircle,
   KeyRound,
+  Webhook,
+  Gauge,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -120,6 +122,16 @@ const navigation: NavigationItem[] = [
       { name: 'Управление сеансами', href: '/security/sessions', icon: UserCheck },
       { name: 'Оповещения', href: '/security/alerts', icon: AlertCircle },
       { name: 'Роли и права', href: '/security/permissions', icon: KeyRound },
+    ],
+  },
+  {
+    name: 'API',
+    icon: Database,
+    children: [
+      { name: 'Webhooks', href: '/api/webhooks', icon: Webhook },
+      { name: 'API Токены', href: '/api/tokens', icon: KeyRound },
+      { name: 'Rate Limiting', href: '/api/rate-limiting', icon: Gauge },
+      { name: 'Логи API', href: '/api/logs', icon: Activity },
     ],
   },
   {
