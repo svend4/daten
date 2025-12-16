@@ -89,19 +89,22 @@ const navigation: NavigationItem[] = [
 ]
 
 // Navigation item component with collapse support
-function NavItem({ item }: { item: NavigationItem }) {
+function NavItem({ item, onNavigate }: { item: NavigationItem; onNavigate?: () => void }) {
   const location = useLocation()
-  const [isOpen, setIsOpen] = useState(false)
+  const hasActiveChild = item.children?.some((child) => location.pathname === child.href)
+  const [isOpen, setIsOpen] = useState(hasActiveChild || false)
 
   const hasChildren = item.children && item.children.length > 0
   const isActive = item.href ? location.pathname === item.href : false
-  const hasActiveChild = hasChildren && item.children?.some((child) => location.pathname === child.href)
 
   if (hasChildren) {
     return (
       <div>
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsOpen(!isOpen)
+          }}
           className={clsx(
             'w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors',
             hasActiveChild
@@ -121,6 +124,7 @@ function NavItem({ item }: { item: NavigationItem }) {
               <Link
                 key={child.name}
                 to={child.href!}
+                onClick={onNavigate}
                 className={clsx(
                   'flex items-center px-3 py-2 text-sm rounded-lg transition-colors',
                   location.pathname === child.href
@@ -141,6 +145,7 @@ function NavItem({ item }: { item: NavigationItem }) {
   return (
     <Link
       to={item.href!}
+      onClick={onNavigate}
       className={clsx(
         'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
         isActive
@@ -189,9 +194,7 @@ export default function Layout({ children }: LayoutProps) {
               {/* Navigation */}
               <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
                 {navigation.map((item) => (
-                  <div key={item.name} onClick={() => item.href && setSidebarOpen(false)}>
-                    <NavItem item={item} />
-                  </div>
+                  <NavItem key={item.name} item={item} onNavigate={() => setSidebarOpen(false)} />
                 ))}
               </nav>
 
