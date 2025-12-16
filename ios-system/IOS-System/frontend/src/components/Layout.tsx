@@ -30,6 +30,9 @@ import {
   FileText as FileIcon,
   Server,
   RefreshCw,
+  Upload,
+  Download,
+  History,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -52,6 +55,10 @@ const navigation: NavigationItem[] = [
     children: [
       { name: 'Все документы', href: '/documents', icon: FileIcon },
       { name: 'Создать документ', href: '/documents/new', icon: PenTool },
+      { name: 'Загрузка файлов', href: '/documents/upload', icon: Upload },
+      { name: 'Массовый импорт', href: '/documents/import', icon: Download },
+      { name: 'Экспорт данных', href: '/documents/export', icon: Download },
+      { name: 'История версий', href: '/documents/history', icon: History },
       { name: 'Поиск', href: '/search', icon: Search },
       { name: 'Семантический поиск', href: '/search/semantic', icon: Sparkles },
     ],

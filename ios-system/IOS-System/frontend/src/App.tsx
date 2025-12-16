@@ -14,6 +14,10 @@ import LoginPage from '@pages/LoginPage'
 import DashboardPage from '@pages/DashboardPage'
 import DocumentsPage from '@pages/DocumentsPage'
 import DocumentNewPage from '@pages/DocumentNewPage'
+import DocumentUploadPage from '@pages/documents/DocumentUploadPage'
+import DocumentImportPage from '@pages/documents/DocumentImportPage'
+import DocumentExportPage from '@pages/documents/DocumentExportPage'
+import DocumentHistoryPage from '@pages/documents/DocumentHistoryPage'
 import SearchPage from '@pages/SearchPage'
 import SemanticSearchPage from '@pages/search/SemanticSearchPage'
 import SettingsPage from '@pages/SettingsPage'
@@ -80,6 +84,10 @@ function App() {
                     {/* Documents */}
                     <Route path="/documents" element={<DocumentsPage />} />
                     <Route path="/documents/new" element={<DocumentNewPage />} />
+                    <Route path="/documents/upload" element={<DocumentUploadPage />} />
+                    <Route path="/documents/import" element={<DocumentImportPage />} />
+                    <Route path="/documents/export" element={<DocumentExportPage />} />
+                    <Route path="/documents/history" element={<DocumentHistoryPage />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/search/semantic" element={<SemanticSearchPage />} />
 
