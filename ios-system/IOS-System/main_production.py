@@ -13,20 +13,20 @@ from fastapi.responses import JSONResponse
 import uvicorn
 
 # Core components
-from .core.ios_root import IOSRoot
-from .core.event_bus import EventBus
-from .core.service_registry import ServiceRegistry
-from .core.config import Settings
+from core.ios_root import IOSRoot
+from core.event_bus import EventBus
+from core.service_registry import ServiceRegistry
+from core.config import Settings
 
 # Services
-from .services.document_service import DocumentService
-from .services.search_service import SearchService
-from .services.knowledge_graph_service import KnowledgeGraphService
-from .services.classifier_service import ClassifierService
-from .services.context_service import ContextService
+from services.document_service import DocumentService
+from services.search_service import SearchService
+from services.knowledge_graph_service import KnowledgeGraphService
+from services.classifier_service import ClassifierService
+from services.context_service import ContextService
 
 # API routers
-from .api.routes import (
+from api.routes import (
     auth_router,
     documents_router,
     search_router,
@@ -36,20 +36,20 @@ from .api.routes import (
 )
 
 # Middleware
-from .middleware.error_handler import ErrorHandlerMiddleware
-from .middleware.request_logger import RequestLoggerMiddleware
-from .middleware.rate_limiter import RateLimiterMiddleware
-from .middleware.security_headers import SecurityHeadersMiddleware
+from middleware.error_handler import ErrorHandlerMiddleware
+from middleware.request_logger import RequestLoggerMiddleware
+from middleware.rate_limiter import RateLimiterMiddleware
+from middleware.security_headers import SecurityHeadersMiddleware
 
 # Monitoring
-from .monitoring.metrics import MetricsCollector
-from .monitoring.health_check import HealthChecker
+from monitoring.metrics import MetricsCollector
+from monitoring.health_check import HealthChecker
 
 # Database
-from .database.connection import DatabaseManager
+from database.connection import DatabaseManager
 
 # Cache
-from .cache.redis_client import RedisCache
+from cache.redis_client import RedisCache
 
 # Configure logging
 logging.basicConfig(
