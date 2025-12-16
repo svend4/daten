@@ -1,7 +1,6 @@
 /**
  * Dashboard Page - Main landing page after login
  */
-import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { 
   FileText, 
