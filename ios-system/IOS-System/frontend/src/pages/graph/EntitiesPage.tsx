@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { Database, Loader2, AlertCircle, Search } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 interface Entity {
   id: string
@@ -25,8 +25,8 @@ export default function EntitiesPage() {
   const fetchEntities = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get('/graph/entities')
-      setEntities(response.data.entities || [])
+      const data = await api.getGraphEntities()
+      setEntities(data.entities || [])
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Failed to load entities')
     } finally {

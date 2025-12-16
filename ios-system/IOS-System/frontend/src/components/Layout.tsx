@@ -89,7 +89,7 @@ const navigation: NavigationItem[] = [
 ]
 
 // Navigation item component with collapse support
-function NavItem({ item, mobile = false }: { item: NavigationItem; mobile?: boolean }) {
+function NavItem({ item }: { item: NavigationItem }) {
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -155,7 +155,6 @@ function NavItem({ item, mobile = false }: { item: NavigationItem; mobile?: bool
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const location = useLocation()
   const { user, logout } = useAuthStore()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -191,7 +190,7 @@ export default function Layout({ children }: LayoutProps) {
               <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
                 {navigation.map((item) => (
                   <div key={item.name} onClick={() => item.href && setSidebarOpen(false)}>
-                    <NavItem item={item} mobile={true} />
+                    <NavItem item={item} />
                   </div>
                 ))}
               </nav>

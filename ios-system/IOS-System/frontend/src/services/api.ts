@@ -192,6 +192,21 @@ class ApiService {
   }
 
   // Knowledge Graph
+  async getKnowledgeGraph() {
+    const response = await apiClient.get('/api/graph')
+    return response.data
+  }
+
+  async getGraphEntities() {
+    const response = await apiClient.get('/api/graph/entities')
+    return response.data
+  }
+
+  async getGraphRelations() {
+    const response = await apiClient.get('/api/graph/relations')
+    return response.data
+  }
+
   async getGraphEntity(entityId: string) {
     const response = await apiClient.get(`/api/graph/entity/${entityId}`)
     return response.data
@@ -199,6 +214,48 @@ class ApiService {
 
   async getEntityRelations(entityId: string) {
     const response = await apiClient.get(`/api/graph/entity/${entityId}/relations`)
+    return response.data
+  }
+
+  // Admin
+  async getAdminStats() {
+    const response = await apiClient.get('/api/admin/stats')
+    return response.data
+  }
+
+  async getAdminServices() {
+    const response = await apiClient.get('/api/admin/services')
+    return response.data
+  }
+
+  async getAdminLogs(limit: number = 100) {
+    const response = await apiClient.get('/api/admin/logs', { params: { limit } })
+    return response.data
+  }
+
+  async reindexDocuments() {
+    const response = await apiClient.post('/api/admin/reindex')
+    return response.data
+  }
+
+  // AI Text Processing
+  async summarizeText(text: string) {
+    const response = await apiClient.post('/api/ai/summarize', { text })
+    return response.data
+  }
+
+  async classifyText(text: string) {
+    const response = await apiClient.post('/api/ai/classify', { text })
+    return response.data
+  }
+
+  async extractEntities(text: string) {
+    const response = await apiClient.post('/api/ai/extract', { text })
+    return response.data
+  }
+
+  async chatAI(message: string) {
+    const response = await apiClient.post('/api/ai/chat', { message })
     return response.data
   }
 

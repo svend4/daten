@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { FileText, Loader2, Sparkles } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 export default function SummarizePage() {
   const [text, setText] = useState('')
@@ -19,8 +19,8 @@ export default function SummarizePage() {
 
     try {
       setLoading(true)
-      const response = await apiClient.post('/ai/summarize', { text: text.trim() })
-      setSummary(response.data.summary || 'Резюме не создано')
+      const data = await api.summarizeText(text.trim())
+      setSummary(data.summary || 'Резюме не создано')
       toast.success('Резюме создано успешно')
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Failed to summarize')

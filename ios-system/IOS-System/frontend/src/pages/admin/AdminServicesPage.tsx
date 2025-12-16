@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { Activity, Loader2, CheckCircle, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 interface Service {
   name: string
@@ -24,8 +24,8 @@ export default function AdminServicesPage() {
   const fetchServices = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get('/admin/services')
-      setServices(response.data.services || [])
+      const data = await api.getAdminServices()
+      setServices(data.services || [])
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Failed to load services')
     } finally {
