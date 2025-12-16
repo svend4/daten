@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 # Add IOS-System to Python path
-ios_system_path = Path(__file__).parent / "ios-system"
+ios_system_path = Path(__file__).parent / "IOS-System"
 sys.path.insert(0, str(ios_system_path))
 
 # Set environment defaults if not provided
@@ -49,7 +49,11 @@ print("=" * 60)
 
 # Import and run
 try:
-    from IOS_System.main_production import create_app
+    # Change to IOS-System directory to make relative imports work
+    os.chdir(ios_system_path)
+
+    # Now we can import main_production
+    import main_production
 
     print("✓ Imports successful")
     print("Starting uvicorn...")
@@ -60,20 +64,18 @@ try:
     port = int(os.environ.get("PORT", 8080))
 
     uvicorn.run(
-        "IOS_System.main_production:app",
+        "main_production:app",
         host="0.0.0.0",
         port=port,
         log_level=os.getenv("LOG_LEVEL", "info").lower(),
-        access_log=True
+        access_log=True,
+        reload=False
     )
 
 except ImportError as e:
     print(f"✗ Import error: {e}")
-    print("\nTrying fallback with modified PYTHONPATH...")
-
-    # Fallback - this means relative imports won't work, need to fix them
-    print("This requires fixing relative imports in main_production.py")
-    print("Consider using absolute imports or creating proper package structure")
+    import traceback
+    traceback.print_exc()
     sys.exit(1)
 
 except Exception as e:
