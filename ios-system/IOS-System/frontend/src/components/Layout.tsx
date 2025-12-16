@@ -30,6 +30,14 @@ import {
   FileText as FileIcon,
   Server,
   RefreshCw,
+  Upload,
+  Download,
+  History,
+  Bookmark,
+  Clock,
+  SlidersHorizontal,
+  Tag as TagIcon,
+  TrendingUp,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -52,8 +60,22 @@ const navigation: NavigationItem[] = [
     children: [
       { name: 'Все документы', href: '/documents', icon: FileIcon },
       { name: 'Создать документ', href: '/documents/new', icon: PenTool },
-      { name: 'Поиск', href: '/search', icon: Search },
+      { name: 'Загрузка файлов', href: '/documents/upload', icon: Upload },
+      { name: 'Массовый импорт', href: '/documents/import', icon: Download },
+      { name: 'Экспорт данных', href: '/documents/export', icon: Download },
+      { name: 'История версий', href: '/documents/history', icon: History },
+    ],
+  },
+  {
+    name: 'Поиск',
+    icon: Search,
+    children: [
+      { name: 'Быстрый поиск', href: '/search', icon: Search },
       { name: 'Семантический поиск', href: '/search/semantic', icon: Sparkles },
+      { name: 'Расширенный поиск', href: '/search/advanced', icon: SlidersHorizontal },
+      { name: 'Поиск по тегам', href: '/search/tags', icon: TagIcon },
+      { name: 'Сохранённые поиски', href: '/search/saved', icon: Bookmark },
+      { name: 'История поиска', href: '/search/history', icon: Clock },
     ],
   },
   {
@@ -73,6 +95,17 @@ const navigation: NavigationItem[] = [
       { name: 'Классификация', href: '/ai/classify', icon: Brain },
       { name: 'Извлечение данных', href: '/ai/extract', icon: Sparkles },
       { name: 'AI Чат', href: '/ai/chat', icon: MessageSquare },
+    ],
+  },
+  {
+    name: 'Аналитика',
+    icon: BarChart3,
+    children: [
+      { name: 'Dashboard', href: '/analytics', icon: BarChart3 },
+      { name: 'Статистика документов', href: '/analytics/documents', icon: FileIcon },
+      { name: 'Карта активности', href: '/analytics/heatmap', icon: Activity },
+      { name: 'Отчёты', href: '/analytics/reports', icon: Download },
+      { name: 'Trending', href: '/analytics/trending', icon: TrendingUp },
     ],
   },
   {
