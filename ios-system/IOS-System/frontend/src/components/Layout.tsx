@@ -44,6 +44,9 @@ import {
   KeyRound,
   Webhook,
   Gauge,
+  Save,
+  HeartPulse,
+  Users,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -142,6 +145,10 @@ const navigation: NavigationItem[] = [
       { name: 'Статус сервисов', href: '/admin/services', icon: Activity },
       { name: 'Системные логи', href: '/admin/logs', icon: Server },
       { name: 'Переиндексация', href: '/admin/reindex', icon: RefreshCw },
+      { name: 'Backup & Restore', href: '/admin/backup', icon: Save },
+      { name: 'Мониторинг системы', href: '/admin/health', icon: HeartPulse },
+      { name: 'Управление БД', href: '/admin/database', icon: Database },
+      { name: 'Управление пользователями', href: '/admin/users', icon: Users },
     ],
   },
   { name: 'Настройки', href: '/settings', icon: Settings },

@@ -42,6 +42,10 @@ import AdminStatsPage from '@pages/admin/AdminStatsPage'
 import AdminServicesPage from '@pages/admin/AdminServicesPage'
 import AdminLogsPage from '@pages/admin/AdminLogsPage'
 import AdminReindexPage from '@pages/admin/AdminReindexPage'
+import BackupRestorePage from '@pages/admin/BackupRestorePage'
+import HealthMonitoringPage from '@pages/admin/HealthMonitoringPage'
+import DatabaseManagementPage from '@pages/admin/DatabaseManagementPage'
+import UserManagementPage from '@pages/admin/UserManagementPage'
 
 // Analytics Pages
 import AnalyticsDashboardPage from '@pages/analytics/AnalyticsDashboardPage'
@@ -134,6 +138,10 @@ function App() {
                     <Route path="/admin/services" element={<AdminServicesPage />} />
                     <Route path="/admin/logs" element={<AdminLogsPage />} />
                     <Route path="/admin/reindex" element={<AdminReindexPage />} />
+                    <Route path="/admin/backup" element={<BackupRestorePage />} />
+                    <Route path="/admin/health" element={<HealthMonitoringPage />} />
+                    <Route path="/admin/database" element={<DatabaseManagementPage />} />
+                    <Route path="/admin/users" element={<UserManagementPage />} />
 
                     {/* Analytics */}
                     <Route path="/analytics" element={<AnalyticsDashboardPage />} />
