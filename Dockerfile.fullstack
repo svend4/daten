@@ -1,6 +1,6 @@
 # Full-stack IOS System (WITHOUT bootstrap)
 # For testing complete architecture with all services
-# Build timestamp: 2025-12-16 (force rebuild to clear Docker cache)
+# Build timestamp: 2025-12-16T05:40:00 (force rebuild with fixed API URL)
 
 # Stage 1: Build Frontend
 FROM node:18-alpine AS frontend-build
@@ -12,6 +12,12 @@ COPY ios-system/IOS-System/frontend/package*.json ./
 RUN npm install
 
 COPY ios-system/IOS-System/frontend/ ./
+
+# Set production API URL to empty string (use same origin as frontend)
+ENV VITE_API_URL=""
+ENV VITE_ENV=production
+
+# Build frontend with production settings
 RUN npm run build
 
 # Stage 2: Python Backend with Full Services
