@@ -49,20 +49,23 @@ print("=" * 60)
 
 # Import and run
 try:
-    print("✓ Starting uvicorn...")
+    print("✓ Importing main_production app...")
 
+    # Import the app directly (sys.path is already configured)
+    from main_production import app
+
+    print("✓ Starting uvicorn...")
     import uvicorn
 
     # Get port from environment (Railway sets PORT)
     port = int(os.environ.get("PORT", 8080))
 
-    # Run uvicorn with the app as a module
-    # This makes relative imports in main_production.py work correctly
+    # Run uvicorn with the app object directly
+    # We import the app ourselves so sys.path modifications are preserved
     uvicorn.run(
-        "main_production:app",
+        app,
         host="0.0.0.0",
         port=port,
-        app_dir=str(ios_system_path),  # Set working directory for the app
         log_level=os.getenv("LOG_LEVEL", "info").lower(),
         access_log=True,
         reload=False
