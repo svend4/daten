@@ -1,8 +1,9 @@
 # Full-stack IOS System (WITHOUT bootstrap)
 # For testing complete architecture with all services
+# Build timestamp: 2025-12-16 (force rebuild to clear Docker cache)
 
 # Stage 1: Build Frontend
-FROM node:18-alpine as frontend-build
+FROM node:18-alpine AS frontend-build
 
 WORKDIR /app/frontend
 
