@@ -257,10 +257,17 @@ class IOSApplication:
         
     def _setup_middleware(self):
         """Настройка middleware"""
-        # CORS
+        # CORS - Allow all origins in production (frontend and API on same domain)
+        # In production, frontend is served from same origin, but we allow all for flexibility
+        cors_origins = self.settings.allowed_origins
+
+        # In production environment, allow all origins
+        if self.settings.environment == "production":
+            cors_origins = ["*"]
+
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=self.settings.allowed_origins,
+            allow_origins=cors_origins,
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
