@@ -142,10 +142,11 @@ class ApiService {
     return response.data
   }
 
-  async semanticSearch(query: string, limit: number = 10) {
-    const response = await apiClient.post('/api/search/semantic', {
+  async semanticSearch(query: string, params?: { limit?: number }) {
+    const response = await apiClient.post('/api/search', {
       query,
-      limit
+      limit: params?.limit || 10,
+      semantic: true
     })
     return response.data
   }
@@ -197,13 +198,17 @@ class ApiService {
     return response.data
   }
 
-  async getGraphEntities() {
-    const response = await apiClient.get('/api/graph/entities')
+  async getGraphEntities(limit?: number) {
+    const response = await apiClient.get('/api/graph/entities', {
+      params: { limit }
+    })
     return response.data
   }
 
-  async getGraphRelations() {
-    const response = await apiClient.get('/api/graph/relations')
+  async getGraphRelations(limit?: number) {
+    const response = await apiClient.get('/api/graph/relations', {
+      params: { limit }
+    })
     return response.data
   }
 
