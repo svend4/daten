@@ -14,6 +14,22 @@ import {
   X,
   User,
   Bell,
+  Network,
+  Bot,
+  Shield,
+  ChevronDown,
+  ChevronRight,
+  Sparkles,
+  GitBranch,
+  Database,
+  PenTool,
+  Brain,
+  MessageSquare,
+  BarChart3,
+  Activity,
+  FileText as FileIcon,
+  Server,
+  RefreshCw,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -21,12 +37,122 @@ interface LayoutProps {
   children: ReactNode
 }
 
-const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Documents', href: '/documents', icon: FileText },
-  { name: 'Search', href: '/search', icon: Search },
-  { name: 'Settings', href: '/settings', icon: Settings },
+interface NavigationItem {
+  name: string
+  href?: string
+  icon: any
+  children?: NavigationItem[]
+}
+
+const navigation: NavigationItem[] = [
+  { name: 'Главная', href: '/dashboard', icon: LayoutDashboard },
+  {
+    name: 'Документы',
+    icon: FileText,
+    children: [
+      { name: 'Все документы', href: '/documents', icon: FileIcon },
+      { name: 'Создать документ', href: '/documents/new', icon: PenTool },
+      { name: 'Поиск', href: '/search', icon: Search },
+      { name: 'Семантический поиск', href: '/search/semantic', icon: Sparkles },
+    ],
+  },
+  {
+    name: 'Граф знаний',
+    icon: Network,
+    children: [
+      { name: 'Визуализация', href: '/graph', icon: GitBranch },
+      { name: 'Сущности', href: '/graph/entities', icon: Database },
+      { name: 'Связи', href: '/graph/relations', icon: Network },
+    ],
+  },
+  {
+    name: 'AI Функции',
+    icon: Bot,
+    children: [
+      { name: 'Резюме текста', href: '/ai/summarize', icon: FileIcon },
+      { name: 'Классификация', href: '/ai/classify', icon: Brain },
+      { name: 'Извлечение данных', href: '/ai/extract', icon: Sparkles },
+      { name: 'AI Чат', href: '/ai/chat', icon: MessageSquare },
+    ],
+  },
+  {
+    name: 'Администрирование',
+    icon: Shield,
+    children: [
+      { name: 'Статистика', href: '/admin/stats', icon: BarChart3 },
+      { name: 'Статус сервисов', href: '/admin/services', icon: Activity },
+      { name: 'Системные логи', href: '/admin/logs', icon: Server },
+      { name: 'Переиндексация', href: '/admin/reindex', icon: RefreshCw },
+    ],
+  },
+  { name: 'Настройки', href: '/settings', icon: Settings },
 ]
+
+// Navigation item component with collapse support
+function NavItem({ item, mobile = false }: { item: NavigationItem; mobile?: boolean }) {
+  const location = useLocation()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const hasChildren = item.children && item.children.length > 0
+  const isActive = item.href ? location.pathname === item.href : false
+  const hasActiveChild = hasChildren && item.children?.some((child) => location.pathname === child.href)
+
+  if (hasChildren) {
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={clsx(
+            'w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+            hasActiveChild
+              ? 'bg-primary-50 text-primary-700'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          )}
+        >
+          <div className="flex items-center">
+            <item.icon className="w-5 h-5 mr-3" />
+            {item.name}
+          </div>
+          {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </button>
+        {isOpen && (
+          <div className="ml-4 mt-1 space-y-1">
+            {item.children?.map((child) => (
+              <Link
+                key={child.name}
+                to={child.href!}
+                className={clsx(
+                  'flex items-center px-3 py-2 text-sm rounded-lg transition-colors',
+                  location.pathname === child.href
+                    ? 'bg-primary-100 text-primary-800'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                )}
+              >
+                <child.icon className="w-4 h-4 mr-3" />
+                {child.name}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      to={item.href!}
+      className={clsx(
+        'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+        isActive
+          ? 'bg-primary-50 text-primary-700'
+          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+      )}
+    >
+      <item.icon className="w-5 h-5 mr-3" />
+      {item.name}
+    </Link>
+  )
+}
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation()
@@ -63,25 +189,11 @@ export default function Layout({ children }: LayoutProps) {
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-                {navigation.map((item) => {
-                  const isActive = location.pathname === item.href
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      onClick={() => setSidebarOpen(false)}
-                      className={clsx(
-                        'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                        isActive
-                          ? 'bg-primary-50 text-primary-700'
-                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                      )}
-                    >
-                      <item.icon className="w-5 h-5 mr-3" />
-                      {item.name}
-                    </Link>
-                  )
-                })}
+                {navigation.map((item) => (
+                  <div key={item.name} onClick={() => item.href && setSidebarOpen(false)}>
+                    <NavItem item={item} mobile={true} />
+                  </div>
+                ))}
               </nav>
 
               {/* User section */}
@@ -127,24 +239,9 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-            {navigation.map((item) => {
-              const isActive = location.pathname === item.href
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={clsx(
-                    'flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                    isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                  )}
-                >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.name}
-                </Link>
-              )
-            })}
+            {navigation.map((item) => (
+              <NavItem key={item.name} item={item} />
+            ))}
           </nav>
 
           {/* User section */}
