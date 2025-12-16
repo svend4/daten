@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { Network, Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 interface GraphNode {
   id: string
@@ -36,8 +36,8 @@ export default function KnowledgeGraphPage() {
     try {
       setLoading(true)
       setError(null)
-      const response = await apiClient.get('/graph')
-      setGraphData(response.data)
+      const data = await api.getKnowledgeGraph()
+      setGraphData(data)
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || 'Failed to load knowledge graph'
       setError(errorMessage)

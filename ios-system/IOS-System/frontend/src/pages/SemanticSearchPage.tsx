@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { Sparkles, Search, Loader2, FileText } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 interface SearchResult {
   id: string
@@ -26,12 +26,8 @@ export default function SemanticSearchPage() {
     try {
       setLoading(true)
       setHasSearched(true)
-      const response = await apiClient.post('/search', {
-        query: query.trim(),
-        semantic: true,
-        limit: 20,
-      })
-      setResults(response.data.results || [])
+      const data = await api.semanticSearch(query.trim(), 20)
+      setResults(data.results || [])
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Search failed')
     } finally {

@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { BarChart3, Loader2, Users, FileText, Database, Activity } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 interface Stats {
   total_users: number
@@ -26,8 +26,8 @@ export default function AdminStatsPage() {
   const fetchStats = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get('/admin/stats')
-      setStats(response.data)
+      const data = await api.getAdminStats()
+      setStats(data)
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Failed to load statistics')
     } finally {

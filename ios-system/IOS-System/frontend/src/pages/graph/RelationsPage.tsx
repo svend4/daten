@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { Network, Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import apiClient from '@services/api'
+import api from '@services/api'
 
 interface Relation {
   id: string
@@ -25,8 +25,8 @@ export default function RelationsPage() {
   const fetchRelations = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get('/graph/relations')
-      setRelations(response.data.relations || [])
+      const data = await api.getGraphRelations()
+      setRelations(data.relations || [])
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Failed to load relations')
     } finally {
