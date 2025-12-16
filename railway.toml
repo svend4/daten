@@ -1,11 +1,12 @@
-# Railway configuration - Updated for Frontend + Backend
+# Railway configuration - Full-stack IOS System with Frontend + Backend
 # This file takes priority over Dockerfile CMD
 
 [build]
 builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.fullstack"
 
 [deploy]
-startCommand = "cd /app && uvicorn ios_bootstrap.main:app --host 0.0.0.0 --port $PORT"
+startCommand = "python /app/start_fullstack.py"
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
