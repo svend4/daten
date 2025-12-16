@@ -50,6 +50,12 @@ import ActivityHeatmapPage from '@pages/analytics/ActivityHeatmapPage'
 import ReportsPage from '@pages/analytics/ReportsPage'
 import TrendingPage from '@pages/analytics/TrendingPage'
 
+// Security Pages
+import AuditTrailPage from '@pages/security/AuditTrailPage'
+import SessionManagementPage from '@pages/security/SessionManagementPage'
+import SecurityAlertsPage from '@pages/security/SecurityAlertsPage'
+import PermissionsPage from '@pages/security/PermissionsPage'
+
 // Layout
 import Layout from './components/Layout'
 
@@ -129,6 +135,12 @@ function App() {
                     <Route path="/analytics/heatmap" element={<ActivityHeatmapPage />} />
                     <Route path="/analytics/reports" element={<ReportsPage />} />
                     <Route path="/analytics/trending" element={<TrendingPage />} />
+
+                    {/* Security */}
+                    <Route path="/security/audit" element={<AuditTrailPage />} />
+                    <Route path="/security/sessions" element={<SessionManagementPage />} />
+                    <Route path="/security/alerts" element={<SecurityAlertsPage />} />
+                    <Route path="/security/permissions" element={<PermissionsPage />} />
 
                     {/* Settings */}
                     <Route path="/settings" element={<SettingsPage />} />

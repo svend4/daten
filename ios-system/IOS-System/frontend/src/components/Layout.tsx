@@ -38,6 +38,10 @@ import {
   SlidersHorizontal,
   Tag as TagIcon,
   TrendingUp,
+  Lock,
+  UserCheck,
+  AlertCircle,
+  KeyRound,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -106,6 +110,16 @@ const navigation: NavigationItem[] = [
       { name: 'Карта активности', href: '/analytics/heatmap', icon: Activity },
       { name: 'Отчёты', href: '/analytics/reports', icon: Download },
       { name: 'Trending', href: '/analytics/trending', icon: TrendingUp },
+    ],
+  },
+  {
+    name: 'Безопасность',
+    icon: Lock,
+    children: [
+      { name: 'Журнал аудита', href: '/security/audit', icon: FileIcon },
+      { name: 'Управление сеансами', href: '/security/sessions', icon: UserCheck },
+      { name: 'Оповещения', href: '/security/alerts', icon: AlertCircle },
+      { name: 'Роли и права', href: '/security/permissions', icon: KeyRound },
     ],
   },
   {
