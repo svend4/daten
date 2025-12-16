@@ -267,40 +267,37 @@ class IOSApplication:
         
     def _setup_routers(self):
         """Настройка роутеров API"""
-        # Inject dependencies into routers
+        # Include API routers
         self.app.include_router(
             auth_router,
             prefix="/api/v1/auth",
             tags=["Authentication"]
         )
-        
+
         self.app.include_router(
             documents_router,
             prefix="/api/v1/documents",
-            tags=["Documents"],
-            dependencies=[self.document_service]
+            tags=["Documents"]
         )
-        
+
         self.app.include_router(
             search_router,
             prefix="/api/v1/search",
-            tags=["Search"],
-            dependencies=[self.search_service]
+            tags=["Search"]
         )
-        
+
         self.app.include_router(
             graph_router,
             prefix="/api/v1/graph",
-            tags=["Knowledge Graph"],
-            dependencies=[self.knowledge_graph_service]
+            tags=["Knowledge Graph"]
         )
-        
+
         self.app.include_router(
             ai_router,
             prefix="/api/v1/ai",
             tags=["AI/ML"]
         )
-        
+
         self.app.include_router(
             admin_router,
             prefix="/api/v1/admin",
