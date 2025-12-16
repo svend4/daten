@@ -36,6 +36,7 @@ from api.routes import (
     graph_router,
     admin_router,
     ai_router,
+    dashboard_router,
 )
 
 # Middleware
@@ -273,43 +274,49 @@ class IOSApplication:
         
     def _setup_routers(self):
         """Настройка роутеров API"""
-        # Include API routers
+        # Include API routers (prefix /api/ to match frontend expectations)
         self.app.include_router(
             auth_router,
-            prefix="/api/v1/auth",
+            prefix="/api/auth",
             tags=["Authentication"]
         )
 
         self.app.include_router(
             documents_router,
-            prefix="/api/v1/documents",
+            prefix="/api/documents",
             tags=["Documents"]
         )
 
         self.app.include_router(
             search_router,
-            prefix="/api/v1/search",
+            prefix="/api/search",
             tags=["Search"]
         )
 
         self.app.include_router(
             graph_router,
-            prefix="/api/v1/graph",
+            prefix="/api/graph",
             tags=["Knowledge Graph"]
         )
 
         self.app.include_router(
             ai_router,
-            prefix="/api/v1/ai",
+            prefix="/api/ai",
             tags=["AI/ML"]
         )
 
         self.app.include_router(
             admin_router,
-            prefix="/api/v1/admin",
+            prefix="/api/admin",
             tags=["Admin"]
         )
-        
+
+        self.app.include_router(
+            dashboard_router,
+            prefix="/api/dashboard",
+            tags=["Dashboard"]
+        )
+
         # Health check endpoint
         @self.app.get("/health")
         async def health_check():

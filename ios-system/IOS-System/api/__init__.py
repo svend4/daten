@@ -8,6 +8,7 @@ from .routes import (
     graph_router,
     admin_router,
     ai_router,
+    dashboard_router,
 )
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     'graph_router',
     'admin_router',
     'ai_router',
+    'dashboard_router',
 ]
