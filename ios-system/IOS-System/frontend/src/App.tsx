@@ -13,7 +13,10 @@ import { useAuthStore } from '@store/authStore'
 import LoginPage from '@pages/LoginPage'
 import DashboardPage from '@pages/DashboardPage'
 import DocumentsPage from '@pages/DocumentsPage'
+import DocumentNewPage from '@pages/DocumentNewPage'
+import SearchPage from '@pages/SearchPage'
 import SemanticSearchPage from '@pages/SemanticSearchPage'
+import SettingsPage from '@pages/SettingsPage'
 
 // Graph Pages
 import KnowledgeGraphPage from '@pages/graph/KnowledgeGraphPage'
@@ -22,10 +25,15 @@ import RelationsPage from '@pages/graph/RelationsPage'
 
 // AI Pages
 import SummarizePage from '@pages/ai/SummarizePage'
+import ClassifyPage from '@pages/ai/ClassifyPage'
+import ExtractPage from '@pages/ai/ExtractPage'
+import ChatPage from '@pages/ai/ChatPage'
 
 // Admin Pages
 import AdminStatsPage from '@pages/admin/AdminStatsPage'
 import AdminServicesPage from '@pages/admin/AdminServicesPage'
+import AdminLogsPage from '@pages/admin/AdminLogsPage'
+import AdminReindexPage from '@pages/admin/AdminReindexPage'
 
 // Layout
 import Layout from './components/Layout'
@@ -71,8 +79,8 @@ function App() {
 
                     {/* Documents */}
                     <Route path="/documents" element={<DocumentsPage />} />
-                    <Route path="/documents/new" element={<div className="p-6">Создание документа (Coming Soon)</div>} />
-                    <Route path="/search" element={<div className="p-6">Поиск документов (Coming Soon)</div>} />
+                    <Route path="/documents/new" element={<DocumentNewPage />} />
+                    <Route path="/search" element={<SearchPage />} />
                     <Route path="/search/semantic" element={<SemanticSearchPage />} />
 
                     {/* Knowledge Graph */}
@@ -82,18 +90,18 @@ function App() {
 
                     {/* AI Features */}
                     <Route path="/ai/summarize" element={<SummarizePage />} />
-                    <Route path="/ai/classify" element={<div className="p-6">Классификация текста (Coming Soon)</div>} />
-                    <Route path="/ai/extract" element={<div className="p-6">Извлечение данных (Coming Soon)</div>} />
-                    <Route path="/ai/chat" element={<div className="p-6">AI Чат (Coming Soon)</div>} />
+                    <Route path="/ai/classify" element={<ClassifyPage />} />
+                    <Route path="/ai/extract" element={<ExtractPage />} />
+                    <Route path="/ai/chat" element={<ChatPage />} />
 
                     {/* Admin */}
                     <Route path="/admin/stats" element={<AdminStatsPage />} />
                     <Route path="/admin/services" element={<AdminServicesPage />} />
-                    <Route path="/admin/logs" element={<div className="p-6">Системные логи (Coming Soon)</div>} />
-                    <Route path="/admin/reindex" element={<div className="p-6">Переиндексация (Coming Soon)</div>} />
+                    <Route path="/admin/logs" element={<AdminLogsPage />} />
+                    <Route path="/admin/reindex" element={<AdminReindexPage />} />
 
                     {/* Settings */}
-                    <Route path="/settings" element={<div className="p-6">Настройки (Coming Soon)</div>} />
+                    <Route path="/settings" element={<SettingsPage />} />
 
                     {/* Default & 404 */}
                     <Route path="/" element={<Navigate to="/dashboard" />} />
