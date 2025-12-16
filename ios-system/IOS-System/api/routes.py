@@ -15,6 +15,11 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    email: str
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -142,6 +147,62 @@ async def login(request: LoginRequest):
             "username": user["username"],
             "email": user["email"],
             "role": user["role"]
+        }
+    )
+
+@auth_router.post("/register", response_model=TokenResponse)
+async def register(request: RegisterRequest):
+    """Регистрация нового пользователя - Demo implementation"""
+    # Check if username already exists
+    if request.username in DEMO_USERS:
+        raise HTTPException(
+            status_code=400,
+            detail="Username already exists"
+        )
+
+    # Check if email already exists
+    for user in DEMO_USERS.values():
+        if user["email"] == request.email:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already exists"
+            )
+
+    # Generate new user ID
+    user_id = f"user_{len(DEMO_USERS) + 1:03d}"
+
+    # Create new user
+    new_user = {
+        "id": user_id,
+        "username": request.username,
+        "password": request.password,  # In production, use hashed passwords!
+        "email": request.email,
+        "role": "user",  # New users get 'user' role by default
+        "created_at": datetime.utcnow().isoformat() + "Z"
+    }
+
+    # Add to users database
+    DEMO_USERS[request.username] = new_user
+
+    # Generate session token (auto-login after registration)
+    token = secrets.token_urlsafe(32)
+
+    # Store session
+    ACTIVE_SESSIONS[token] = {
+        "user_id": new_user["id"],
+        "username": new_user["username"],
+        "created_at": datetime.utcnow().isoformat()
+    }
+
+    # Return token and user info
+    return TokenResponse(
+        access_token=token,
+        token_type="bearer",
+        user={
+            "id": new_user["id"],
+            "username": new_user["username"],
+            "email": new_user["email"],
+            "role": new_user["role"]
         }
     )
 
