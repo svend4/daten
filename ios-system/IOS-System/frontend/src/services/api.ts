@@ -20,7 +20,10 @@ export interface PaginatedResponse<T> {
 }
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+// In production, use same origin (empty string). In development, use VITE_API_URL or localhost
+const API_BASE_URL = import.meta.env.VITE_ENV === 'production'
+  ? ''
+  : (import.meta.env.VITE_API_URL || 'http://localhost:8000')
 const API_TIMEOUT = 30000 // 30 seconds
 
 // Create axios instance

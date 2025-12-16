@@ -1,6 +1,6 @@
 # Full-stack IOS System (WITHOUT bootstrap)
 # For testing complete architecture with all services
-# Build timestamp: 2025-12-16T05:45:00 (force rebuild - fixed API URL + CORS)
+# Build timestamp: 2025-12-16T06:30:00 (force rebuild - fixed empty string API_BASE_URL logic)
 
 # Stage 1: Build Frontend
 FROM node:18-alpine AS frontend-build
