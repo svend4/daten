@@ -49,34 +49,24 @@ print("=" * 60)
 
 # Import and run
 try:
-    # Change to IOS-System directory to make relative imports work
-    os.chdir(ios_system_path)
-
-    # Now we can import main_production
-    import main_production
-
-    print("✓ Imports successful")
-    print("Starting uvicorn...")
+    print("✓ Starting uvicorn...")
 
     import uvicorn
 
     # Get port from environment (Railway sets PORT)
     port = int(os.environ.get("PORT", 8080))
 
+    # Run uvicorn with the app as a module
+    # This makes relative imports in main_production.py work correctly
     uvicorn.run(
         "main_production:app",
         host="0.0.0.0",
         port=port,
+        app_dir=str(ios_system_path),  # Set working directory for the app
         log_level=os.getenv("LOG_LEVEL", "info").lower(),
         access_log=True,
         reload=False
     )
-
-except ImportError as e:
-    print(f"✗ Import error: {e}")
-    import traceback
-    traceback.print_exc()
-    sys.exit(1)
 
 except Exception as e:
     print(f"✗ Startup error: {e}")
