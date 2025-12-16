@@ -397,5 +397,9 @@ def main():
     )
 
 
+# Create app instance for import (used by start_fullstack.py)
+app = create_application()
+
+
 if __name__ == "__main__":
     main()
