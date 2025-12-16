@@ -38,6 +38,18 @@ import {
   SlidersHorizontal,
   Tag as TagIcon,
   TrendingUp,
+  Lock,
+  UserCheck,
+  AlertCircle,
+  KeyRound,
+  Webhook,
+  Gauge,
+  Save,
+  HeartPulse,
+  Users,
+  Users2,
+  ListTodo,
+  CheckSquare,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -98,6 +110,16 @@ const navigation: NavigationItem[] = [
     ],
   },
   {
+    name: 'Совместная работа',
+    icon: Users2,
+    children: [
+      { name: 'Комментарии', href: '/collaboration/comments', icon: MessageSquare },
+      { name: 'Согласование', href: '/collaboration/approval', icon: CheckSquare },
+      { name: 'Задачи', href: '/collaboration/tasks', icon: ListTodo },
+      { name: 'Лента активности', href: '/collaboration/activity', icon: Activity },
+    ],
+  },
+  {
     name: 'Аналитика',
     icon: BarChart3,
     children: [
@@ -109,6 +131,26 @@ const navigation: NavigationItem[] = [
     ],
   },
   {
+    name: 'Безопасность',
+    icon: Lock,
+    children: [
+      { name: 'Журнал аудита', href: '/security/audit', icon: FileIcon },
+      { name: 'Управление сеансами', href: '/security/sessions', icon: UserCheck },
+      { name: 'Оповещения', href: '/security/alerts', icon: AlertCircle },
+      { name: 'Роли и права', href: '/security/permissions', icon: KeyRound },
+    ],
+  },
+  {
+    name: 'API',
+    icon: Database,
+    children: [
+      { name: 'Webhooks', href: '/api/webhooks', icon: Webhook },
+      { name: 'API Токены', href: '/api/tokens', icon: KeyRound },
+      { name: 'Rate Limiting', href: '/api/rate-limiting', icon: Gauge },
+      { name: 'Логи API', href: '/api/logs', icon: Activity },
+    ],
+  },
+  {
     name: 'Администрирование',
     icon: Shield,
     children: [
@@ -116,6 +158,10 @@ const navigation: NavigationItem[] = [
       { name: 'Статус сервисов', href: '/admin/services', icon: Activity },
       { name: 'Системные логи', href: '/admin/logs', icon: Server },
       { name: 'Переиндексация', href: '/admin/reindex', icon: RefreshCw },
+      { name: 'Backup & Restore', href: '/admin/backup', icon: Save },
+      { name: 'Мониторинг системы', href: '/admin/health', icon: HeartPulse },
+      { name: 'Управление БД', href: '/admin/database', icon: Database },
+      { name: 'Управление пользователями', href: '/admin/users', icon: Users },
     ],
   },
   { name: 'Настройки', href: '/settings', icon: Settings },

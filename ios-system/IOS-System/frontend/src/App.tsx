@@ -37,11 +37,21 @@ import ClassifyPage from '@pages/ai/ClassifyPage'
 import ExtractPage from '@pages/ai/ExtractPage'
 import ChatPage from '@pages/ai/ChatPage'
 
+// Collaboration Pages
+import CommentsPage from '@pages/collaboration/CommentsPage'
+import ApprovalWorkflowPage from '@pages/collaboration/ApprovalWorkflowPage'
+import TaskManagementPage from '@pages/collaboration/TaskManagementPage'
+import ActivityFeedPage from '@pages/collaboration/ActivityFeedPage'
+
 // Admin Pages
 import AdminStatsPage from '@pages/admin/AdminStatsPage'
 import AdminServicesPage from '@pages/admin/AdminServicesPage'
 import AdminLogsPage from '@pages/admin/AdminLogsPage'
 import AdminReindexPage from '@pages/admin/AdminReindexPage'
+import BackupRestorePage from '@pages/admin/BackupRestorePage'
+import HealthMonitoringPage from '@pages/admin/HealthMonitoringPage'
+import DatabaseManagementPage from '@pages/admin/DatabaseManagementPage'
+import UserManagementPage from '@pages/admin/UserManagementPage'
 
 // Analytics Pages
 import AnalyticsDashboardPage from '@pages/analytics/AnalyticsDashboardPage'
@@ -49,6 +59,18 @@ import DocumentStatsPage from '@pages/analytics/DocumentStatsPage'
 import ActivityHeatmapPage from '@pages/analytics/ActivityHeatmapPage'
 import ReportsPage from '@pages/analytics/ReportsPage'
 import TrendingPage from '@pages/analytics/TrendingPage'
+
+// Security Pages
+import AuditTrailPage from '@pages/security/AuditTrailPage'
+import SessionManagementPage from '@pages/security/SessionManagementPage'
+import SecurityAlertsPage from '@pages/security/SecurityAlertsPage'
+import PermissionsPage from '@pages/security/PermissionsPage'
+
+// API Pages
+import WebhooksPage from '@pages/api/WebhooksPage'
+import ApiTokensPage from '@pages/api/ApiTokensPage'
+import RateLimitingPage from '@pages/api/RateLimitingPage'
+import ApiLogsPage from '@pages/api/ApiLogsPage'
 
 // Layout
 import Layout from './components/Layout'
@@ -117,11 +139,21 @@ function App() {
                     <Route path="/ai/extract" element={<ExtractPage />} />
                     <Route path="/ai/chat" element={<ChatPage />} />
 
+                    {/* Collaboration */}
+                    <Route path="/collaboration/comments" element={<CommentsPage />} />
+                    <Route path="/collaboration/approval" element={<ApprovalWorkflowPage />} />
+                    <Route path="/collaboration/tasks" element={<TaskManagementPage />} />
+                    <Route path="/collaboration/activity" element={<ActivityFeedPage />} />
+
                     {/* Admin */}
                     <Route path="/admin/stats" element={<AdminStatsPage />} />
                     <Route path="/admin/services" element={<AdminServicesPage />} />
                     <Route path="/admin/logs" element={<AdminLogsPage />} />
                     <Route path="/admin/reindex" element={<AdminReindexPage />} />
+                    <Route path="/admin/backup" element={<BackupRestorePage />} />
+                    <Route path="/admin/health" element={<HealthMonitoringPage />} />
+                    <Route path="/admin/database" element={<DatabaseManagementPage />} />
+                    <Route path="/admin/users" element={<UserManagementPage />} />
 
                     {/* Analytics */}
                     <Route path="/analytics" element={<AnalyticsDashboardPage />} />
@@ -129,6 +161,18 @@ function App() {
                     <Route path="/analytics/heatmap" element={<ActivityHeatmapPage />} />
                     <Route path="/analytics/reports" element={<ReportsPage />} />
                     <Route path="/analytics/trending" element={<TrendingPage />} />
+
+                    {/* Security */}
+                    <Route path="/security/audit" element={<AuditTrailPage />} />
+                    <Route path="/security/sessions" element={<SessionManagementPage />} />
+                    <Route path="/security/alerts" element={<SecurityAlertsPage />} />
+                    <Route path="/security/permissions" element={<PermissionsPage />} />
+
+                    {/* API */}
+                    <Route path="/api/webhooks" element={<WebhooksPage />} />
+                    <Route path="/api/tokens" element={<ApiTokensPage />} />
+                    <Route path="/api/rate-limiting" element={<RateLimitingPage />} />
+                    <Route path="/api/logs" element={<ApiLogsPage />} />
 
                     {/* Settings */}
                     <Route path="/settings" element={<SettingsPage />} />
