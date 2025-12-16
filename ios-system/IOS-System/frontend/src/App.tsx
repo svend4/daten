@@ -37,6 +37,12 @@ import ClassifyPage from '@pages/ai/ClassifyPage'
 import ExtractPage from '@pages/ai/ExtractPage'
 import ChatPage from '@pages/ai/ChatPage'
 
+// Collaboration Pages
+import CommentsPage from '@pages/collaboration/CommentsPage'
+import ApprovalWorkflowPage from '@pages/collaboration/ApprovalWorkflowPage'
+import TaskManagementPage from '@pages/collaboration/TaskManagementPage'
+import ActivityFeedPage from '@pages/collaboration/ActivityFeedPage'
+
 // Admin Pages
 import AdminStatsPage from '@pages/admin/AdminStatsPage'
 import AdminServicesPage from '@pages/admin/AdminServicesPage'
@@ -132,6 +138,12 @@ function App() {
                     <Route path="/ai/classify" element={<ClassifyPage />} />
                     <Route path="/ai/extract" element={<ExtractPage />} />
                     <Route path="/ai/chat" element={<ChatPage />} />
+
+                    {/* Collaboration */}
+                    <Route path="/collaboration/comments" element={<CommentsPage />} />
+                    <Route path="/collaboration/approval" element={<ApprovalWorkflowPage />} />
+                    <Route path="/collaboration/tasks" element={<TaskManagementPage />} />
+                    <Route path="/collaboration/activity" element={<ActivityFeedPage />} />
 
                     {/* Admin */}
                     <Route path="/admin/stats" element={<AdminStatsPage />} />

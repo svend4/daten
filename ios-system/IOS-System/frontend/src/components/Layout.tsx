@@ -47,6 +47,9 @@ import {
   Save,
   HeartPulse,
   Users,
+  Users2,
+  ListTodo,
+  CheckSquare,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -104,6 +107,16 @@ const navigation: NavigationItem[] = [
       { name: 'Классификация', href: '/ai/classify', icon: Brain },
       { name: 'Извлечение данных', href: '/ai/extract', icon: Sparkles },
       { name: 'AI Чат', href: '/ai/chat', icon: MessageSquare },
+    ],
+  },
+  {
+    name: 'Совместная работа',
+    icon: Users2,
+    children: [
+      { name: 'Комментарии', href: '/collaboration/comments', icon: MessageSquare },
+      { name: 'Согласование', href: '/collaboration/approval', icon: CheckSquare },
+      { name: 'Задачи', href: '/collaboration/tasks', icon: ListTodo },
+      { name: 'Лента активности', href: '/collaboration/activity', icon: Activity },
     ],
   },
   {
