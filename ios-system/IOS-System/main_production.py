@@ -9,8 +9,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 import uvicorn
+import os
+from pathlib import Path
 
 # Core components
 from core.ios_root import IOSRoot
@@ -239,13 +242,16 @@ class IOSApplication:
         
         # Add middleware
         self._setup_middleware()
-        
+
         # Add routers
         self._setup_routers()
-        
+
+        # Setup frontend static files
+        self._setup_frontend()
+
         # Add exception handlers
         self._setup_exception_handlers()
-        
+
         return self.app
         
     def _setup_middleware(self):
@@ -314,17 +320,61 @@ class IOSApplication:
         async def metrics():
             return self.metrics.get_metrics()
             
-        # Root endpoint
-        @self.app.get("/")
-        async def root():
-            return {
-                "name": "IOS System",
-                "version": "1.0.0",
-                "status": "running",
-                "docs_url": "/docs",
-                "health_url": "/health"
-            }
-            
+    def _setup_frontend(self):
+        """Настройка раздачи статических файлов фронтенда"""
+        frontend_dist = os.getenv("FRONTEND_DIST", "/app/frontend-dist")
+
+        if os.path.exists(frontend_dist):
+            logger.info(f"📦 Mounting frontend from {frontend_dist}")
+
+            # Mount static assets (CSS, JS, images, etc.)
+            assets_path = os.path.join(frontend_dist, "assets")
+            if os.path.exists(assets_path):
+                self.app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
+
+            # SPA fallback - serve index.html for all non-API routes
+            @self.app.get("/{full_path:path}", include_in_schema=False)
+            async def serve_spa(full_path: str):
+                """Serve React SPA for all non-API routes"""
+                # Skip API routes and special endpoints
+                if (full_path.startswith("api/") or
+                    full_path in ["health", "metrics", "docs", "redoc", "openapi.json"]):
+                    return JSONResponse({"error": "Not found"}, status_code=404)
+
+                # Serve static files if they exist
+                file_path = Path(frontend_dist) / full_path
+                if file_path.is_file():
+                    return FileResponse(file_path)
+
+                # Otherwise serve index.html for client-side routing
+                index_path = os.path.join(frontend_dist, "index.html")
+                if os.path.exists(index_path):
+                    return FileResponse(index_path)
+                else:
+                    # Fallback API response if no frontend
+                    return JSONResponse({
+                        "name": "IOS System",
+                        "version": "1.0.0",
+                        "status": "running",
+                        "docs_url": "/docs",
+                        "health_url": "/health",
+                        "message": "Frontend not available - use /docs for API documentation"
+                    })
+        else:
+            logger.warning(f"⚠️  Frontend dist directory not found: {frontend_dist}")
+
+            # Add root endpoint if no frontend
+            @self.app.get("/")
+            async def root():
+                return {
+                    "name": "IOS System",
+                    "version": "1.0.0",
+                    "status": "running",
+                    "docs_url": "/docs",
+                    "health_url": "/health",
+                    "message": "API-only mode - use /docs for documentation"
+                }
+
     def _setup_exception_handlers(self):
         """Настройка обработчиков исключений"""
         
