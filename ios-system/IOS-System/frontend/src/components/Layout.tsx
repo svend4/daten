@@ -33,6 +33,10 @@ import {
   Upload,
   Download,
   History,
+  Bookmark,
+  Clock,
+  SlidersHorizontal,
+  Tag as TagIcon,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -59,8 +63,18 @@ const navigation: NavigationItem[] = [
       { name: 'Массовый импорт', href: '/documents/import', icon: Download },
       { name: 'Экспорт данных', href: '/documents/export', icon: Download },
       { name: 'История версий', href: '/documents/history', icon: History },
-      { name: 'Поиск', href: '/search', icon: Search },
+    ],
+  },
+  {
+    name: 'Поиск',
+    icon: Search,
+    children: [
+      { name: 'Быстрый поиск', href: '/search', icon: Search },
       { name: 'Семантический поиск', href: '/search/semantic', icon: Sparkles },
+      { name: 'Расширенный поиск', href: '/search/advanced', icon: SlidersHorizontal },
+      { name: 'Поиск по тегам', href: '/search/tags', icon: TagIcon },
+      { name: 'Сохранённые поиски', href: '/search/saved', icon: Bookmark },
+      { name: 'История поиска', href: '/search/history', icon: Clock },
     ],
   },
   {

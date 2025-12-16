@@ -20,6 +20,10 @@ import DocumentExportPage from '@pages/documents/DocumentExportPage'
 import DocumentHistoryPage from '@pages/documents/DocumentHistoryPage'
 import SearchPage from '@pages/SearchPage'
 import SemanticSearchPage from '@pages/search/SemanticSearchPage'
+import SavedSearchesPage from '@pages/search/SavedSearchesPage'
+import SearchHistoryPage from '@pages/search/SearchHistoryPage'
+import AdvancedSearchPage from '@pages/search/AdvancedSearchPage'
+import TagSearchPage from '@pages/search/TagSearchPage'
 import SettingsPage from '@pages/SettingsPage'
 
 // Graph Pages
@@ -90,6 +94,10 @@ function App() {
                     <Route path="/documents/history" element={<DocumentHistoryPage />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/search/semantic" element={<SemanticSearchPage />} />
+                    <Route path="/search/advanced" element={<AdvancedSearchPage />} />
+                    <Route path="/search/tags" element={<TagSearchPage />} />
+                    <Route path="/search/saved" element={<SavedSearchesPage />} />
+                    <Route path="/search/history" element={<SearchHistoryPage />} />
 
                     {/* Knowledge Graph */}
                     <Route path="/graph" element={<KnowledgeGraphPage />} />
