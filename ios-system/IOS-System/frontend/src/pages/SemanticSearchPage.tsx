@@ -26,7 +26,7 @@ export default function SemanticSearchPage() {
     try {
       setLoading(true)
       setHasSearched(true)
-      const data = await api.semanticSearch(query.trim(), 20)
+      const data = await api.semanticSearch(query.trim(), { limit: 20 })
       setResults(data.results || [])
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'Search failed')

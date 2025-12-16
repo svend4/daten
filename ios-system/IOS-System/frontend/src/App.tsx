@@ -15,7 +15,7 @@ import DashboardPage from '@pages/DashboardPage'
 import DocumentsPage from '@pages/DocumentsPage'
 import DocumentNewPage from '@pages/DocumentNewPage'
 import SearchPage from '@pages/SearchPage'
-import SemanticSearchPage from '@pages/SemanticSearchPage'
+import SemanticSearchPage from '@pages/search/SemanticSearchPage'
 import SettingsPage from '@pages/SettingsPage'
 
 // Graph Pages
