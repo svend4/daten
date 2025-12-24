@@ -1,0 +1,94 @@
+# Docker Compose для локальной разработки IOS System
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ios_postgres_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ios_db
+      POSTGRES_USER: ios_user
+      POSTGRES_PASSWORD: ios_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - ios_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ios_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ios_redis_dev
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - ios_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: ios_backend_dev
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://ios_user:ios_password@postgres:5432/ios_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=dev_secret_key_change_in_production
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+      - LOG_LEVEL=DEBUG
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ios_network
+    volumes:
+      - ./:/app
+    command: uvicorn main_production:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend (для production build, для разработки используйте npm run dev)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ios_frontend_dev
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ios_network
+    environment:
+      - VITE_API_URL=http://localhost:8000
+
+networks:
+  ios_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
