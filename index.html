@@ -153,11 +153,12 @@
         <h2>Свяжитесь с флористом</h2>
         <p class="lede">Оставьте номер — мы предложим идеи и отправим подборку на ваш вкус в течение 15 минут.</p>
       </div>
-      <form class="cta__form">
+      <form class="cta__form" novalidate>
         <input type="text" placeholder="Имя" aria-label="Имя">
         <input type="tel" placeholder="Телефон" aria-label="Телефон">
         <button class="btn primary" type="submit">Жду звонка</button>
       </form>
+      <p class="cta__status" role="status" aria-live="polite"></p>
     </section>
   </main>
 
@@ -172,5 +173,6 @@
       <a href="tel:+78001234567">+7 (800) 123-45-67</a>
     </div>
   </footer>
+  <script src="app.js"></script>
 </body>
 </html>
