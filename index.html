@@ -154,9 +154,11 @@
         <p class="lede">Оставьте номер — мы предложим идеи и отправим подборку на ваш вкус в течение 15 минут.</p>
       </div>
       <form class="cta__form">
-        <input type="text" placeholder="Имя" aria-label="Имя">
-        <input type="tel" placeholder="Телефон" aria-label="Телефон">
-        <button class="btn primary" type="submit">Жду звонка</button>
+        <label for="cta-name">Имя</label>
+        <input id="cta-name" name="name" type="text" placeholder="Имя" aria-label="Имя">
+        <label for="cta-phone">Телефон</label>
+        <input id="cta-phone" name="phone" type="tel" placeholder="Телефон" aria-label="Телефон">
+        <button class="btn primary" type="submit">Отправить заявку</button>
       </form>
     </section>
   </main>
